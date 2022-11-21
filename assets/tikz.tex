@@ -1,0 +1,24 @@
+\tikzset{
+    common/.style={anchor=west, draw, rectangle, minimum height=6mm},
+    letter/.style={common, minimum width=\widthletter},
+    block/.style={common, minimum width=\widthblock},
+    epoch/.style={letter, rounded rectangle, rounded rectangle east arc=0pt, minimum width=\widthepoch},
+    point/.style={insert path={ node[scale=5*sqrt(\pgflinewidth)]{.} }},
+    node/.style={draw, circle, minimum size=1em},
+    op/.style={draw, circle, minimum size=2.7em},
+    causalop/.style={op, double=white, inner sep=2pt},
+    gc-rule-1/.style={dashed, thick, darkblue},
+    gc-rule-2/.style={densely dotted, thick, darkgreen},
+    cross/.style={
+        path picture={
+            \draw[\colorcross, very thick]
+                (path picture bounding box.south east)--(path picture bounding box.north west)
+                (path picture bounding box.south west)--(path picture bounding box.north east);
+        }
+    },
+    invisible/.style={opacity=0},
+    visible on/.style={alt=#1{}{invisible}},
+    alt/.code args={<#1>#2#3}{%
+      \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+    },
+}
