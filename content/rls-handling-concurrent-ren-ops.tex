@@ -1,0 +1,64 @@
+\begin{frame}{What about concurrent \emph{rename} operations ?}
+  \begin{figure}
+    \centering
+    \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/divergent-concurrent-rename/1/figure.pdf}
+    \includegraphics<2->[width=\columnwidth]{../2021-phd-day-figures/divergent-concurrent-rename/2/figure.pdf}
+    \caption{Concurrent \emph{rename} operations leading to divergent states}
+  \end{figure}
+  \vspace{-3mm}
+  \begin{itemize}
+    \item<3-> \emph{Rename} operations are system operations
+    \item<4> Can resolve conflict by only applying one of them
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{How to do so ?}
+  \begin{figure}
+    \centering
+    \includegraphics<1>[width=0.3\columnwidth]{../2021-phd-day-figures/epoch-tree/1/figure.pdf}
+    \includegraphics<2->[width=0.3\columnwidth]{../2021-phd-day-figures/epoch-tree/2/figure.pdf}
+    \caption{\emph{Epoch tree} corresponding to previous scenario}
+  \end{figure}
+  \vspace{-3mm}
+  \begin{itemize}
+    \item<2-> Have to pick an epoch as the {\color{red} target one}
+    \begin{itemize}
+      \item<2-> Define total order on epochs
+    \end{itemize}
+    \item<3> Have to move through the tree
+    \begin{itemize}
+      \item<3> Design transformation function to revert \emph{rename} operation
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Applying concurrent \emph{rename} operations}
+  \begin{figure}
+    \centering
+    \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/1/figure.pdf}
+    \includegraphics<2>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/2/figure.pdf}
+    \includegraphics<3>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/3/figure.pdf}
+    \caption{Applying a concurrent \emph{rename} operation}
+  \end{figure}
+  \vspace{-3mm}
+  \begin{itemize}
+    \item<2-> Revert state to equivalent one at LCA epoch
+    \item<3> Apply then \emph{rename} operations leading to target epoch
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Downsides}
+  \begin{block}{Need to store former state until no more concurrent operations}
+    \begin{itemize}
+      \item Can garbage collect it once the \emph{rename} operation is causally stable \footfullcite{10.1007/978-3-662-43352-2_11}
+      \item Can offload it to the disk meanwhile
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Need to propagate former state to other nodes}
+    \begin{itemize}
+      \item Can compress the operation to minimise bandwidth consumption
+      \item Can trigger \emph{rename} operations at a given number of blocks
+    \end{itemize}
+  \end{block}
+\end{frame}

@@ -1,3 +1,6 @@
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}
+
 \documentclass[10pt]{beamer}
 
 \usetheme{metropolis}
@@ -50,18 +53,31 @@
 \input{assets/tikz}
 
 \author{
-  \textbf{Matthieu Nicolas} (\url{matthieu.nicolas@loria.fr})
-  \\
-  COAST team
+  \textbf{Matthieu Nicolas} (\texttt{matthieu.nicolas@loria.fr})
 }
-\title{Ré-identification sans coordination dans les types de données répliquées sans conflits (CRDTs)}
+\date{20 décembre 2022}
+\title{Ré-identification sans coordination dans les types de données répliquées sans conflits}
 % \subtitle{}
 \institute{
-  \vspace{3em}
-  \includegraphics[width=2.8cm]{img/loria-logo.png}\hspace{3em}
-  \includegraphics[width=1.2cm]{img/ul-logo.pdf}\hspace{3em}
-  \includegraphics[width=3cm]{img/inria-logo.pdf}\hspace{3em}
-  \includegraphics[width=1.2cm]{img/cnrs-logo.png}
+  \begin{table}
+    \resizebox{\columnwidth}{!}{
+      \begin{tabular}{lll}
+        \emph{Rapporteurs :}  & Hanifa Boucheneb  & Professeure, Polytechnique Montréal\\
+                              & Davide Frey       & Chargé de recherche, HdR, Inria Rennes Bretagne-Atlantique \\[0.5em]
+        \emph{Examinateurs :} & Hala Skaf-Molli   & Maîtresse de conférences, HdR, Nantes Université, LS2N \\
+                              & Stephan Merz      & Directeur de Recherche, Inria Nancy - Grand Est \\[0.5em]
+        \emph{Encadrants :}   & Olivier Perrin    & Professeur des Universités, Université de Lorraine, LORIA \\
+                              & Gérald Oster      & Maître de conférences, Université de Lorraine, LORIA \\
+      \end{tabular}
+    }
+  \end{table}
+  \vspace{1em}
+  \resizebox{\columnwidth}{!}{
+    \includegraphics[height=1.2em]{img/loria-logo.png}\hspace{1em}
+    \includegraphics[height=1.2em]{img/ul-logo.pdf}\hspace{1em}
+    \includegraphics[height=1.2em]{img/inria-logo.pdf}\hspace{1em}
+    \includegraphics[height=1.2em]{img/cnrs-logo.png}
+  }
 }
 
 \begin{document}
@@ -70,82 +86,9 @@
   \maketitle
 \end{frame}
 
-\begin{frame}{LogootSplit \footfullcite{2013-logootsplit}}
-  \begin{itemize}
-    \item State of the art of \emph{Sequence \acp{CRDT}}
-    \item Elements are ordered by their identifier, noted here with the following formalism: $\id{position}{node\_id~node\_seq}{offset}$
-  \end{itemize}
-
-  \pause
-
-  \begin{columns}
-    \begin{column}{0.33\textwidth}
-      \begin{figure}
-        \centering
-        \begin{tikzpicture}
-            \path
-                node[letter, label=below:{$\id{i}{B0}{0}$}] {H}
-                to ++(0:\widthletter) node[letter, label=below:{$\id{i}{B0}{1}$}] {L}
-                to ++(0:\widthletter) node[letter, label=below:{$\id{i}{B0}{2}$}] {O};
-        \end{tikzpicture}
-        \caption{State of a sequence which contains the elements "HLO" and their corresponding identifiers}
-      \end{figure}
-    \end{column}
-    \pause
-    \begin{column}{0.33\textwidth}
-      \vspace{-9mm}
-      \begin{figure}
-        \centering
-        \begin{tikzpicture}
-            \path
-                node[block, label=below:{$\id{i}{B0}{0..2}$}] {HLO};
-        \end{tikzpicture}
-        \caption{State of a sequence which contains the block "HLO"}
-      \end{figure}
-    \end{column}
-    \pause
-    \begin{column}{0.33\textwidth}
-      \begin{figure}
-        \vspace{-7mm}
-        \centering
-        \begin{tikzpicture}
-            \path
-              node[letter, label=below:{$\id{i}{B0}{0}$}] {H}
-              to ++(0:\widthletter) node[letter, fill=\colorblockone, label=above:{\coloridone$\id{i}{B0}{0}\id{f}{A0}{0}$}] {E}
-            to ++(0:\widthletter) node[block, label={below:$\id{i}{B0}{1..2}$}] {LO};
-        \end{tikzpicture}
-        \caption{State of a sequence which contains the elements "HELO" and their corresponding identifiers}
-      \end{figure}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Research issue}
-
-  \begin{itemize}
-    \item \textbf{Evergrowing overhead:} impacts memory, bandwidth and CPU
-  \end{itemize}
-
-  \begin{columns}
-    \begin{column}{0.45\textwidth}
-      \begin{figure}
-        \centering
-        \includegraphics[width=\textwidth]{img/overhead-size.pdf}
-        \caption{Memory footprint of the data structure}
-      \end{figure}
-    \end{column}
-    \begin{column}{0.55\textwidth}
-      \begin{itemize}
-        \item \textbf{Operation count:} 100k
-        \item \textbf{Size of content:} 100KB
-        \item \textbf{Size of data structure:} 20MB
-      \end{itemize}
-    \end{column}
-  \end{columns}
-
-  \centering
-  \alert{How to reduce the overhead introduced by the data structure?}
-\end{frame}
+\input{content/collaborative-apps}
+\input{content/research-questions}
+\input{content/rls-state-of-art}
 
 \begin{frame}[standout]
   \alert{Our approach}
@@ -155,130 +98,15 @@
   Reassign shorter identifiers and aggregate them into blocks in a fully distributed manner
 \end{frame}
 
-\begin{frame}{RenamableLogootSplit}
-  \begin{itemize}
-    \item Propose \emph{RenamableLogootSplit}, \emph{LogootSplit} with a $rename$ operation
-    \item Can be performed without coordination
-  \end{itemize}
-  \begin{figure}
-    \includegraphics<1>{img/rename-op-initial-state.pdf}
-    \includegraphics<2>{img/rename-op-first-id.pdf}
-    \includegraphics<3>{img/rename-op-remaining-ids.pdf}
-    \includegraphics<4>{img/rename-op-final-state.pdf}
-    \caption{Example of renaming}
-  \end{figure}
-  \begin{itemize}
-    \item<2-> Generates a new identifier for the first element, based on its previous identifier
-    \item<3-> Then generates contiguous identifiers for all following elements
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Handling concurrent operations}
-  \begin{figure}
-    \centering
-    \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/inconsistency-concurrent-op-to-rename/1/figure.pdf}
-    \includegraphics<2>[width=\columnwidth]{../2021-phd-day-figures/inconsistency-concurrent-op-to-rename/2/figure.pdf}
-    \includegraphics<3>[width=\columnwidth]{../2021-phd-day-figures/inconsistency-concurrent-op-to-rename/3/figure.pdf}
-    \includegraphics<4>[width=\columnwidth]{../2021-phd-day-figures/inconsistency-concurrent-op-to-rename/4/figure.pdf}
-    \caption{Applying naively concurrent update}
-  \end{figure}
-  \vspace{-3mm}
-  \begin{itemize}
-    \item <2->Can issue operations concurrently to \emph{rename}
-    \item <4>Produce inconsistencies if applied naively
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Fixing handling concurrent operations}
-  \begin{figure}
-    \centering
-    \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/handling-concurrent-op-to-rename/1/figure.pdf}
-    \includegraphics<2>[width=\columnwidth]{../2021-phd-day-figures/handling-concurrent-op-to-rename/2/figure.pdf}
-    \includegraphics<3-6>[width=\columnwidth]{../2021-phd-day-figures/handling-concurrent-op-to-rename/3/figure.pdf}
-    \includegraphics<7>[width=\columnwidth]{../2021-phd-day-figures/handling-concurrent-op-to-rename/4/figure.pdf}
-    \includegraphics<8>[width=\columnwidth]{../2021-phd-day-figures/handling-concurrent-op-to-rename/5/figure.pdf}
-    \caption{Handling properly concurrent update}
-  \end{figure}
-  \vspace{-3mm}
-  \begin{itemize}
-    \item<1-> Use \emph{epoch-based} system to track concurrent operations
-    \item<4-> Transform operations against \emph{rename} ones (\emph{OT})
-    \begin{enumerate}
-      \item<5-> Find predecessor in former state ($\id{i}{B0}{0}\id{f}{A0}{0}$)
-      \item<6-> Find its counterpart in new state ($\id{i}{A1}{1}$)
-      \item<7-> Prepend it to given id to form new id ($\id{i}{A1}{1}\id{i}{B0}{0}\id{m}{B1}{0}$)
-    \end{enumerate}
-  \end{itemize}
-\end{frame}
+\input{content/rls-presentation}
+\input{content/rls-handling-concurrent-ins-rmv-ops}
 
 \begin{frame}[standout]
   What about concurrent \emph{rename} operations ?
 \end{frame}
 
-\begin{frame}{What about concurrent \emph{rename} operations ?}
-  \begin{figure}
-    \centering
-    \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/divergent-concurrent-rename/1/figure.pdf}
-    \includegraphics<2->[width=\columnwidth]{../2021-phd-day-figures/divergent-concurrent-rename/2/figure.pdf}
-    \caption{Concurrent \emph{rename} operations leading to divergent states}
-  \end{figure}
-  \vspace{-3mm}
-  \begin{itemize}
-    \item<3-> \emph{Rename} operations are system operations
-    \item<4> Can resolve conflict by only applying one of them
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{How to do so ?}
-  \begin{figure}
-    \centering
-    \includegraphics<1>[width=0.3\columnwidth]{../2021-phd-day-figures/epoch-tree/1/figure.pdf}
-    \includegraphics<2->[width=0.3\columnwidth]{../2021-phd-day-figures/epoch-tree/2/figure.pdf}
-    \caption{\emph{Epoch tree} corresponding to previous scenario}
-  \end{figure}
-  \vspace{-3mm}
-  \begin{itemize}
-    \item<2-> Have to pick an epoch as the {\color{red} target one}
-    \begin{itemize}
-      \item<2-> Define total order on epochs
-    \end{itemize}
-    \item<3> Have to move through the tree
-    \begin{itemize}
-      \item<3> Design transformation function to revert \emph{rename} operation
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Applying concurrent \emph{rename} operations}
-  \begin{figure}
-    \centering
-    \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/1/figure.pdf}
-    \includegraphics<2>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/2/figure.pdf}
-    \includegraphics<3>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/3/figure.pdf}
-    \caption{Applying a concurrent \emph{rename} operation}
-  \end{figure}
-  \vspace{-3mm}
-  \begin{itemize}
-    \item<2-> Revert state to equivalent one at LCA epoch
-    \item<3> Apply then \emph{rename} operations leading to target epoch
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Downsides}
-  \begin{block}{Need to store former state until no more concurrent operations}
-    \begin{itemize}
-      \item Can garbage collect it once the \emph{rename} operation is causally stable \footfullcite{10.1007/978-3-662-43352-2_11}
-      \item Can offload it to the disk meanwhile
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{Need to propagate former state to other nodes}
-    \begin{itemize}
-      \item Can compress the operation to minimise bandwidth consumption
-      \item Can trigger \emph{rename} operations at a given number of blocks
-    \end{itemize}
-  \end{block}
-\end{frame}
+\input{content/rls-handling-concurrent-ren-ops}
+\input{content/rls-gc-mechanism}
 
 \begin{frame}[standout]
   \alert{Evaluation}
@@ -287,127 +115,9 @@
   Ran simulations to compare performance of RenamableLogootSplit to LogootSplit one
 \end{frame}
 
-\begin{frame}{Scenario}
-  \begin{itemize}
-    \item Simulate collaborative editing sessions using either LogootSplit or RenamableLogootSplit
-    \item \textbf{Phase 1 (content generation):} 80/20\% of \emph{insert}/\emph{remove}
-    \item \textbf{Phase 2 (editing):} 50/50\% of \emph{insert}/\emph{remove}
-    \item Nodes switch to phase 2 when document reaches critical size (15 pages - 60k elements)
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Results - Convergence}
-  \begin{itemize}
-    \item Compared final content of nodes per sessions
-    \item Did not observe any divergence
-    \bigskip
-    \item Empirical result, not a proof...
-    \item ... but represents first step towards the validation
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Results - Memory footprint}
-  \begin{figure}
-    \centering
-    \only<1>{\hspace{-10mm}\includegraphics[width=0.61\textwidth]{img/snapshots-sizes-1.pdf}}
-    \includegraphics<2>[width=0.7\textwidth]{img/snapshots-sizes-2.pdf}
-    \includegraphics<3>[width=0.7\textwidth]{img/snapshots-sizes.pdf}
-    \caption{Evolution of the size of the document}
-    \label{fig:evolution-document-size}
-  \end{figure}
-
-  \vspace{-1\baselineskip}
-  \begin{itemize}
-    \item<2-> \emph{Rename} resets the overhead of the CRDT, if can garbage collect
-    \item<3> \emph{Rename} still reduces by $66\%$ the size otherwise
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Results - Integration time of \emph{insert} operations}
-  \begin{figure}
-    \captionsetup[subfigure]{aboveskip=-1pt,belowskip=-1pt}
-    \centering
-    \begin{subfigure}{0.47\columnwidth}
-        \includegraphics[width=1\textwidth]{img/integration-time-boxplot-local-operations-without-outliers.pdf}
-        \caption{Local operations}
-        \label{fig:evolution-integration-time-local-insert-remove}
-    \end{subfigure}
-    \begin{subfigure}{0.47\columnwidth}
-        \includegraphics[width=1\textwidth]{img/integration-time-boxplot-remote-operations-without-outliers.pdf}
-        \caption{Remote operations}
-        \label{fig:evolution-integration-time-remote-insert-remove}
-    \end{subfigure}
-    \caption{Evolution of the integration time of \emph{insert} operations}
-    \label{fig:evolution-integration-time-insert-remove}
-  \end{figure}
-
-  \vspace{-1\baselineskip}
-  \begin{itemize}
-    \item<2-> \emph{Rename} reduces integration times of future operations
-    \item<3> Transforming concurrent operations is actually faster than applying them on former state
-  \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Results - Integration time of \emph{rename} operations}
-  \begin{table}[!ht]
-      \centering
-      \resizebox{\columnwidth}{!}{
-          \begin{tabular}{lrrrrr}
-              \toprule
-              \multicolumn{2}{c}{Parameters} & \multicolumn{4}{c}{Integration Time (ms)} \\
-              \cmidrule(lr){1-2} \cmidrule(lr){3-6}
-              Type & Nb Ops (k) &   Mean &   Median & 99\textsuperscript{th} Quant. &    Std \\
-              \midrule
-              Local & 30  &    41.75 &    38.74 &      71.68 &   6.84 \\
-                                      & 90  &   119.19 &   118.87 &     124.22 &   2.49 \\
-                                      & 150 &   158.04 &   157.95 &     164.38 &   2.49 \\
-              \cmidrule(lr){1-6}
-              Remote & 30  &   481.32 &   477.13 &     537.30 &  17.11 \\
-                                      & 90  &  1491.28 &  1481.83 &    1657.58 &  51.10 \\
-                                      & 150 &  1694.17 &  1675.95 &    1852.55 &  59.94 \\
-              \bottomrule
-          \end{tabular}
-      }
-      \caption{Integration time of rename operations}
-  \end{table}
-
-  \begin{itemize}
-    \item<2-> Noticeable by users
-    \item<3> Need to improve remote integration time
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Conclusion}
-  \begin{block}{Done}
-    \vspace{-1mm}
-    \begin{itemize}
-      \item Designed a new Sequence \ac{CRDT} : RenamableLogootSplit
-      \item Validated it through experimental evaluation
-    \end{itemize}
-  \end{block}
-
-  \pause
-
-  \begin{block}{Work in progress}
-    \vspace{-1mm}
-    \begin{itemize}
-      \item Publishing it
-      \item Writing the manuscript
-    \end{itemize}
-  \end{block}
-
-  \pause
-
-  \begin{block}{To do}
-    \vspace{-1mm}
-    \begin{itemize}
-      \item Prove formally the correctness of the mechanism
-      \item Design better strategies to select the target epoch
-      \item Improve performance of \emph{rename} operations
-    \end{itemize}
-  \end{block}
-\end{frame}
+\input{content/rls-evaluation}
+\input{content/rls-summary}
+\input{content/conclusion-perspectives}
 
 \begin{frame}[standout]
   Thanks for your attention, any questions?
@@ -418,112 +128,5 @@
 \end{frame}
 
 \appendix
-
-\begin{frame}{LogootSplit identifiers}
-  \begin{itemize}
-    \item To comply with these constraints, LogootSplit proposes identifiers composed of quadruplets of integers of the following form:
-  \end{itemize}
-  \begin{center}
-    $\id{position}{node\_id~node\_seq}{offset}$
-  \end{center}
-  \begin{itemize}
-    \item \emph{position} allows to determine the position of this identifier compared to others
-    \item \emph{node\_id} refers to the node's identifier, assumed to be unique
-    \item \emph{node\_seq} refers to the node's logical clock, which increases monotonically with local operations
-    \item \emph{offset} refers to the element position in its original block
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Identifier constraints}
-  \begin{itemize}
-    \item To fulfill their role, identifiers have to comply to several constraints:
-  \end{itemize}
-
-  \begin{block}{Globally unique}
-    \begin{itemize}
-      \item Identifiers should never be generated twice, neither by different users nor by the same one at different times
-    \end{itemize}
-  \end{block}
-  \begin{block}{Totally ordered}
-    \begin{itemize}
-      \item We should always be able to compare and order two elements using their identifiers
-    \end{itemize}
-  \end{block}
-  \begin{block}{Dense set}
-    \begin{itemize}
-      \item We should always be able to add a new element, and thus a new identifier, between two others
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\begin{frame}{Related work}
-  \begin{itemize}
-    \item Core-nebula approach \footfullcite{zawirski:hal-01248197}
-    \begin{itemize}
-      \item Reassigns shorter identifiers to elements\dots
-      \item \dots but requires consensus
-    \end{itemize}
-    \item LSEQ \footfullcite{doi:10.1002/cpe.4108}
-    \begin{itemize}
-      \item Set of strategies to reduce the growth of identifiers \dots
-      \item \dots but overhead still proportional to number of elements
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Perspectives}
-  \begin{block}{Propose a strategy to avoid conflicting \emph{rename} operations}
-    \begin{itemize}
-      \item How to minimise likelihood of concurrent \emph{rename} operations without coordinating?
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{Propose a smarter strategy to choose the "winning" renaming}
-    \begin{itemize}
-      \item How to minimise the overall computations?
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\begin{frame}{Results - Integration time of \emph{rename} operations (complete)}
-  \begin{table}[!ht]
-      \centering
-      \resizebox{\columnwidth}{!}{
-          \begin{tabular}{lrrrrr}
-              \toprule
-              \multicolumn{2}{c}{Parameters} & \multicolumn{4}{c}{Integration Time (ms)} \\
-              \cmidrule(lr){1-2} \cmidrule(lr){3-6}
-              Type & Nb Ops (k) &   Mean &   Median & 99\textsuperscript{th} Quant. &    Std \\
-              \midrule
-              Local & 30  &    41.75 &    38.74 &      71.68 &   6.84 \\
-                                      & 90  &   119.19 &   118.87 &     124.22 &   2.49 \\
-                                      & 150 &   158.04 &   157.95 &     164.38 &   2.49 \\
-              \cmidrule(lr){1-6}
-              Direct remote & 30  &   481.32 &   477.13 &     537.30 &  17.11 \\
-                                      & 90  &  1491.28 &  1481.83 &    1657.58 &  51.10 \\
-                                      & 150 &  1694.17 &  1675.95 &    1852.55 &  59.94 \\
-              \cmidrule(lr){1-6}
-              Cc. int. greater epoch & 30  &   643.53 &   643.57 &     682.80 &  13.42 \\
-                                      & 90  &  1998.23 &  1994.08 &    2111.98 &  45.37 \\
-                                      & 150 &  2241.92 &  2233.61 &    2351.02 &  52.20 \\
-              \cmidrule(lr){1-6}
-              Cc. int. lesser epoch & 30  &     1.36 &     1.30 &       3.53 &   0.37 \\
-                                      & 90  &     4.45 &     4.23 &       5.81 &   0.71 \\
-                                      & 150 &     5.53 &     5.26 &       8.70 &   0.79 \\
-              \bottomrule
-          \end{tabular}
-      }
-      \caption{Integration time of rename operations}
-  \end{table}
-\end{frame}
-
-\begin{frame}{Experimental settings}
-  \begin{itemize}
-    \item Use Node.js version 13.1.0
-    \item Obtained documents sizes using our fork of \emph{object-sizeof} \footnote{\url{https://www.npmjs.com/package/object-sizeof}}
-    \item Ran benchmarks on a workstation equipped of a Intel Xeon CPU E5-1620 (10MB Cache, 3.50 GHz) with 16GB of RAM running Fedora 31
-    \item Measured times using \texttt{process.hrtime.bigint()}
-  \end{itemize}
-\end{frame}
 
 \end{document}

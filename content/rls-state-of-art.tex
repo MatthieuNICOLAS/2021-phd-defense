@@ -1,0 +1,129 @@
+\begin{frame}{LogootSplit \footfullcite{2013-logootsplit}}
+  \begin{itemize}
+    \item State of the art of \emph{Sequence \acp{CRDT}}
+    \item Elements are ordered by their identifier, noted here with the following formalism: $\id{position}{node\_id~node\_seq}{offset}$
+  \end{itemize}
+
+  \pause
+
+  \begin{columns}
+    \begin{column}{0.33\textwidth}
+      \begin{figure}
+        \centering
+        \begin{tikzpicture}
+            \path
+                node[letter, label=below:{$\id{i}{B0}{0}$}] {H}
+                to ++(0:\widthletter) node[letter, label=below:{$\id{i}{B0}{1}$}] {L}
+                to ++(0:\widthletter) node[letter, label=below:{$\id{i}{B0}{2}$}] {O};
+        \end{tikzpicture}
+        \caption{State of a sequence which contains the elements "HLO" and their corresponding identifiers}
+      \end{figure}
+    \end{column}
+    \pause
+    \begin{column}{0.33\textwidth}
+      \vspace{-9mm}
+      \begin{figure}
+        \centering
+        \begin{tikzpicture}
+            \path
+                node[block, label=below:{$\id{i}{B0}{0..2}$}] {HLO};
+        \end{tikzpicture}
+        \caption{State of a sequence which contains the block "HLO"}
+      \end{figure}
+    \end{column}
+    \pause
+    \begin{column}{0.33\textwidth}
+      \begin{figure}
+        \vspace{-7mm}
+        \centering
+        \begin{tikzpicture}
+            \path
+              node[letter, label=below:{$\id{i}{B0}{0}$}] {H}
+              to ++(0:\widthletter) node[letter, fill=\colorblockone, label=above:{\coloridone$\id{i}{B0}{0}\id{f}{A0}{0}$}] {E}
+            to ++(0:\widthletter) node[block, label={below:$\id{i}{B0}{1..2}$}] {LO};
+        \end{tikzpicture}
+        \caption{State of a sequence which contains the elements "HELO" and their corresponding identifiers}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}{Identifier constraints}
+  \begin{itemize}
+    \item To fulfill their role, identifiers have to comply to several constraints:
+  \end{itemize}
+
+  \begin{block}{Globally unique}
+    \begin{itemize}
+      \item Identifiers should never be generated twice, neither by different users nor by the same one at different times
+    \end{itemize}
+  \end{block}
+  \begin{block}{Totally ordered}
+    \begin{itemize}
+      \item We should always be able to compare and order two elements using their identifiers
+    \end{itemize}
+  \end{block}
+  \begin{block}{Dense set}
+    \begin{itemize}
+      \item We should always be able to add a new element, and thus a new identifier, between two others
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{LogootSplit identifiers}
+  \begin{itemize}
+    \item To comply with these constraints, LogootSplit proposes identifiers composed of quadruplets of integers of the following form:
+  \end{itemize}
+  \begin{center}
+    $\id{position}{node\_id~node\_seq}{offset}$
+  \end{center}
+  \begin{itemize}
+    \item \emph{position} allows to determine the position of this identifier compared to others
+    \item \emph{node\_id} refers to the node's identifier, assumed to be unique
+    \item \emph{node\_seq} refers to the node's logical clock, which increases monotonically with local operations
+    \item \emph{offset} refers to the element position in its original block
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Research issue}
+
+  \begin{itemize}
+    \item \textbf{Evergrowing overhead:} impacts memory, bandwidth and CPU
+  \end{itemize}
+
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{img/overhead-size.pdf}
+        \caption{Memory footprint of the data structure}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \begin{itemize}
+        \item \textbf{Operation count:} 100k
+        \item \textbf{Size of content:} 100KB
+        \item \textbf{Size of data structure:} 20MB
+      \end{itemize}
+    \end{column}
+  \end{columns}
+
+  \centering
+  \alert{How to reduce the overhead introduced by the data structure?}
+\end{frame}
+
+\begin{frame}{Related work}
+  \begin{itemize}
+    \item Core-nebula approach \footfullcite{zawirski:hal-01248197}
+    \begin{itemize}
+      \item Reassigns shorter identifiers to elements\dots
+      \item \dots but requires consensus
+    \end{itemize}
+    \item LSEQ \footfullcite{lseq2017}
+    \begin{itemize}
+      \item Set of strategies to reduce the growth of identifiers \dots
+      \item \dots but overhead still proportional to number of elements
+    \end{itemize}
+  \end{itemize}
+\end{frame}

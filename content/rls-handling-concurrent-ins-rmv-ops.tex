@@ -1,0 +1,37 @@
+\begin{frame}{Handling concurrent operations}
+  \begin{figure}
+    \centering
+    \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/inconsistency-concurrent-op-to-rename/1/figure.pdf}
+    \includegraphics<2>[width=\columnwidth]{../2021-phd-day-figures/inconsistency-concurrent-op-to-rename/2/figure.pdf}
+    \includegraphics<3>[width=\columnwidth]{../2021-phd-day-figures/inconsistency-concurrent-op-to-rename/3/figure.pdf}
+    \includegraphics<4>[width=\columnwidth]{../2021-phd-day-figures/inconsistency-concurrent-op-to-rename/4/figure.pdf}
+    \caption{Applying naively concurrent update}
+  \end{figure}
+  \vspace{-3mm}
+  \begin{itemize}
+    \item <2->Can issue operations concurrently to \emph{rename}
+    \item <4>Produce inconsistencies if applied naively
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Fixing handling concurrent operations}
+  \begin{figure}
+    \centering
+    \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/handling-concurrent-op-to-rename/1/figure.pdf}
+    \includegraphics<2>[width=\columnwidth]{../2021-phd-day-figures/handling-concurrent-op-to-rename/2/figure.pdf}
+    \includegraphics<3-6>[width=\columnwidth]{../2021-phd-day-figures/handling-concurrent-op-to-rename/3/figure.pdf}
+    \includegraphics<7>[width=\columnwidth]{../2021-phd-day-figures/handling-concurrent-op-to-rename/4/figure.pdf}
+    \includegraphics<8>[width=\columnwidth]{../2021-phd-day-figures/handling-concurrent-op-to-rename/5/figure.pdf}
+    \caption{Handling properly concurrent update}
+  \end{figure}
+  \vspace{-3mm}
+  \begin{itemize}
+    \item<1-> Use \emph{epoch-based} system to track concurrent operations
+    \item<4-> Transform operations against \emph{rename} ones (\emph{OT})
+    \begin{enumerate}
+      \item<5-> Find predecessor in former state ($\id{i}{B0}{0}\id{f}{A0}{0}$)
+      \item<6-> Find its counterpart in new state ($\id{i}{A1}{1}$)
+      \item<7-> Prepend it to given id to form new id ($\id{i}{A1}{1}\id{i}{B0}{0}\id{m}{B1}{0}$)
+    \end{enumerate}
+  \end{itemize}
+\end{frame}

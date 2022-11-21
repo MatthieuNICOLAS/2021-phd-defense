@@ -1,0 +1,17 @@
+\begin{frame}{RenamableLogootSplit}
+  \begin{itemize}
+    \item Propose \emph{RenamableLogootSplit}, \emph{LogootSplit} with a $rename$ operation
+    \item Can be performed without coordination
+  \end{itemize}
+  \begin{figure}
+    \includegraphics<1>{img/rename-op-initial-state.pdf}
+    \includegraphics<2>{img/rename-op-first-id.pdf}
+    \includegraphics<3>{img/rename-op-remaining-ids.pdf}
+    \includegraphics<4>{img/rename-op-final-state.pdf}
+    \caption{Example of renaming}
+  \end{figure}
+  \begin{itemize}
+    \item<2-> Generates a new identifier for the first element, based on its previous identifier
+    \item<3-> Then generates contiguous identifiers for all following elements
+  \end{itemize}
+\end{frame}
