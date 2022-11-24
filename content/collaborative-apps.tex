@@ -1,1 +1,74 @@
+\begin{frame}{Applications collaboratives}
+    TODO: Voir comment représenter une appli collaboratice à ce stade
+    \begin{itemize}
+        \item Un \alert{système collaboratif} est un système supportant ses utilisateur-rices dans leurs processus de collaboration pour la réalisation de tâches.
+    \end{itemize}
+\end{frame}
 
+\begin{frame}{Démocratisation des applications collaboratives}
+    TODO: Voir comment illustrer ce point.
+    Screenshots et nombre d'utilisateurs en-dessous ?
+\end{frame}
+
+\begin{frame}{Avantages d'une architecture basée sur le cloud...}
+    TODO: Représenter collaboration via appli basée sur le cloud
+    \begin{itemize}
+        \item \alert{Disponibilité} : Répond aux utilisateur-rices
+        \item \alert{Tolérance aux pannes} : Fonctionne malgré pannes
+        \item \alert{Capacité de passage à l'échelle} : Supporte activité massive
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{... et ses limites}
+    TODO: Illustrer chacune des propriétés
+    \begin{columns}
+        \begin{column}{0.5\columnwidth}
+            \begin{itemize}
+                \item Confidentialité
+                \item Souveraineté
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\columnwidth}
+            \begin{itemize}
+                \item Pérennité
+                \item Résistance à la censure
+            \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[standout]
+    Pouvons-nous concevoir des applications collaboratives satisfaisant l'ensemble de ces propriétés ?
+\end{frame}
+
+\begin{frame}{Applications collaboratives pair-à-pair \footfullcite{localfirstsoftware2019}}
+    TODO: Illustrer une appli P2P
+    \begin{block}{Problématiques}
+        En l'absence d'autorités centrales, comment
+        \begin{itemize}
+            \item résoudre les conflits de modifications ?
+            \item authentifier les utilisateur-rices ?
+            \item sécuriser les communications ?
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+\begin{frame}{MUTE \footfullcite{MUTE2017}}
+    \begin{figure}
+        \resizebox{\columnwidth}{!}{
+            \includegraphics{img/screenshot-mute-editor.png}
+        }
+    \end{figure}
+    \begin{itemize}
+        \item Éditeur de texte collaboratif P2P temps réel chiffré de bout en bout
+        \item Permet à l'équipe d'étudier et contribuer sur les problématiques des applications \ac{LFS}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Mes contributions}
+    \begin{itemize}
+        \item Conception d'un nouveau \ac{CRDT} pour le type Séquence
+        \item Implémentation et intégration de \acp{CRDT} dans MUTE
+    \end{itemize}
+\end{frame}
