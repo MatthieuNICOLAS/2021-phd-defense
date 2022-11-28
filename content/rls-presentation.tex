@@ -1,0 +1,14 @@
+\begin{frame}{Contribution : RenamableLogootSplit}
+    \begin{itemize}
+        \item CRDT pour le type Séquence qui incorpore un mécanisme de renommage
+        \item Prend la forme d'une nouvelle opération : \ren
+    \end{itemize}
+    \begin{block}{Propriétés de l'opération \ren}
+        \begin{itemize}
+            \item Est déterministe
+            \item Préserve l'intention des utilisateur-rices
+            \item Préserve la séquence, \ie unicité et ordre de ses identifiants
+            \item Commute avec les opérations \ins, \rmv mais aussi \ren concurrentes
+        \end{itemize}
+    \end{block}
+\end{frame}
