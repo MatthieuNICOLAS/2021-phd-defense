@@ -3,12 +3,12 @@
 
 \documentclass[10pt]{beamer}
 
-\usetheme[sectionpage=none]{metropolis}
+\usetheme[sectionpage=none,block=fill]{metropolis}
 
 \usepackage{acronym} % \ac[p], \acl[ptl], \acs[p], \acf[p]
 \usepackage{algorithm, algpseudocode}
 \usepackage{appendixnumberbeamer}
-\usepackage[backend=biber,maxbibnames=1,maxcitenames=1]{biblatex}
+\usepackage[backend=biber,defernumbers=true,bibstyle=trad-plain,citestyle=authortitle,sorting=none,maxbibnames=1,maxcitenames=1]{biblatex}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage[french]{babel}
 \usepackage{bookmark}
@@ -98,31 +98,31 @@
 
 \subsection{Opération \emph{rename}}
 
-\input{content/rls-presentation}
+% \input{content/rls-presentation}
 
 \subsection{Gestion des opérations \emph{insert} et \emph{remove} concurrentes}
 
-\input{content/rls-handling-concurrent-ins-rmv-ops}
+% \input{content/rls-handling-concurrent-ins-rmv-ops}
 
 \subsection{Gestion des opérations \emph{rename} concurrentes}
 
-\input{content/rls-handling-concurrent-ren-ops}
+% \input{content/rls-handling-concurrent-ren-ops}
 
 \subsection{Mécanisme de GC des époques obsolètes}
 
-\input{content/rls-gc-mechanism}
+% \input{content/rls-gc-mechanism}
 
 \subsection{Évaluation}
 
-\input{content/rls-evaluation}
+% \input{content/rls-evaluation}
 
 \subsection{Conclusion}
 
-\input{content/rls-summary}
+% \input{content/rls-summary}
 
 \section{Conclusion et perspectives}
 
-\input{content/conclusion-perspectives}
+% \input{content/conclusion-perspectives}
 
 \begin{frame}[standout]
   Thanks for your attention, any questions?

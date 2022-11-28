@@ -1,129 +1,168 @@
-\begin{frame}{LogootSplit \footfullcite{2013-logootsplit}}
-  \begin{itemize}
-    \item State of the art of \emph{Sequence \acp{CRDT}}
-    \item Elements are ordered by their identifier, noted here with the following formalism: $\id{position}{node\_id~node\_seq}{offset}$
-  \end{itemize}
-
-  \pause
-
-  \begin{columns}
-    \begin{column}{0.33\textwidth}
-      \begin{figure}
-        \centering
-        \begin{tikzpicture}
-            \path
-                node[letter, label=below:{$\id{i}{B0}{0}$}] {H}
-                to ++(0:\widthletter) node[letter, label=below:{$\id{i}{B0}{1}$}] {L}
-                to ++(0:\widthletter) node[letter, label=below:{$\id{i}{B0}{2}$}] {O};
-        \end{tikzpicture}
-        \caption{State of a sequence which contains the elements "HLO" and their corresponding identifiers}
-      \end{figure}
-    \end{column}
-    \pause
-    \begin{column}{0.33\textwidth}
-      \vspace{-9mm}
-      \begin{figure}
-        \centering
-        \begin{tikzpicture}
-            \path
-                node[block, label=below:{$\id{i}{B0}{0..2}$}] {HLO};
-        \end{tikzpicture}
-        \caption{State of a sequence which contains the block "HLO"}
-      \end{figure}
-    \end{column}
-    \pause
-    \begin{column}{0.33\textwidth}
-      \begin{figure}
-        \vspace{-7mm}
-        \centering
-        \begin{tikzpicture}
-            \path
-              node[letter, label=below:{$\id{i}{B0}{0}$}] {H}
-              to ++(0:\widthletter) node[letter, fill=\colorblockone, label=above:{\coloridone$\id{i}{B0}{0}\id{f}{A0}{0}$}] {E}
-            to ++(0:\widthletter) node[block, label={below:$\id{i}{B0}{1..2}$}] {LO};
-        \end{tikzpicture}
-        \caption{State of a sequence which contains the elements "HELO" and their corresponding identifiers}
-      \end{figure}
-    \end{column}
-  \end{columns}
+\begin{frame}{Type de données \emph{Séquence}}
+    TODO: Représenter une séquence, puis une exécution provoquant un conflit
+    \begin{itemize}
+        \item Représente une collection ordonnée et de taille dynamique d'éléments
+        \item Deux opérations de modifications, $\trm{insert}$ et $\trm{remove}$
+        \item Modifications ne commutent généralement pas
+    \end{itemize}
+    Un mécanisme de résolution de conflits est nécessaire pour résoudre les divergences
 \end{frame}
 
-
-\begin{frame}{Identifier constraints}
-  \begin{itemize}
-    \item To fulfill their role, identifiers have to comply to several constraints:
-  \end{itemize}
-
-  \begin{block}{Globally unique}
+\begin{frame}{Conflict-free Replicated Data Types (CRDTs) \footcite{shapiro_2011_crdt}}
     \begin{itemize}
-      \item Identifiers should never be generated twice, neither by different users nor by the same one at different times
+        \item Nouvelles spécifications des types de données
+        \item Types de données répliquées
+        \begin{itemize}
+            \item Permettent modifications sans coordination
+            \item Garantissent la convergence forte
+        \end{itemize}
     \end{itemize}
-  \end{block}
-  \begin{block}{Totally ordered}
-    \begin{itemize}
-      \item We should always be able to compare and order two elements using their identifiers
-    \end{itemize}
-  \end{block}
-  \begin{block}{Dense set}
-    \begin{itemize}
-      \item We should always be able to add a new element, and thus a new identifier, between two others
-    \end{itemize}
-  \end{block}
+    \begin{alertblock}{Convergence forte}
+        Ensemble des noeuds ayant intégrés le même ensemble de modifications obtient des états équivalents, sans nécessiter d'actions ou messages supplémentaires
+    \end{alertblock}
 \end{frame}
 
-\begin{frame}{LogootSplit identifiers}
-  \begin{itemize}
-    \item To comply with these constraints, LogootSplit proposes identifiers composed of quadruplets of integers of the following form:
-  \end{itemize}
-  \begin{center}
-    $\id{position}{node\_id~node\_seq}{offset}$
-  \end{center}
-  \begin{itemize}
-    \item \emph{position} allows to determine the position of this identifier compared to others
-    \item \emph{node\_id} refers to the node's identifier, assumed to be unique
-    \item \emph{node\_seq} refers to the node's logical clock, which increases monotonically with local operations
-    \item \emph{offset} refers to the element position in its original block
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Research issue}
-
-  \begin{itemize}
-    \item \textbf{Evergrowing overhead:} impacts memory, bandwidth and CPU
-  \end{itemize}
-
-  \begin{columns}
-    \begin{column}{0.45\textwidth}
-      \begin{figure}
-        \centering
-        \includegraphics[width=\textwidth]{img/overhead-size.pdf}
-        \caption{Memory footprint of the data structure}
-      \end{figure}
-    \end{column}
-    \begin{column}{0.55\textwidth}
-      \begin{itemize}
-        \item \textbf{Operation count:} 100k
-        \item \textbf{Size of content:} 100KB
-        \item \textbf{Size of data structure:} 20MB
-      \end{itemize}
-    \end{column}
-  \end{columns}
-
-  \centering
-  \alert{How to reduce the overhead introduced by the data structure?}
-\end{frame}
-
-\begin{frame}{Related work}
-  \begin{itemize}
-    \item Core-nebula approach \footfullcite{zawirski:hal-01248197}
+\begin{frame}{CRDTs et théorie des treillis \footcite{2002-intro-lattices-order-davey}}
     \begin{itemize}
-      \item Reassigns shorter identifiers to elements\dots
-      \item \dots but requires consensus
+        \item Reposent sur la théorie des treillis
     \end{itemize}
-    \item LSEQ \footfullcite{lseq2017}
+    TODO: Représenter un sup-demi-treillis
     \begin{itemize}
-      \item Set of strategies to reduce the growth of identifiers \dots
-      \item \dots but overhead still proportional to number of elements
+        \item États ordonnés par relation $\leq$, avec état minimal $\bot$
+        \item Modification d'un état génère état supérieur ou égal d'après $\leq$
+        \item Existe fonction qui fusionne deux états et retourne leur borne supérieure
     \end{itemize}
-  \end{itemize}
 \end{frame}
+
+\begin{frame}[standout]
+    La fonction de fusion d'états est un mécanisme de résolution de conflits automatique
+\end{frame}
+
+\begin{frame}{Caractéristiques d'un CRDT}
+    \begin{block}{Ce qui définit un CRDT}
+        \begin{itemize}
+            \item Sémantique de son mécanisme de résolution de conflits
+            \item Modèle de synchronisation utilisé
+        \end{itemize}
+    \end{block}
+    \begin{block}{Se focalise sur}
+        \begin{itemize}
+            \item Spécification forte des séquences répliquées avec entrelacements \footcite{2021-specification-complexity-collaborative-text-editing-attiya}
+            \item Synchronisation par opérations
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{LogootSplit \footcite{2013-logootsplit}}
+    \begin{itemize}
+        \item CRDT pour le type Séquence
+        \item Appartient à l'approche à identifiants densément ordonnés
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Approche à identifiants densément ordonnés}
+    \begin{itemize}
+        \item Assigne un identifiant de position à chaque élément de la séquence
+        \item Utilise les identifiants des éléments pour les ordonner les uns par rapport aux autres
+    \end{itemize}
+    \begin{block}{Propriétés des identifiants de position \footcite{2009-treedoc-preguica}}
+        \begin{itemize}
+            \item Unique
+            \item Immuable
+            \item Ordonnable par une relation d'ordre strict total $\lid$
+            \item Appartenant à un espace dense
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Identifiant LogootSplit}
+    \begin{itemize}
+        \item Composé d'un ou plusieurs tuples $\id{pos}{nodeId~nodeSeq}{offset}$
+        \item TODO: Ajouter animations pour expliciter le rôle de chaque composant
+    \end{itemize}
+    Exemple :
+    \begin{equation*}
+        \id{i}{A1}{0}\id{r}{B1}{3}\cdots\id{m}{A2}{0}
+    \end{equation*}
+\end{frame}
+
+\begin{frame}{???}
+    TODO: Reprendre exemple de divergence, mais avec LogootSplit pour montrer convergence
+\end{frame}
+
+\begin{frame}{Limites de LogootSplit}
+    \begin{itemize}
+        \item Croissance non-bornée de la taille des identifiants
+        \item Fragmentation en blocs courts
+    \end{itemize}
+    \metroset{block=transparent}
+    \begin{block}{Taille du contenu comparé à la taille de la séquence LogootSplit}
+        \begin{columns}
+            \begin{column}{0.6\textwidth}
+                \begin{figure}
+                    \resizebox{\columnwidth}{!}{
+                        \includegraphics{img/ls-vs-content-snapshot-sizes-7k5.pdf}
+                    }
+                \end{figure}
+            \end{column}
+            \begin{column}{0.4\textwidth}
+                1\% contenu, 99\% métadonnées
+            \end{column}
+        \end{columns}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Mitigation du surcoût des CRDTs pour le type Séquence}
+    \metroset{block=transparent}
+    \begin{block}{L'approche core-nebula \footcite{zawirski:hal-01248197}}
+        \begin{itemize}
+            \item Ré-assigne des identifiants courts aux éléments, \ie les \emph{renomme}
+            \item Nécessite de transformer les opérations \ins et \rmv concurrentes\dots
+            \item \dots et consensus pour effectuer le renommage
+        \end{itemize}
+    \end{block}
+    \alert{Inadaptée aux systèmes P2P sujets au churn}
+\end{frame}
+
+\begin{frame}[standout]
+    Pouvons-nous proposer un mécanisme de réduction du surcoût des CRDTs pour le type Séquence adapté aux applications LFS, \ie  sans coordination synchrone ?
+\end{frame}
+
+% \begin{frame}{Mitigation du surcoût des CRDTs pour le type Séquence}
+%     \metroset{block=transparent}
+%     \begin{block}{L'approche LSEQ \footcite{lseq2017}}
+%         \begin{itemize}
+%             \item Structure de données \emph{sur mesure} pour représenter les identifiants
+%             \item Ensemble de fonctions d'allocation des identifiants, chacune adaptée à un comportement d'édition différent
+%             \item Permet de ralentir la croissance des identifiants
+%             \item
+%         \end{itemize}
+%     \end{block}
+% \end{frame}
+
+% \begin{frame}{Research issue}
+
+%   \begin{itemize}
+%     \item \textbf{Evergrowing overhead:} impacts memory, bandwidth and CPU
+%   \end{itemize}
+
+%   \begin{columns}
+%     \begin{column}{0.45\textwidth}
+%       \begin{figure}
+%         \centering
+%         \includegraphics[width=\textwidth]{img/overhead-size.pdf}
+%         \caption{Memory footprint of the data structure}
+%       \end{figure}
+%     \end{column}
+%     \begin{column}{0.55\textwidth}
+%       \begin{itemize}
+%         \item \textbf{Operation count:} 100k
+%         \item \textbf{Size of content:} 100KB
+%         \item \textbf{Size of data structure:} 20MB
+%       \end{itemize}
+%     \end{column}
+%   \end{columns}
+
+%   \centering
+%   \alert{How to reduce the overhead introduced by the data structure?}
+% \end{frame}

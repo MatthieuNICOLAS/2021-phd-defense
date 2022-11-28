@@ -1,3 +1,16 @@
 \addbibresource{biblio.bib}
 \AtBeginBibliography{\footnotesize}
 \setbeamertemplate{bibliography item}[text] % use ref number in bibliography
+
+\renewcommand{\thefootnote}{[\arabic{footnote}]}
+    % Footnote style: [footnote-counter]
+
+\newcommand\singlefootnote[1]{%
+    % Use this footnote variant when a single footnote is on the page
+    % Footnote style: *
+    \begingroup
+    %\renewcommand\thefootnote{}\footnote{#1}%
+    \renewcommand{\thefootnote}{*}\footnote{#1}%
+    \addtocounter{footnote}{-1}%
+    \endgroup
+}

@@ -22,13 +22,13 @@
 \begin{frame}{... et ses limites}
     TODO: Illustrer chacune des propriétés
     \begin{columns}
-        \begin{column}{0.5\columnwidth}
+        \begin{column}{0.5\textwidth}
             \begin{itemize}
                 \item Confidentialité
                 \item Souveraineté
             \end{itemize}
         \end{column}
-        \begin{column}{0.5\columnwidth}
+        \begin{column}{0.5\textwidth}
             \begin{itemize}
                 \item Pérennité
                 \item Résistance à la censure
@@ -41,7 +41,7 @@
     Pouvons-nous concevoir des applications collaboratives satisfaisant l'ensemble de ces propriétés ?
 \end{frame}
 
-\begin{frame}{Applications collaboratives pair-à-pair \footfullcite{localfirstsoftware2019}}
+\begin{frame}{Applications collaboratives pair-à-pair \footcite{localfirstsoftware2019}}
     TODO: Illustrer une appli P2P
     \begin{block}{Problématiques}
         En l'absence d'autorités centrales, comment
@@ -54,9 +54,9 @@
 \end{frame}
 
 
-\begin{frame}{MUTE \footfullcite{MUTE2017}}
+\begin{frame}{MUTE \singlefootnote{Disponible à : \url{https://mutehost.loria.fr}}}
     \begin{figure}
-        \resizebox{\columnwidth}{!}{
+        \resizebox{0.8 \textwidth}{!}{
             \includegraphics{img/screenshot-mute-editor.png}
         }
     \end{figure}
@@ -67,6 +67,8 @@
 \end{frame}
 
 \begin{frame}{Mes contributions}
+    TODO: À retravailler pour faire apparaître les problématiques ?
+    TODO: Ajouter comparaison des modèles de sync et approches pour CRDTs pour le type Séquence ?
     \begin{itemize}
         \item Conception d'un nouveau \ac{CRDT} pour le type Séquence
         \item Implémentation et intégration de \acp{CRDT} dans MUTE
