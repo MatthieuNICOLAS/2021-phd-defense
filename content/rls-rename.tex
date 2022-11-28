@@ -1,0 +1,103 @@
+\subsection{Opération \emph{rename}}
+
+\begin{frame}[fragile]{Opération \ren}
+  \begin{figure}
+    \resizebox{\textwidth}{!}{
+      \begin{tikzpicture}
+        \newcommand\nodeh[1]{
+            node[letter, label=#1:{$\id{i}{B1}{0}$}] {H}
+        }
+        \newcommand\nodee[1]{
+            node[letter, fill=\colorblockone, label=#1:{$\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$}] {E}
+        }
+        \newcommand\nodelo[1]{
+            node[block, label=#1:{$\id{i}{B1}{1..2}$}] {LO}
+        }
+        \newcommand\renh[1]{
+            node[letter, fill=\colorblocktwo, label=#1:{$\coloridtwo\id{i}{A2}{0}$}] {H}
+        }
+        \newcommand\rene[1]{
+            node[letter, fill=\colorblocktwo, label=#1:{$\coloridtwo\id{i}{A2}{1}$}] {E}
+        }
+        \newcommand\renl[1]{
+            node[letter, fill=\colorblocktwo, label=#1:{$\coloridtwo\id{i}{A2}{2}$}] {L}
+        }
+        \newcommand\reno[1]{
+            node[letter, fill=\colorblocktwo, label=#1:{$\coloridtwo\id{i}{A2}{3}$}] {O}
+        }
+        \newcommand\renhelo[1]{
+            node[block, fill=\colorblocktwo, label=#1:{$\coloridtwo\id{i}{A2}{0..3}$}] {HELO}
+        }
+
+        \newcommand\initialstate[3]{
+            \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) \nodeh{-#3}
+            ++(0:\widthletter) \nodee{#3}
+            ++(0:\widthletter) \nodelo{-#3};
+        }
+
+        \newcommand\stateh[3]{
+            \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) \renh{-#3};
+        }
+
+        \newcommand\statehe[3]{
+          \path
+          #1
+          ++#2
+          ++(0:0.5)
+          ++(#3:0.5) \renh{-#3}
+          ++(0:\widthletter) \rene{-#3};
+        }
+
+        \newcommand\statehelo[3]{
+          \path
+          #1
+          ++#2
+          ++(0:0.5)
+          ++(#3:0.5) \renh{-#3}
+          ++(0:\widthletter) \rene{-#3}
+          ++(0:\widthletter) \renl{-#3}
+          ++(0:\widthletter) \reno{-#3};
+        }
+
+        \newcommand\finalstate[3]{
+          \path
+          #1
+          ++#2
+          ++(0:0.5)
+          ++(#3:0.5) \renhelo{-#3};
+        }
+
+        \newcommand\offseta{ (90:0.7) }
+
+        \path
+            node {\textbf{A}}
+            ++(0:0.5) node (a) {}
+            +(0:11) node (a-end) {}
+            +(0:1) node[point] (a-initial) {}
+            +(0:6) node[point, label=-170:{$\trm{ren}()$}, label={[xshift=0pt]-10:{$\trm{ren}(A,2)$}}] (a-ren-a1) {}
+            +(0:10) node (a-final) {};
+
+        \initialstate{(a-initial)}{\offseta}{90};
+        \only<2>{\stateh{(a-ren-a1)}{\offseta}{90}};
+        \only<3>{\statehe{(a-ren-a1)}{\offseta}{90};}
+        \only<4>{\statehelo{(a-ren-a1)}{\offseta}{90};}
+        \only<5>{\finalstate{(a-ren-a1)}{\offseta}{90};}
+
+        \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
+        \draw[->, thick] (a-initial) --  (a-ren-a1) -- (a-final);
+      \end{tikzpicture}
+    }
+  \end{figure}
+  \begin{itemize}
+    \item<2-> Génère nouvel identifiant pour le 1er élément : $\id{i}{B1}{0} \to \id{i}{A2}{0}$
+    \item<3-> Génère identifiants contigus pour éléments suivants : $\id{i}{A2}{1}$, $\id{i}{A2}{2}$\dots
+  \end{itemize}
+\end{frame}

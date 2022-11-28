@@ -1,8 +1,10 @@
+\section{État de l'art des CRDTs pour le type Séquence}
+
 \begin{frame}{Type de données \emph{Séquence}}
     TODO: Représenter une séquence, puis une exécution provoquant un conflit
     \begin{itemize}
         \item Représente une collection ordonnée et de taille dynamique d'éléments
-        \item Deux opérations de modifications, $\trm{insert}$ et $\trm{remove}$
+        \item Deux opérations de modifications, \ins et \rmv
         \item Modifications ne commutent généralement pas
     \end{itemize}
     Un mécanisme de résolution de conflits est nécessaire pour résoudre les divergences
