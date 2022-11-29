@@ -1,68 +1,288 @@
+\subsection{Gestion des opérations \ren concurrentes}
+
 \begin{frame}[standout]
-  What about concurrent \emph{rename} operations ?
+  Et en cas d'opérations \ren concurrentes ?
 \end{frame}
 
-\begin{frame}{What about concurrent \emph{rename} operations ?}
+\begin{frame}[fragile]{Opérations \ren concurrentes}
   \begin{figure}
-    \centering
-    \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/divergent-concurrent-rename/1/figure.pdf}
-    \includegraphics<2->[width=\columnwidth]{../2021-phd-day-figures/divergent-concurrent-rename/2/figure.pdf}
-    \caption{Concurrent \emph{rename} operations leading to divergent states}
+    \resizebox{\textwidth}{!}{
+      \begin{tikzpicture}
+        \newcommand\nodeh[1]{
+            node[letter, label=#1:{$\id{i}{B1}{0}$}] {H}
+        }
+        \newcommand\nodee[1]{
+            node[letter, fill=\colorblockone, label=#1:{\coloridone$\id{i}{B1}{0}\id{f}{A1}{0}$}] {E}
+        }
+        \newcommand\nodelo[1]{
+            node[block, label=#1:{$\id{i}{B1}{1..2}$}] {LO}
+        }
+        \newcommand\renhelo[1]{
+            node[block, fill=\colorblocktwo, label=#1:{\coloridtwo$\id{i}{A2}{0..3}$}] {HELO}
+        }
+        \newcommand\nodel[1]{
+            node[letter, fill=\colorblockthree,label=#1:{\coloridthree$\id{i}{B1}{0}\id{m}{B2}{0}$}] {L}
+        }
+        \newcommand\renhe[1]{
+            node[block, fill=\colorblocktwo, label=#1:{\coloridtwo$\id{i}{A2}{0..1}$}] {HE}
+        }
+        \newcommand\renl[1]{
+            node[letter, fill=\colorblockfour, label=#1:{\coloridfour$\id{i}{A2}{1}\id{i}{B1}{0}\id{m}{B2}{0}$}] {L}
+        }
+        \newcommand\renlo[1]{
+            node[block, fill=\colorblocktwo, label=#1:{\coloridtwo$\id{i}{A2}{2..3}$}] {LO}
+        }
+        \newcommand\renhello[1]{
+            node[block, fill=\colorblockfive, label=#1:{\coloridfive$\id{i}{B3}{0..4}$}] {HELLO}
+        }
+
+        \newcommand\initialstate[3]{
+            \path
+                #1
+                ++#2
+                ++(0:0.5)
+                ++(#3:0.5) node[epoch] {$\epoch{0}$}
+                ++(0:1.25 * \widthoriginepoch) \nodeh{-#3}
+                ++(0:\widthletter) \nodee{#3}
+                ++(0:\widthletter) \nodelo{-#3};
+        }
+
+        \newcommand\statehelo[3]{
+            \path
+                #1
+                ++#2
+                ++(0:0.5)
+                ++(#3:0.5) node[epoch] {$\epoch{A2}$}
+                ++(0:1.18 * \widthepoch) \renhelo{-#3};
+        }
+
+        \newcommand\insl[3]{
+            \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{0}$}
+            ++(0:1.25 * \widthoriginepoch) \nodeh{-#3}
+            ++(0:\widthletter) \nodee{#3}
+            ++(0:\widthletter) \nodel{-#3}
+            ++(0:\widthletter) \nodelo{#3};
+        }
+
+        \newcommand\finalstatea[3]{
+            \path
+                #1
+                ++#2
+                ++(0:0.5)
+                ++(#3:0.5) node[epoch] {$\epoch{A2}$}
+                ++(0:1.18 * \widthepoch) \renhe{-#3}
+                ++(0:\widthblock) \renl{#3}
+                ++(0:\widthletter) \renlo{-#3};
+        }
+        \newcommand\finalstateb[3]{
+            \path
+                #1
+                ++#2
+                ++(0:0.5)
+                ++(#3:0.5) node[epoch] {$\epoch{B3}$}
+                ++(0:1.18 * \widthepoch) \renhello{#3};
+        }
+
+        \newcommand\offseta{ (90:0.7) }
+        \newcommand\offsetb{ (-90:0.7) }
+
+        \path
+            node {\textbf{A}}
+            ++(0:0.5) node (a) {}
+            +(0:20) node (a-end) {}
+            +(0:1) node[point] (a-initial) {}
+            +(0:7) node[point, label=-170:{$\trm{ren}()$}, label={[xshift=0pt]-10:{$\trm{ren}(\epoch{0}, A,2)$}}] (a-ren-A2) {}
+            +(0:15) node[point] (a-recv-ins-l) {}
+            +(0:19) node (a-final) {};
+
+        \initialstate{(a-initial)}{\offseta}{90};
+        \statehelo{(a-ren-A2)}{\offseta}{90};
+        \finalstatea{(a-recv-ins-l)}{\offseta}{90};
+
+        \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
+        \draw[->, thick] (a-initial) --  (a-ren-A2) -- (a-recv-ins-l) -- (a-final);
+
+        \path
+            ++(270:3) node {\textbf{B}}
+            ++(0:0.5) node (b) {}
+            +(0:20) node (b-end) {}
+            +(0:1) node[point] (b-initial) {}
+            +(0:7) node[point, label=170:{$\trm{ins}(E \prec L \prec O)$}, label={[xshift=45pt]10:{$\trm{ins}(\epoch{0}, {\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}},L)$}}] (b-ins-l) {}
+            +(0:15) node[point, label=170:{$\trm{ren}()$}, label={[xshift=0pt]10:{$\trm{ren}(\epoch{0}, B,3)$}}] (b-ren-B3) {}
+            +(0:19) node (b-final) {};
+
+
+        \initialstate{(b-initial)}{\offsetb}{-90};
+        \insl{(b-ins-l)}{\offsetb}{-90};
+        \finalstateb{(b-ren-B3)}{\offsetb}{-90};
+
+        \draw[dotted] (b) -- (b-initial) (b-final) -- (b-end);
+        \draw[->, thick] (b-initial) --  (b-ins-l) -- (b-ren-B3) -- (b-final);
+
+        \draw[->, dashed, shorten >= 1] (b-ins-l) -- (a-recv-ins-l);
+      \end{tikzpicture}
+    }
   \end{figure}
-  \vspace{-3mm}
   \begin{itemize}
-    \item<3-> \emph{Rename} operations are system operations
-    \item<4> Can resolve conflict by only applying one of them
+    \item Apparition d'une divergence
   \end{itemize}
+  \alert{Besoin d'un mécanisme de résolution de conflits pour faire converger les noeuds}
 \end{frame}
 
-\begin{frame}{How to do so ?}
-  \begin{figure}
-    \centering
-    \includegraphics<1>[width=0.3\columnwidth]{../2021-phd-day-figures/epoch-tree/1/figure.pdf}
-    \includegraphics<2->[width=0.3\columnwidth]{../2021-phd-day-figures/epoch-tree/2/figure.pdf}
-    \caption{\emph{Epoch tree} corresponding to previous scenario}
-  \end{figure}
-  \vspace{-3mm}
+\begin{frame}{Intuition}
   \begin{itemize}
-    \item<2-> Have to pick an epoch as the {\color{red} target one}
-    \begin{itemize}
-      \item<2-> Define total order on epochs
-    \end{itemize}
-    \item<3> Have to move through the tree
-    \begin{itemize}
-      \item<3> Design transformation function to revert \emph{rename} operation
-    \end{itemize}
+    \item Opérations \ren sont des opérations systèmes, \ie pas d'intention utilisateur
+    \item Peut ne pas appliquer les effets de certaines d'entre elles
   \end{itemize}
-\end{frame}
-
-\begin{frame}{Applying concurrent \emph{rename} operations}
-  \begin{figure}
-    \centering
-    \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/1/figure.pdf}
-    \includegraphics<2>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/2/figure.pdf}
-    \includegraphics<3>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/3/figure.pdf}
-    \caption{Applying a concurrent \emph{rename} operation}
-  \end{figure}
-  \vspace{-3mm}
-  \begin{itemize}
-    \item<2-> Revert state to equivalent one at LCA epoch
-    \item<3> Apply then \emph{rename} operations leading to target epoch
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Downsides}
-  \begin{block}{Need to store former state until no more concurrent operations}
+  \begin{block}{Mécanisme de résolution de conflits}
     \begin{itemize}
-      \item Can garbage collect it once the \emph{rename} operation is causally stable \footcite{10.1007/978-3-662-43352-2_11}
-      \item Can offload it to the disk meanwhile
+      \item Choisir une époque comme époque cible
+      \item Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)
+      \item Annuler l'effet des opérations \ren de l'époque courante au PPAC
+      \item Appliquer l'effet des opérations \ren du PPAC à l'époque cible
     \end{itemize}
   \end{block}
-
-  \begin{block}{Need to propagate former state to other nodes}
-    \begin{itemize}
-      \item Can compress the operation to minimise bandwidth consumption
-      \item Can trigger \emph{rename} operations at a given number of blocks
-    \end{itemize}
-  \end{block}
 \end{frame}
+
+\begin{frame}{Choisir une époque comme époque cible}
+  \begin{figure}
+    \resizebox{\textwidth}{!}{
+      \begin{tikzpicture}
+        \path
+            node {\textbf{A}}
+            ++(0:0.5) node (a) {}
+            +(0:14) node (a-end) {}
+            +(0:1) node (a-initial) {}
+            +(0:3) node[point, label=above:{$\trm{ren}(\epoch{0}, A,2)$}] (a-ren-A2) {}
+            +(0:13) node (a-final) {};
+
+        \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
+        \draw[->, thick] (a-initial) --  (a-ren-A2) -- (a-final);
+
+        \path
+            ++(270:2) node {\textbf{B}}
+            ++(0:0.5) node (b) {}
+            +(0:14) node (b-end) {}
+            +(0:1) node (b-initial) {}
+            +(0:3) node[point, label=below:{$\trm{ren}(\epoch{0},B,3)$}] (b-ren-B3) {}
+            +(0:11) node[point, label=below:{$\trm{ren}(\epoch{B3},B,7)$}] (b-ren-b7) {}
+            +(0:13) node (b-final) {};
+
+        \draw[dotted] (b) -- (b-initial) (b-final) -- (b-end);
+        \draw[->, thick] (b-initial) -- (b-ren-B3) -- (b-ren-b7) -- (b-final);
+
+        \path
+            ++(270:4) node {\textbf{C}}
+            ++(0:0.5) node (c) {}
+            +(0:14) node (c-end) {}
+            +(0:1) node (c-initial) {}
+            +(0:7) node[point] (c-recv-ren-A2) {}
+            +(0:9) node[point, label=below:{$\trm{ren}(\epoch{A2},C,6)$}] (c-ren-c6) {}
+            +(0:13) node (c-final) {};
+
+        \draw[dotted] (c) -- (c-initial) (c-final) -- (c-end);
+        \draw[->, thick] (c-initial) -- (c-recv-ren-A2) -- (c-ren-c6) -- (c-final);
+
+        \draw[->, dashed, shorten >= 1] (a-ren-A2) -- (c-recv-ren-A2);
+      \end{tikzpicture}
+    }
+  \end{figure}
+  \begin{columns}
+    \begin{column}{0.3 \textwidth}
+      \begin{figure}
+        \resizebox{\columnwidth}{!}{
+          \begin{tikzpicture}[scale=0.8,every node/.style={scale=0.3}]
+            \path
+              node[op] (e0) {$\epoch{0}$}
+              ++(225:0.7) node[op] (eA2) {$\epoch{A2}$}
+              ++(270:0.7) node[op] (eC6) {$\epoch{C6}$};
+            \path
+              ++(315:0.7) node[op] (eB3) {$\epoch{B3}$}
+              ++(270:0.7) node[op, red] (eB7) {$\epoch{B7}$};
+
+            \draw[->] (e0) edge (eA2) (eA2) edge (eC6) (e0) edge (eB3) (eB3) edge (eB7);
+            \draw[->, dashed, red] (eB7.135) -- (eB3.225) (eB3.180) -- (eC6.45) -- (eA2.315) (eA2.0) -- (e0.270);
+          \end{tikzpicture}
+        }
+      \end{figure}
+    \end{column}
+    \begin{column}{0.7 \textwidth}
+      \begin{itemize}
+        \item Doit définir relation \emph{priority}, notée $\lepoch$, ordre strict total sur les époques
+        \item Utilise ordre lexicographique sur chemins des époques dans l'arbre
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Annuler l'effet d'une opération \ren}
+\end{frame}
+
+% \begin{frame}{What about concurrent \emph{rename} operations ?}
+%   \begin{figure}
+%     \centering
+%     \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/divergent-concurrent-rename/1/figure.pdf}
+%     \includegraphics<2->[width=\columnwidth]{../2021-phd-day-figures/divergent-concurrent-rename/2/figure.pdf}
+%     \caption{Concurrent \emph{rename} operations leading to divergent states}
+%   \end{figure}
+%   \vspace{-3mm}
+%   \begin{itemize}
+%     \item<3-> \emph{Rename} operations are system operations
+%     \item<4> Can resolve conflict by only applying one of them
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}{How to do so ?}
+%   \begin{figure}
+%     \centering
+%     \includegraphics<1>[width=0.3\columnwidth]{../2021-phd-day-figures/epoch-tree/1/figure.pdf}
+%     \includegraphics<2->[width=0.3\columnwidth]{../2021-phd-day-figures/epoch-tree/2/figure.pdf}
+%     \caption{\emph{Epoch tree} corresponding to previous scenario}
+%   \end{figure}
+%   \vspace{-3mm}
+%   \begin{itemize}
+%     \item<2-> Have to pick an epoch as the {\color{red} target one}
+%     \begin{itemize}
+%       \item<2-> Define total order on epochs
+%     \end{itemize}
+%     \item<3> Have to move through the tree
+%     \begin{itemize}
+%       \item<3> Design transformation function to revert \emph{rename} operation
+%     \end{itemize}
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}{Applying concurrent \emph{rename} operations}
+%   \begin{figure}
+%     \centering
+%     \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/1/figure.pdf}
+%     \includegraphics<2>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/2/figure.pdf}
+%     \includegraphics<3>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/3/figure.pdf}
+%     \caption{Applying a concurrent \emph{rename} operation}
+%   \end{figure}
+%   \vspace{-3mm}
+%   \begin{itemize}
+%     \item<2-> Revert state to equivalent one at LCA epoch
+%     \item<3> Apply then \emph{rename} operations leading to target epoch
+%   \end{itemize}
+% \end{frame}
+
+% \begin{frame}{Downsides}
+%   \begin{block}{Need to store former state until no more concurrent operations}
+%     \begin{itemize}
+%       \item Can garbage collect it once the \emph{rename} operation is causally stable \footcite{10.1007/978-3-662-43352-2_11}
+%       \item Can offload it to the disk meanwhile
+%     \end{itemize}
+%   \end{block}
+
+%   \begin{block}{Need to propagate former state to other nodes}
+%     \begin{itemize}
+%       \item Can compress the operation to minimise bandwidth consumption
+%       \item Can trigger \emph{rename} operations at a given number of blocks
+%     \end{itemize}
+%   \end{block}
+% \end{frame}
