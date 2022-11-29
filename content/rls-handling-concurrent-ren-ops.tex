@@ -133,12 +133,12 @@
   \alert{Besoin d'un mécanisme de résolution de conflits pour faire converger les noeuds}
 \end{frame}
 
-\begin{frame}{Intuition}
+\begin{frame}{Résolution de conflits entre opérations \ren concurrentes}
   \begin{itemize}
     \item Opérations \ren sont des opérations systèmes, \ie pas d'intention utilisateur
     \item Peut ne pas appliquer les effets de certaines d'entre elles
   \end{itemize}
-  \begin{block}{Mécanisme de résolution de conflits}
+  \begin{block}{Intuition}
     \begin{itemize}
       \item Choisir une époque comme époque cible
       \item Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)
@@ -220,41 +220,160 @@
 \end{frame}
 
 \begin{frame}{Annuler l'effet d'une opération \ren}
+  \begin{itemize}
+    \item Propose un nouvel algorithme, \emph{revertRenameId}
+    \item Permet d'obtenir l'identifiant correspondant à l'époque parente
+  \end{itemize}
+  \begin{block}{Intuition}
+    \begin{enumerate}
+      \item $\trm{id}$ fait partie des identifiants renommés : doit retourner son ancienne valeur
+      \item $\trm{id}$ a potentiellement été inséré en concurrence : doit restaurer son ancienne valeur
+      \item $\trm{id}$ a été inséré après le renommage : doit retourner une valeur qui préserve l'ordre
+    \end{enumerate}
+  \end{block}
 \end{frame}
 
-% \begin{frame}{What about concurrent \emph{rename} operations ?}
-%   \begin{figure}
-%     \centering
-%     \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/divergent-concurrent-rename/1/figure.pdf}
-%     \includegraphics<2->[width=\columnwidth]{../2021-phd-day-figures/divergent-concurrent-rename/2/figure.pdf}
-%     \caption{Concurrent \emph{rename} operations leading to divergent states}
-%   \end{figure}
-%   \vspace{-3mm}
-%   \begin{itemize}
-%     \item<3-> \emph{Rename} operations are system operations
-%     \item<4> Can resolve conflict by only applying one of them
-%   \end{itemize}
-% \end{frame}
+\begin{frame}[fragile]{Opérations \ren concurrentes}
+  \begin{figure}
+    \resizebox{\textwidth}{!}{
+      \begin{tikzpicture}
+        \newcommand\nodeh[1]{
+          node[letter, label=#1:{$\id{i}{B1}{0}$}] {H}
+        }
+        \newcommand\nodee[1]{
+          node[letter, fill=\colorblockone, label=#1:{\coloridone$\id{i}{B1}{0}\id{f}{A1}{0}$}] {E}
+        }
+        \newcommand\nodelo[1]{
+          node[block, label=#1:{$\id{i}{B1}{1..2}$}] {LO}
+        }
+        \newcommand\renhelo[1]{
+          node[block, fill=\colorblocktwo, label=#1:{\coloridtwo$\id{i}{A2}{0..3}$}] {HELO}
+        }
+        \newcommand\nodel[1]{
+          node[letter, fill=\colorblockthree,label=#1:{\coloridthree$\id{i}{B1}{0}\id{m}{B2}{0}$}] {L}
+        }
+        \newcommand\renhe[1]{
+          node[block, fill=\colorblocktwo, label=#1:{\coloridtwo$\id{i}{A2}{0..1}$}] {HE}
+        }
+        \newcommand\renl[1]{
+          node[letter, fill=\colorblockfour, label=#1:{\coloridfour$\id{i}{A2}{1}\id{i}{B1}{0}\id{m}{B2}{0}$}] {L}
+        }
+        \newcommand\renlo[1]{
+          node[block, fill=\colorblocktwo, label=#1:{\coloridtwo$\id{i}{A2}{2..3}$}] {LO}
+        }
+        \newcommand\renhello[1]{
+          node[block, fill=\colorblockfive, label=#1:{\coloridfive$\id{i}{B3}{0..4}$}] {HELLO}
+        }
 
-% \begin{frame}{How to do so ?}
-%   \begin{figure}
-%     \centering
-%     \includegraphics<1>[width=0.3\columnwidth]{../2021-phd-day-figures/epoch-tree/1/figure.pdf}
-%     \includegraphics<2->[width=0.3\columnwidth]{../2021-phd-day-figures/epoch-tree/2/figure.pdf}
-%     \caption{\emph{Epoch tree} corresponding to previous scenario}
-%   \end{figure}
-%   \vspace{-3mm}
-%   \begin{itemize}
-%     \item<2-> Have to pick an epoch as the {\color{red} target one}
-%     \begin{itemize}
-%       \item<2-> Define total order on epochs
-%     \end{itemize}
-%     \item<3> Have to move through the tree
-%     \begin{itemize}
-%       \item<3> Design transformation function to revert \emph{rename} operation
-%     \end{itemize}
-%   \end{itemize}
-% \end{frame}
+        \newcommand\insl[3]{
+          \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{0}$}
+            ++(0:1.25 * \widthoriginepoch) \nodeh{-#3}
+            ++(0:\widthletter) \nodee{#3}
+            ++(0:\widthletter) \nodel{-#3}
+            ++(0:\widthletter) \nodelo{#3};
+        }
+
+        \newcommand\recvrenl[3]{
+          \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{A2}$}
+            ++(0:1.18 * \widthepoch) \renhe{-#3}
+            ++(0:\widthblock) \renl{#3}
+            ++(0:\widthletter) \renlo{-#3};
+        }
+        \newcommand\finalstatea[3]{
+          \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{A2}$}
+            ++(0:1.18 * \widthepoch) \renhe{-#3}
+            ++(0:\widthblock) \renl{#3}
+            ++(0:\widthletter) \renlo{-#3}
+            ++(0:\widthblock) node (eA2-right) {}
+            ++(0:1.5) node[epoch] (e0-left) {$\epoch{0}$}
+            ++(0:1.25 * \widthoriginepoch) \nodeh{-#3}
+            ++(0:\widthletter) \nodee{#3}
+            ++(0:\widthletter) \nodel{-#3}
+            ++(0:\widthletter) \nodelo{#3}
+            ++(0:\widthblock) node (e0-right) {}
+            ++(0:1.5) node[epoch] (eB3-left) {$\epoch{B3}$}
+            ++(0:1.18 * \widthepoch) \renhello{#3};
+
+            \draw[->, loosely dash dot, shorten >= 1] (eA2-right) --  node[above, align=center]{\emph{revert}\\ \emph{to} $\epoch{0}$} (e0-left);
+            \draw[->, loosely dash dot, shorten >= 1] (e0-right) --  node[above, align=center]{$\trm{rename}$\\ \emph{to} $\epoch{B3}$} (eB3-left);
+        }
+        \newcommand\finalstateb[3]{
+          \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{B3}$}
+            ++(0:1.18 * \widthepoch) \renhello{#3};
+        }
+
+        \newcommand\offseta{ (90:0.7) }
+        \newcommand\offsetb{ (-90:0.7) }
+
+        \path
+          node {\textbf{A}}
+          ++(0:0.5) node (a) {}
+          +(0:20) node (a-end) {}
+          +(0:1) node[point] (a-recv-ins-l) {}
+          +(0:6) node[point] (a-recv-ren-B3) {}
+          +(0:19) node (a-final) {};
+
+        \recvrenl{(a-recv-ins-l)}{\offseta}{90};
+        \finalstatea{(a-recv-ren-B3)}{\offseta}{90};
+
+        \draw[dotted] (a) -- (a-recv-ins-l) (a-final) -- (a-end);
+        \draw[->, thick] (a-recv-ins-l) -- (a-recv-ren-B3) -- (a-final);
+
+        \path
+          ++(270:3) node {\textbf{B}}
+          ++(0:0.5) node (b) {}
+          +(0:20) node (b-end) {}
+          +(0:1) node[point, label=170:{$\trm{ren}()$}, label={[xshift=30pt]10:{$\trm{ren}(\epoch{0}, B,3)$}}] (b-ren-B3) {}
+          +(0:19) node (b-final) {};
+
+        \finalstateb{(b-ren-B3)}{\offsetb}{-90};
+
+        \draw[dotted] (b) -- (b-ren-B3) (b-final) -- (b-end);
+        \draw[->, thick] (b-ren-B3) -- (b-final);
+
+        \draw[->, dashed, shorten >= 1] (b-ren-B3) -- (a-recv-ren-B3);
+    \end{tikzpicture}
+    }
+  \end{figure}
+  \begin{columns}
+    \begin{column}{0.3 \textwidth}
+      \begin{figure}
+        \resizebox{\columnwidth}{!}{
+          \begin{tikzpicture}[scale=0.8,every node/.style={scale=0.3}]
+            \path
+              node[op] (e0) {$\epoch{0}$}
+              +(225:0.7) node[op] (eA2) {$\epoch{A2}$}
+              +(315:0.7) node[op, red] (eB3) {$\epoch{B3}$};
+
+            \draw[->] (e0) edge (eA2) (eA2) (e0) edge (eB3);
+            \draw[->, dashed, red] (eB3.180) -- (eA2.0) (eA2.0) -- (e0.270);
+          \end{tikzpicture}
+        }
+      \end{figure}
+    \end{column}
+    \begin{column}{0.7 \textwidth}
+      \begin{itemize}
+        \item TODO: Illustrer choix de l'époque cible, cas 1 et cas 2
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
 
 % \begin{frame}{Applying concurrent \emph{rename} operations}
 %   \begin{figure}
