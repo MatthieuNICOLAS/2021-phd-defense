@@ -1,16 +1,53 @@
-\
+\metroset{sectionpage=progressbar}
+\section{Conclusion générale \& Perspectives}
+\metroset{sectionpage=none}
 
+\begin{frame}{Conclusion}
+  \metroset{block=transparent}
+  \begin{block}{Contributions}
+    \begin{itemize}
+      \item Mécanisme de renommage pour CRDTs pour le type Séquence à identifiants densément ordonnés
+      \item Implémentation de RenamableLogootSplit et de ses dépendances (protocole d'appartenance au réseau, couche de livraison) dans MUTE
+      \item Comparaison des différents modèles de synchronisation pour CRDTs, ainsi que
+      \item Comparaison des différentes approches pour CRDTs pour le type Séquence
+    \end{itemize}
+  \end{block}
+\end{frame}
 
 \begin{frame}{Perspectives}
-  \begin{block}{Propose a strategy to avoid conflicting \emph{rename} operations}
+  \metroset{block=transparent}
+  \begin{block}{RenamableLogootSplit}
     \begin{itemize}
-      \item How to minimise likelihood of concurrent \emph{rename} operations without coordinating?
+      \item Relations \emph{priority} $\lepoch$ réduisant calculs à l'échelle du système
     \end{itemize}
   \end{block}
+  \begin{block}{CRDTs}
+    \begin{itemize}
+      \item Framework pour conception de CRDTs synchronisés par opérations
+      \item Comparaison des différents modèles de synchronisation pour CRDTs
+    \end{itemize}
+  \end{block}
+\end{frame}
 
-  \begin{block}{Propose a smarter strategy to choose the "winning" renaming}
-    \begin{itemize}
-      \item How to minimise the overall computations?
-    \end{itemize}
-  \end{block}
+\begin{frame}{Ouverture : comparaison modèles synchronisation}
+  \begin{table}[!ht]
+    \resizebox{\columnwidth}{!}{
+      \begin{tabular}{lccc}
+        \toprule
+                                                  & Sync. par états & Sync. par opérations    & Sync. par diff. d'états \\
+        \midrule
+        Forme un sup-demi-treillis                  & \checkmark  & \checkmark  & \checkmark  \\
+        Intègre modifications par fusion d'états  & \checkmark  & \ballotx    & \checkmark  \\
+        Intègre modifications par élts irréductibles & \ballotx    & \checkmark  & \checkmark  \\
+        Résiste nativ. aux défaillances réseau           & \checkmark  & \ballotx    & \checkmark  \\
+        Adapté pour systèmes temps réel           & \ballotx    & \checkmark  & \checkmark  \\
+        Offre nativ. modèle de cohérence causale             & \checkmark  & \ballotx    & \ballotx  \\
+        \bottomrule
+      \end{tabular}
+    }
+  \end{table}
+  \begin{itemize}
+    \item Synchronisation par différences offre meilleur des mondes\dots
+    \item \dots y a-t-il encore un intérêt aux autres modèles, \eg pour composition ou sécurité ?
+  \end{itemize}
 \end{frame}
