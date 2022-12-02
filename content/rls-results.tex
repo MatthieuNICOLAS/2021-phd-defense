@@ -1,0 +1,122 @@
+\metroset{subsectionpage=progressbar}
+\subsection{Résultats}
+\metroset{subsectionpage=none}
+
+\begin{frame}{Convergence}
+  \begin{block}{Intuition}
+    Comparer l'état final des différents noeuds d'une session pour confirmer l'absence de divergence
+  \end{block}
+  \begin{itemize}
+    \item Ensemble des noeuds convergent
+    \item Un résultat empirique, pas une preuve\dots
+    \item \dots mais un premier pas vers la validation de RLS
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Surcoût en métadonnées - 1 noeud de renommage}
+    \begin{block}{Intuition}
+      Mesurer évolution de la taille de la structure de données à partir des instantanés des sessions avec \alert{1 seul noeud de renommage}
+    \end{block}
+    TODO: Regénérer figure avec légende en bas
+    \begin{figure}
+      \centering
+      \only<1>{\hspace{-10mm}\includegraphics[width=0.61\textwidth]{img/snapshots-sizes-1.pdf}}
+      \includegraphics<2>[width=0.7\textwidth]{img/snapshots-sizes-2.pdf}
+      \includegraphics<3>[width=0.7\textwidth]{img/snapshots-sizes.pdf}
+    \end{figure}
+    \begin{itemize}
+      \item<2-> Opération \ren réinitialise le surcoût du CRDT, si GC de l'entièreté des métadonnées du mécanisme de renommage
+      \item<3> Opération \ren réduit de 66\% le surcoût du CRDT sinon
+    \end{itemize}
+  \end{frame}
+
+\begin{frame}{Surcoût en métadonnées - 1 à 4 noeuds de renommage}
+  \begin{block}{Intuition}
+    Mesurer évolution de la taille de la structure de données \alert{en fonction du nombre de noeuds de renommage}
+  \end{block}
+  \begin{columns}
+    \begin{column}{0.6 \textwidth}
+        TODO: Mettre en ligne les 4 plots
+        \begin{figure}
+            \centering
+            \includegraphics[width=\columnwidth]{img/2022-10-27-snapshot-sizes.pdf}
+        \end{figure}
+    \end{column}
+    \begin{column}{0.4 \textwidth}
+        \begin{itemize}
+            \item Aucun impact si GC
+            \item Surcoût de chaque opération \ren s'additionne sinon
+          \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Surcoût en calculs - Opérations \ins et \rmv}
+    \begin{block}{Intuition}
+        Mesurer temps d'intégration \alert{local} et \alert{distant} d'opérations \ins à différents stades de la collaboration
+    \end{block}
+    TODO: Animer l'apparition au fur et à mesure des différentes stats?
+    \begin{figure}[!ht]
+        \centering
+        \subfloat[Modifications locales]{
+            \includegraphics[width=0.5\textwidth]{img/integration-time-boxplot-local-operations-without-outliers.pdf}
+        }
+        \subfloat[Modifications distantes]{
+            \includegraphics[width=0.5\textwidth]{img/integration-time-boxplot-remote-operations-without-outliers.pdf}
+        }
+    \end{figure}
+    \begin{itemize}
+        \item Opérations \ren réduisent temps d'intégration des opérations suivantes
+        \item Réduction de l'état contrebalance surcoût de transformation pour opérations concurrentes à une opération \ren
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Surcoûts en calculs - Opérations \ren}
+    \begin{block}{Intuition}
+        Mesurer temps d'intégration \alert{local} et \alert{distant} d'opérations \ren à différents stades de la collaboration
+    \end{block}
+
+    \begin{table}[!ht]
+        \centering
+        \resizebox{\columnwidth}{!}{
+            \begin{tabular}{lrrrrrr}
+                \toprule
+                \multicolumn{2}{c}{Paramètres} & \multicolumn{5}{c}{Temps d'intégration (ms)} \\
+                \cmidrule(lr){1-2} \cmidrule(lr){3-7}
+                Type & Nb Ops (k) &  Moyenne & Médiane &    IQR & 1\textsuperscript{er} Percent. & 99\textsuperscript{ème} Percent. \\
+                \midrule
+                Locale & 30  & 41.8 &   38.7 &   5.66 &       37.3 &        71.7 \\
+                    & 90  &  119 &    119 &   2.17 &        116 &         124 \\
+                    & 150 &  158 &    158 &   3.71 &        153 &         164 \\
+                \cmidrule{1-7}
+                Distante directe & 30  &  481 &    477 &   15.2 &        454 &         537 \\
+                    & 90  & 1491 &   1482 &   58.8 &       1396 &        1658 \\
+                    & 150 & 1694 &   1676 &   60.6 &       1591 &        1853 \\
+                \cmidrule{1-7}
+                Cc. int. époque plus prioritaire & 30  &  644 &    644 &   16.6 &        620 &         683 \\
+                    & 90  & 1998 &   1994 &   46.6 &       1906 &        2112 \\
+                    & 150 & 2242 &   2234 &   63.5 &       2139 &        2351 \\
+                \bottomrule
+            \end{tabular}
+        }
+    \end{table}
+
+  \begin{itemize}
+    \item Détectable par utilisateur-rices
+    \item Nécessaire d'améliorer temps d'intégration distant
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Surcoût en calculs - Vue globale}
+    \begin{block}{Intuition}
+        Mesurer temps pour intégrer l'entièreté du journal d'opérations d'une collaboration en fonction du \alert{nombre de noeuds de renommage}
+    \end{block}
+    TODO: Afficher résultats qu'à partir de 75k opés
+    \begin{figure}[!ht]
+        \includegraphics[width=\columnwidth]{img/replay-log-30k-2022-10-27}
+      \end{figure}
+    \begin{itemize}
+        \item Initialement, gains sur opérations \ins et \rmv contrebalancent coût des opérations \ren \dots
+        \item \dots mais coût des opérations \ren augmente surcoût total \emph{in fine}
+    \end{itemize}
+\end{frame}
