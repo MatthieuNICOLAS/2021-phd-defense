@@ -1,30 +1,25 @@
+\metroset{subsectionpage=progressbar}
+\subsection{Conclusion}
+\metroset{subsectionpage=none}
+
 \begin{frame}{Conclusion}
-  \begin{block}{Done}
-    \vspace{-1mm}
+  \metroset{block=transparent}
+  \begin{block}{Contribution}
     \begin{itemize}
-      \item Designed a new Sequence \ac{CRDT} : RenamableLogootSplit
-      \item Validated it through experimental evaluation
+      \item Définition et validation mécanisme de renommage pour CRDTs pour Séquence à identifiants densément ordonnés, compatible avec systèmes pair-à-pair
     \end{itemize}
   \end{block}
-
-  \pause
-
-  \begin{block}{Work in progress}
-    \vspace{-1mm}
+  \begin{block}{Limites}
     \begin{itemize}
-      \item Publishing it
-      \item Writing the manuscript
+      \item Surcoût fonction du nombre d'opérations \ren concurrentes
+      \item Stabilité causale \footcite{baquero2017pure} requise pour supprimer les métadonnées
     \end{itemize}
   \end{block}
-
-  \pause
-
-  \begin{block}{To do}
-    \vspace{-1mm}
+  \begin{block}{Perspectives}
     \begin{itemize}
-      \item Prove formally the correctness of the mechanism
-      \item Design better strategies to select the target epoch
-      \item Improve performance of \emph{rename} operations
+      \item Stratégies de génération des opérations \ren
+      \item Relations \emph{priority} $\lepoch$ réduisant calculs à l'échelle du système
+      \item Preuve de correction de RLS
     \end{itemize}
   \end{block}
 \end{frame}
