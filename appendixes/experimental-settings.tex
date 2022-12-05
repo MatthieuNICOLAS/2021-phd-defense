@@ -1,10 +1,14 @@
-\section{Conditions expérimentales}
+\section{Paramètres expérimentaux}
 
-\begin{frame}{Experimental settings}
+% \begin{frame}{Simulations}
+
+% \end{frame}
+
+\begin{frame}{Benchmarks}
   \begin{itemize}
-    \item Use Node.js version 13.1.0
-    \item Obtained documents sizes using our fork of \emph{object-sizeof} \footnote{\url{https://www.npmjs.com/package/object-sizeof}}
-    \item Ran benchmarks on a workstation equipped of a Intel Xeon CPU E5-1620 (10MB Cache, 3.50 GHz) with 16GB of RAM running Fedora 31
-    \item Measured times using \texttt{process.hrtime.bigint()}
+    \item Node.js, version 13.1.0, avec option \texttt{jitless}
+    \item Machiné équipée d'un Intel Xeon CPU E5-1620 (10MB Cache, 3.50 GHz), de 16GB de RAM et utilisant Fedora 31
+    \item Taille des documents obtenus en utilisant notre fork de \emph{object-sizeof} \singlefootnote{\url{https://www.npmjs.com/package/object-sizeof}}
+    \item Mesures de temps avec \texttt{process.hrtime.bigint()}
   \end{itemize}
 \end{frame}
