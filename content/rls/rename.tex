@@ -56,6 +56,16 @@
           ++(0:\widthletter) \rene{-#3};
         }
 
+        \newcommand\statehel[3]{
+          \path
+          #1
+          ++#2
+          ++(0:0.5)
+          ++(#3:0.5) \renh{-#3}
+          ++(0:\widthletter) \rene{-#3}
+          ++(0:\widthletter) \renl{-#3};
+        }
+
         \newcommand\statehelo[3]{
           \path
           #1
@@ -86,10 +96,11 @@
             +(0:10) node (a-final) {};
 
         \initialstate{(a-initial)}{\offseta}{90};
-        \only<2>{\stateh{(a-ren-a1)}{\offseta}{90}};
-        \only<3>{\statehe{(a-ren-a1)}{\offseta}{90};}
-        \only<4>{\statehelo{(a-ren-a1)}{\offseta}{90};}
-        \only<5>{\finalstate{(a-ren-a1)}{\offseta}{90};}
+        \only<4>{\stateh{(a-ren-a1)}{\offseta}{90}};
+        \only<5>{\statehe{(a-ren-a1)}{\offseta}{90};}
+        \only<6>{\statehel{(a-ren-a1)}{\offseta}{90};}
+        \only<7>{\statehelo{(a-ren-a1)}{\offseta}{90};}
+        \only<8>{\finalstate{(a-ren-a1)}{\offseta}{90};}
 
         \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
         \draw[->, thick] (a-initial) --  (a-ren-a1) -- (a-final);
@@ -97,7 +108,13 @@
     }
   \end{figure}
   \begin{itemize}
-    \item<2-> Génère nouvel identifiant pour le 1er élément : $\id{i}{B1}{0} \to \id{i}{A2}{0}$
-    \item<3-> Puis génère identifiants contigus pour éléments suivants : $\id{i}{A2}{1}$, $\id{i}{A2}{2}$\dots
+    \item<2-> Génère nouvel identifiant pour le 1er élément : \onslide<3->{$\id{i}{B1}{0} \to \id{i}{A2}{0}$}
+    \item<4-> Puis génère identifiants contigus pour éléments suivants : \onslide<5->{$\id{i}{A2}{1}$}\onslide<6->{, $\id{i}{A2}{2}$}\onslide<7->{, \dots}
   \end{itemize}
+
+  \onslide<8>{
+    \begin{center}
+      \alert{Regroupe tous les éléments en 1 unique bloc}
+    \end{center}
+  }
 \end{frame}
