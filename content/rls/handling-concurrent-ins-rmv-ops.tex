@@ -67,42 +67,54 @@
         \path
             node {\textbf{A}}
             ++(0:0.5) node (a) {}
-            +(0:18) node (a-end) {}
+            +(0:16) node (a-end) {}
             +(0:1) node[point] (a-initial) {}
-            +(0:7) node[point, label=-170:{$\trm{ren}()$}, label={[xshift=0pt]-10:{$\trm{ren}(A,2)$}}] (a-ren-a1) {}
-            +(0:13) node[point] (a-recv-ins-l) {}
-            +(0:17) node (a-final) {};
+            +(0:6) node[point, label=-170:{$\trm{ren}()$}, label={[xshift=0pt]-10:{$\trm{ren}(A,2)$}}] (a-ren-a1) {}
+            +(0:12) node (a-recv-ins-l) {}
+            +(0:15) node (a-final) {};
+        \path<3->
+            (a-recv-ins-l) node[point] {};
 
         \initialstate{(a-initial)}{\offseta}{90};
         \statehelo{(a-ren-a1)}{\offseta}{90};
-        \finalstate{(a-recv-ins-l)}{\offseta}{90};
+        \onslide<4->{\finalstate{(a-recv-ins-l)}{\offseta}{90};}
 
         \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
-        \draw[->, thick] (a-initial) --  (a-ren-a1) -- (a-recv-ins-l) -- (a-final);
+        \draw<-3>[->, thick] (a-initial) --  (a-ren-a1) -- (a-final);
+        \draw<4->[->, thick] (a-initial) --  (a-ren-a1) -- (a-recv-ins-l) -- (a-final);
 
         \path
             ++(270:3) node {\textbf{B}}
             ++(0:0.5) node (b) {}
-            +(0:18) node (b-end) {}
+            +(0:16) node (b-end) {}
             +(0:1) node[point] (b-initial) {}
-            +(0:7) node[point, label=170:{$\trm{ins}(E \prec L \prec O)$}, label={[xshift=45pt]10:{$\trm{ins}({\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}},L)$}}] (b-ins-l) {}
-            +(0:17) node (b-final) {};
-
+            +(0:6) node (b-ins-l) {}
+            +(0:15) node (b-final) {};
+        \path<2->
+            (b-ins-l) node[point, label=170:{$\trm{ins}(E \prec L \prec O)$}] {};
+        \path<3->
+            (b-ins-l) node[label={[xshift=45pt]10:{$\trm{ins}({\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}},L)$}}] {};
 
         \initialstate{(b-initial)}{\offsetb}{-90};
-        \insl{(b-ins-l)}{\offsetb}{-90};
+        \onslide<2->{\insl{(b-ins-l)}{\offsetb}{-90};}
 
         \draw[dotted] (b) -- (b-initial) (b-final) -- (b-end);
-        \draw[->, thick] (b-initial) --  (b-ins-l) -- (b-final);
+        \draw<1>[->, thick] (b-initial) -- (b-final);
+        \draw<2->[->, thick] (b-initial) --  (b-ins-l) -- (b-final);
 
-        \draw[->, dashed, shorten >= 1] (b-ins-l) -- (a-recv-ins-l);
+        \draw<3->[->, dashed, shorten >= 1] (b-ins-l) -- (a-recv-ins-l);
       \end{tikzpicture}
     }
   \end{figure}
   \begin{itemize}
     \item Peuvent générer opérations concurrentes aux opérations \ren
-    \item Produisent anomalies si intégrées telles qu'elles
+    \item<5-> Produisent anomalies si intégrées naïvement
   \end{itemize}
+  \onslide<6>{
+    \begin{center}
+      \alert{Nécessité d'un mécanisme dédié}
+    \end{center}
+  }
 \end{frame}
 
 \begin{frame}[fragile]{Correction de l'intégration des opérations concurrentes}
