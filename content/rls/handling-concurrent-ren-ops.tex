@@ -36,17 +36,6 @@
             node[block, fill=\colorblockfive, label=#1:{\coloridfive$\id{i}{B3}{0..4}$}] {HELLO}
         }
 
-        \newcommand\initialstate[3]{
-            \path
-                #1
-                ++#2
-                ++(0:0.5)
-                ++(#3:0.5) node[epoch] {$\epoch{0}$}
-                ++(0:1.25 * \widthoriginepoch) \nodeh{-#3}
-                ++(0:\widthletter) \nodee{#3}
-                ++(0:\widthletter) \nodelo{-#3};
-        }
-
         \newcommand\statehelo[3]{
             \path
                 #1
@@ -91,46 +80,49 @@
         \newcommand\offsetb{ (-90:0.7) }
 
         \path
-            node {\textbf{A}}
-            ++(0:0.5) node (a) {}
-            +(0:20) node (a-end) {}
-            +(0:1) node[point] (a-initial) {}
-            +(0:7) node[point, label=-170:{$\trm{ren}()$}, label={[xshift=0pt]-10:{$\trm{ren}(\epoch{0}, A,2)$}}] (a-ren-A2) {}
-            +(0:15) node[point] (a-recv-ins-l) {}
-            +(0:19) node (a-final) {};
+          node {\textbf{A}}
+          ++(0:0.5) node (a) {}
+          +(0:13) node (a-end) {}
+          +(0:1) node[point] (a-initial) {}
+          +(0:7) node[point] (a-recv-ins-l) {}
+          +(0:12) node (a-final) {};
 
-        \initialstate{(a-initial)}{\offseta}{90};
-        \statehelo{(a-ren-A2)}{\offseta}{90};
+        \statehelo{(a-initial)}{\offseta}{90};
         \finalstatea{(a-recv-ins-l)}{\offseta}{90};
 
         \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
-        \draw[->, thick] (a-initial) --  (a-ren-A2) -- (a-recv-ins-l) -- (a-final);
+        \draw[->, thick] (a-initial) -- (a-recv-ins-l) -- (a-final);
 
         \path
-            ++(270:3) node {\textbf{B}}
-            ++(0:0.5) node (b) {}
-            +(0:20) node (b-end) {}
-            +(0:1) node[point] (b-initial) {}
-            +(0:7) node[point, label=170:{$\trm{ins}(E \prec L \prec O)$}, label={[xshift=45pt]10:{$\trm{ins}(\epoch{0}, {\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}},L)$}}] (b-ins-l) {}
-            +(0:15) node[point, label=170:{$\trm{ren}()$}, label={[xshift=0pt]10:{$\trm{ren}(\epoch{0}, B,3)$}}] (b-ren-B3) {}
-            +(0:19) node (b-final) {};
+          ++(270:2) node {\textbf{B}}
+          ++(0:0.5) node (b) {}
+          +(0:13) node (b-end) {}
+          +(0:1) node[point, label={[xshift=45pt]10:{$\trm{ins}(\epoch{0}, {\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}},L)$}}] (b-initial) {}
+          +(0:7) node (b-ren-b3) {}
+          +(0:12) node (b-final) {};
 
-
-        \initialstate{(b-initial)}{\offsetb}{-90};
-        \insl{(b-ins-l)}{\offsetb}{-90};
-        \finalstateb{(b-ren-B3)}{\offsetb}{-90};
+        \insl{(b-initial)}{\offsetb}{-90};
 
         \draw[dotted] (b) -- (b-initial) (b-final) -- (b-end);
-        \draw[->, thick] (b-initial) --  (b-ins-l) -- (b-ren-B3) -- (b-final);
+        \draw[->, dashed, shorten >= 1] (b-initial) -- (a-recv-ins-l);
 
-        \draw[->, dashed, shorten >= 1] (b-ins-l) -- (a-recv-ins-l);
+        \draw<1>[->, thick] (b-initial) -- (b-final);
+        \onslide<2->{
+          \path
+            (b-ren-b3) node[point, label=170:{$\trm{ren}()$}] {};
+          \draw[->, thick] (b-initial) -- (b-ren-b3) -- (b-final);
+        }
+        \onslide<3->{
+          \finalstateb{(b-ren-b3)}{\offsetb}{-90};
+        }
       \end{tikzpicture}
     }
   \end{figure}
-  \begin{itemize}
-    \item Apparition d'une divergence
-  \end{itemize}
-  \alert{Besoin d'un mécanisme de résolution de conflits pour faire converger les noeuds}
+  \begin{center}
+    \onslide<4->{Comment faire converger les noeuds ?}
+
+    \onslide<5>{\alert{Besoin d'un mécanisme de résolution de conflits pour faire converger les noeuds}}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Résolution de conflits entre opérations \ren concurrentes}
