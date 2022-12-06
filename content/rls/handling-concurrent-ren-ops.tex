@@ -290,14 +290,24 @@
 \end{frame}
 
 \begin{frame}{Annuler l'effet d'une opération \ren}
-  \begin{itemize}
-    \item Propose un nouvel algorithme, \emph{revertRenameId}
-    \item Permet d'obtenir l'identifiant correspondant à l'époque parente
-  \end{itemize}
+  \metroset{block=transparent}
+  \begin{block}{Ajout d'un nouveau mécanisme de transformation}
+    \begin{itemize}
+      \pause
+      \item Prend la forme de l'algorithme \emph{revertRenameId}
+      \pause
+      \item \alert{Exclure l'effet de l'opération \ren}
+    \end{itemize}
+  \end{block}
+  \metroset{block=fill}
+  \pause
   \begin{block}{Intuition}
     \begin{enumerate}
+      \pause
       \item $\trm{id}$ fait partie des identifiants renommés : doit retourner son ancienne valeur
+      \pause
       \item $\trm{id}$ a (potentiellement) été inséré en concurrence : doit restaurer sa (potentielle) ancienne valeur
+      \pause
       \item $\trm{id}$ a été inséré après le renommage : doit retourner une valeur qui préserve l'ordre
     \end{enumerate}
   \end{block}
