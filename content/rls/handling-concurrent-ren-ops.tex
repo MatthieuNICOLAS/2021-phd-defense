@@ -121,21 +121,38 @@
   \begin{center}
     \onslide<4->{Comment faire converger les noeuds ?}
 
-    \onslide<5>{\alert{Besoin d'un mécanisme de résolution de conflits pour faire converger les noeuds}}
+    \onslide<5>{\alert{Besoin d'un mécanisme additionnel de résolution de conflits}}
   \end{center}
 \end{frame}
 
 \begin{frame}{Résolution de conflits entre opérations \ren concurrentes}
-  \begin{itemize}
-    \item Opérations \ren sont des opérations systèmes, \ie pas d'intention utilisateur
-    \item Peut ne pas appliquer les effets de certaines d'entre elles
-  \end{itemize}
+  \metroset{block=transparent}
+  \begin{block}{Observation}
+    \begin{itemize}
+      \item Opérations \ren sont des opérations systèmes\dots
+      \item \dots pas des opérations utilisateur-rices
+    \end{itemize}
+  \end{block}
+  \pause
+  \begin{block}{Proposition}
+    \begin{itemize}
+      \item Considérer une opération \ren comme prioritaire\dots
+      \item \dots et ignorer les opérations \ren en conflit avec elle
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Algorithme d'intégration d'une opération \ren}
   \begin{block}{Intuition}
     \begin{itemize}
-      \item Choisir une époque comme époque cible
-      \item Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)
-      \item Annuler l'effet des opérations \ren de l'époque courante au PPAC
-      \item Appliquer l'effet des opérations \ren du PPAC à l'époque cible
+      \item<2-> \only<8,9>{\color{gray}}Ajouter l'époque créée par l'opération \ren à l'ensemble des époques connues
+      \item<3-> Choisir entre époque courante et nouvelle époque \alert{l'époque cible}
+      \item<4-> Si changement d'époque cible
+      \begin{itemize}
+        \item<5-> \only<8,9>{\color{gray}}Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)
+        \item<6-> Annuler l'effet des opérations \ren de l'époque courante au PPAC
+        \item<7-> \only<9>{\color{gray}}Appliquer l'effet des opérations \ren du PPAC à l'époque cible
+      \end{itemize}
     \end{itemize}
   \end{block}
 \end{frame}
@@ -219,7 +236,7 @@
   \begin{block}{Intuition}
     \begin{enumerate}
       \item $\trm{id}$ fait partie des identifiants renommés : doit retourner son ancienne valeur
-      \item $\trm{id}$ a potentiellement été inséré en concurrence : doit restaurer son ancienne valeur
+      \item $\trm{id}$ a (potentiellement) été inséré en concurrence : doit restaurer sa (potentielle) ancienne valeur
       \item $\trm{id}$ a été inséré après le renommage : doit retourner une valeur qui préserve l'ordre
     \end{enumerate}
   \end{block}
