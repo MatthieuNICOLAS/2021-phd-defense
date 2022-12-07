@@ -7,17 +7,21 @@
     \item Montrer convergence des noeuds
     \item Montrer que mécanisme de renommage améliore performances de la séquence répliquée (mémoire, calculs, bande-passante)
   \end{itemize}
-  \alert{Conduction d'une évaluation expérimentale}
+  \pause
+  \begin{center}
+    \alert{Conduction d'une évaluation expérimentale}
+  \end{center}
 \end{frame}
 
 \begin{frame}[standout]
   \alert{Absence d'un jeu de données de sessions d'édition collaborative}
 
   \medskip
+  \pause
   Mise en place de simulations pour générer un jeu de données
 \end{frame}
 
-\begin{frame}{Simulation - Architecture}
+\begin{frame}{Simulations - Architecture}
   \begin{figure}
     \centering
     \resizebox{0.5 \columnwidth}{!}{
@@ -44,36 +48,41 @@
     \item 10 noeuds éditent collaborativement un document
     \item Utilisent soit LogootSplit (LS), soit RenamableLogootSplit (RLS)
   \end{itemize}
+  \pause
   \begin{itemize}
     \item Topologie réseau entièrement maillée
     \item Ne considère pas pannes ou pertes de message
    \end{itemize}
 \end{frame}
 
-\begin{frame}{Simulation - Modifications}
+\begin{frame}{Simulations - Modifications}
   \begin{itemize}
     \item Phase 1 (génération du contenu) : Beaucoup d'insertions, quelques suppressions (80/20\%)
     \item Phase 2 (édition) : Équilibre insertions/suppressions (50/50\%)
     \item Noeuds passent à la phase 2 quand document atteint taille donnée (15 pages - 60k caractères)
   \end{itemize}
+  \pause
   \begin{itemize}
     \item Noeuds terminent quand ensemble des noeuds a effectué nombre donné de modifications (10k)\dots
     \item \dots et intégré celles des autres (150k au total)
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Simulation - Mécanisme de renommage}
+\begin{frame}{Simulations - Mécanisme de renommage}
   \begin{itemize}
     \item Noeuds désignés comme \emph{noeuds de renommage} (1 à 4)
     \item Noeuds de renommage effectue un renommage à toutes les 7.5k/30k opérations qu'ils intègrent (5/20 opérations \ren par noeud de renommage)
-    \item Opérations \ren générées à un point donné sont concurrentes
+    \item Opérations \ren générées à un point donné sont \alert{concurrentes}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Simulation - Sorties}
+\begin{frame}{Simulations - Sorties}
   \begin{itemize}
     \item Instantané de l'état de chaque noeud à différents points de la simulation (2.5k/10k opérations et état final)
     \item Journal des opérations de chaque noeud
   \end{itemize}
-  \alert{Permet de conduire évaluations sur ces données}\singlefootnote{Code des simulations et benchmarks : \url{https://github.com/coast-team/mute-bot-random}}
+  \pause
+  \begin{center}
+    \alert{Permet de conduire évaluations sur ces données}\singlefootnote{Code des simulations et benchmarks : \url{https://github.com/coast-team/mute-bot-random}}
+  \end{center}
 \end{frame}
