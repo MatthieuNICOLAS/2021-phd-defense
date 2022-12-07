@@ -6,8 +6,10 @@
   \begin{block}{Intuition}
     Comparer l'état final des différents noeuds d'une session pour confirmer l'absence de divergence
   \end{block}
+  \pause
   \begin{itemize}
     \item Ensemble des noeuds convergent
+    \pause
     \item Un résultat empirique, pas une preuve\dots
     \item \dots mais un premier pas vers la validation de RLS
   \end{itemize}
@@ -17,17 +19,24 @@
     \begin{block}{Intuition}
       Mesurer évolution de la taille de la structure de données à partir des instantanés des sessions avec \alert{1 seul noeud de renommage}
     \end{block}
-    TODO: Regénérer figure avec légende en bas
-    \begin{figure}
-      \centering
-      \only<1>{\hspace{-10mm}\includegraphics[width=0.61\textwidth]{img/snapshots-sizes-1.pdf}}
-      \includegraphics<2>[width=0.7\textwidth]{img/snapshots-sizes-2.pdf}
-      \includegraphics<3>[width=0.7\textwidth]{img/snapshots-sizes.pdf}
-    \end{figure}
-    \begin{itemize}
-      \item<2-> Opération \ren réinitialise le surcoût du CRDT, si GC de l'entièreté des métadonnées du mécanisme de renommage
-      \item<3> Opération \ren réduit de 66\% le surcoût du CRDT sinon
-    \end{itemize}
+    \begin{columns}
+      \hspace{-2em}
+      \begin{column}{0.6 \textwidth}
+        \begin{figure}
+          \centering
+          \includegraphics<2>[width=0.9\columnwidth]{img/2022-12-07-snapshot-sizes-ls.pdf}
+          \includegraphics<3,4>[width=\columnwidth]{img/2022-12-07-snapshot-sizes-rls-with-gc.pdf}
+          \includegraphics<5->[width=\columnwidth]{img/2022-12-07-snapshot-sizes-rls-without-gc.pdf}
+        \end{figure}
+      \end{column}
+      \hspace{-3em}
+      \begin{column}{0.6 \textwidth}
+        \begin{itemize}
+          \item<4-> Opération \ren réinitialise surcoût du CRDT, si GC de l'entièreté des métadonnées du mécanisme de renommage
+          \item<6> Opération \ren réduit de 66\% surcoût du CRDT sinon
+        \end{itemize}
+      \end{column}
+    \end{columns}
   \end{frame}
 
 \begin{frame}{Surcoût en métadonnées - 1 à 4 noeuds de renommage}
