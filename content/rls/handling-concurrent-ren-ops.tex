@@ -268,9 +268,9 @@
 
               \onslide<9>{
                 \path
-                  (eB7) node[op, red] (eB7-node-2) {$\epoch{B7}$};
+                  (eB7) node[op, targetepoch] (eB7-node-2) {$\epoch{B7}$};
                 \draw[->] (eB3-node) edge (eB7-node-2);
-                \draw[->, dashed, red] (eB7-node-2.135) -- (eB3-node.225) (eB3-node.180) -- (eC6-node.45) -- (eA2-node.315) (eA2-node.0) -- (e0.270);
+                \draw[->, dashed, targetepoch] (eB7-node-2.135) -- (eB3-node.225) (eB3-node.180) -- (eC6-node.45) -- (eA2-node.315) (eA2-node.0) -- (e0.270);
               }
             \end{tikzpicture}
           }
@@ -311,9 +311,171 @@
       \item $\trm{id}$ a été inséré après le renommage : doit retourner une valeur qui préserve l'ordre
     \end{enumerate}
   \end{block}
+  \pause
+  \begin{center}
+    Distingue cas par \alert{filtrage par motif}
+  \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Opérations \ren concurrentes}
+\begin{frame}[fragile]{Exemple - Calculs des transformations à effectuer}
+  \metroset{block=transparent}
+  \begin{figure}
+    \resizebox{\textwidth}{!}{
+      \begin{tikzpicture}
+        \newcommand\nodeh[1]{
+          node[letter, label=#1:{$\id{i}{B1}{0}$}] {H}
+        }
+        \newcommand\nodee[1]{
+          node[letter, fill=\colorblockone, label=#1:{\coloridone$\id{i}{B1}{0}\id{f}{A1}{0}$}] {E}
+        }
+        \newcommand\nodelo[1]{
+          node[block, label=#1:{$\id{i}{B1}{1..2}$}] {LO}
+        }
+        \newcommand\renhelo[1]{
+          node[block, fill=\colorblocktwo, label=#1:{\coloridtwo$\id{i}{A2}{0..3}$}] {HELO}
+        }
+        \newcommand\nodel[1]{
+          node[letter, fill=\colorblockthree,label=#1:{\coloridthree$\id{i}{B1}{0}\id{m}{B2}{0}$}] {L}
+        }
+        \newcommand\renhe[1]{
+          node[block, fill=\colorblocktwo, label=#1:{\coloridtwo$\id{i}{A2}{0..1}$}] {HE}
+        }
+        \newcommand\renl[1]{
+          node[letter, fill=\colorblockfour, label=#1:{\coloridfour$\id{i}{A2}{1}\id{i}{B1}{0}\id{m}{B2}{0}$}] {L}
+        }
+        \newcommand\renlo[1]{
+          node[block, fill=\colorblocktwo, label=#1:{\coloridtwo$\id{i}{A2}{2..3}$}] {LO}
+        }
+        \newcommand\renhello[1]{
+          node[block, fill=\colorblockfive, label=#1:{\coloridfive$\id{i}{B3}{0..4}$}] {HELLO}
+        }
+
+        \newcommand\insl[3]{
+          \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{0}$}
+            ++(0:1.25 * \widthoriginepoch) \nodeh{-#3}
+            ++(0:\widthletter) \nodee{#3}
+            ++(0:\widthletter) \nodel{-#3}
+            ++(0:\widthletter) \nodelo{#3};
+        }
+
+        \newcommand\recvrenl[3]{
+          \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{A2}$}
+            ++(0:1.18 * \widthepoch) \renhe{-#3}
+            ++(0:\widthblock) \renl{#3}
+            ++(0:\widthletter) \renlo{-#3};
+        }
+        \newcommand\finalstatea[3]{
+          \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{A2}$}
+            ++(0:1.18 * \widthepoch) \renhe{-#3}
+            ++(0:\widthblock) \renl{#3}
+            ++(0:\widthletter) \renlo{-#3}
+            ++(0:\widthblock) node (eA2-right) {};
+        }
+        \newcommand\finalstateb[3]{
+          \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{B3}$}
+            ++(0:1.18 * \widthepoch) \renhello{#3};
+        }
+
+        \newcommand\offseta{ (90:0.7) }
+        \newcommand\offsetb{ (-90:0.7) }
+
+        \path
+          node {\textbf{A}}
+          ++(0:0.5) node (a) {}
+          +(0:20) node (a-end) {}
+          +(0:1) node[point] (a-recv-ins-l) {}
+          +(0:6) node (a-recv-ren-B3) {}
+          +(0:19) node (a-final) {};
+
+        \recvrenl{(a-recv-ins-l)}{\offseta}{90};
+
+        \draw[dotted] (a) -- (a-recv-ins-l) (a-final) -- (a-end);
+
+        \path
+          ++(270:3) node {\textbf{B}}
+          ++(0:0.5) node (b) {}
+          +(0:20) node (b-end) {}
+          +(0:1) node[point, label=170:{$\trm{ren}()$}, label={[xshift=30pt]10:{$\trm{ren}(\epoch{0}, B,3)$}}] (b-ren-B3) {}
+          +(0:19) node (b-final) {};
+
+        \finalstateb{(b-ren-B3)}{\offsetb}{-90};
+
+        \draw[dotted] (b) -- (b-ren-B3) (b-final) -- (b-end);
+        \draw[->, thick] (b-ren-B3) -- (b-final);
+
+        \only<1>{
+          \draw[->, thick] (a-recv-ins-l) -- (a-final);
+        }
+        \onslide<2->{
+          \path
+            (a-recv-ren-B3) node[point] {};
+          \finalstatea{(a-recv-ren-B3)}{\offseta}{90};
+          \draw[->, thick] (a-recv-ins-l) -- (a-recv-ren-B3) -- (a-final);
+          \draw[->, dashed, shorten >= 1] (b-ren-B3) -- (a-recv-ren-B3);
+        }
+    \end{tikzpicture}
+    }
+  \end{figure}
+  \begin{columns}
+    \begin{column}{0.4 \textwidth}
+      \begin{block}{Arbre des époques de A}
+        \begin{figure}
+          \resizebox{0.8 \columnwidth}{!}{
+            \begin{tikzpicture}[scale=0.8,every node/.style={scale=0.3}]
+              \path
+                node[op] (e0) {$\epoch{0}$}
+                +(225:0.7) node[op, currentepoch] (eA2) {$\epoch{A2}$}
+                +(315:0.7) node (eB3) {};
+
+              \draw[->] (e0) edge (eA2);
+
+              \only<2> {
+                \path
+                  (eB3) node[op] (eB3-node-1) {$\epoch{B3}$};
+                \draw[->] (e0) edge (eB3-node-1);
+              }
+              \onslide<3-> {
+                \path
+                  (eB3) node[op,targetepoch] (eB3-node-2) {$\epoch{B3}$};
+                \draw[->] (e0) edge (eB3-node-2);
+              }
+            \end{tikzpicture}
+          }
+        \end{figure}
+      \end{block}
+    \end{column}
+    \begin{column}{0.6 \textwidth}
+      \begin{block}{Étapes}
+        \begin{itemize}
+          \item Époque courante : $\epoch{A2}$
+          \item<3-> Époque cible : $\epoch{B3}$
+          \item<4-> Plus Proche Ancêtre Commun : $\epoch{0}$
+        \end{itemize}
+      \end{block}
+      \begin{center}
+        \only<5>{\alert{Doit annuler $\epoch{A2}$ et appliquer $\epoch{B3}$}}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Opérations \ren concurrentes - Choix de l'époque cible}
   \begin{figure}
     \resizebox{\textwidth}{!}{
       \begin{tikzpicture}
@@ -439,10 +601,10 @@
             \path
               node[op] (e0) {$\epoch{0}$}
               +(225:0.7) node[op] (eA2) {$\epoch{A2}$}
-              +(315:0.7) node[op, red] (eB3) {$\epoch{B3}$};
+              +(315:0.7) node[op, targetepoch] (eB3) {$\epoch{B3}$};
 
             \draw[->] (e0) edge (eA2) (eA2) (e0) edge (eB3);
-            \draw[->, dashed, red] (eB3.180) -- (eA2.0) (eA2.0) -- (e0.270);
+            \draw[->, dashed, targetepoch] (eB3.180) -- (eA2.0) (eA2.0) -- (e0.270);
           \end{tikzpicture}
         }
       \end{figure}
@@ -454,21 +616,6 @@
     \end{column}
   \end{columns}
 \end{frame}
-
-% \begin{frame}{Applying concurrent \emph{rename} operations}
-%   \begin{figure}
-%     \centering
-%     \includegraphics<1>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/1/figure.pdf}
-%     \includegraphics<2>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/2/figure.pdf}
-%     \includegraphics<3>[width=\columnwidth]{../2021-phd-day-figures/resolving-concurrent-rename/3/figure.pdf}
-%     \caption{Applying a concurrent \emph{rename} operation}
-%   \end{figure}
-%   \vspace{-3mm}
-%   \begin{itemize}
-%     \item<2-> Revert state to equivalent one at LCA epoch
-%     \item<3> Apply then \emph{rename} operations leading to target epoch
-%   \end{itemize}
-% \end{frame}
 
 % \begin{frame}{Downsides}
 %   \begin{block}{Need to store former state until no more concurrent operations}
