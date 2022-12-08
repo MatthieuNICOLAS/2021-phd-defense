@@ -24,7 +24,7 @@
       \begin{column}{0.6 \textwidth}
         \begin{figure}
           \centering
-          \includegraphics<2>[width=0.9\columnwidth]{img/2022-12-07-snapshot-sizes-ls.pdf}
+          \includegraphics<2>[width=0.98 \columnwidth]{img/2022-12-07-snapshot-sizes-ls.pdf}
           \includegraphics<3,4>[width=\columnwidth]{img/2022-12-07-snapshot-sizes-rls-with-gc.pdf}
           \includegraphics<5->[width=\columnwidth]{img/2022-12-07-snapshot-sizes-rls-without-gc.pdf}
         \end{figure}
@@ -44,20 +44,30 @@
     Mesurer évolution de la taille de la structure de données \alert{en fonction du nombre de noeuds de renommage}
   \end{block}
   \begin{columns}
-    \begin{column}{0.6 \textwidth}
-        TODO: Mettre en ligne les 4 plots
-        \begin{figure}
-            \centering
-            \includegraphics[width=\columnwidth]{img/2022-10-27-snapshot-sizes.pdf}
-        \end{figure}
+    \begin{column}{0.25\textwidth}
+      \includegraphics[width=1.15\columnwidth,trim=1.6cm 0.8cm 35.8cm 0cm, clip]{img/2022-12-07-snapshot-sizes-1-4-rb.pdf}
     \end{column}
-    \begin{column}{0.4 \textwidth}
-        \begin{itemize}
-            \item Aucun impact si GC
-            \item Surcoût de chaque opération \ren s'additionne sinon
-          \end{itemize}
+    \begin{column}{0.25\textwidth}
+      \includegraphics<2->[width=\columnwidth,trim=15cm 0.8cm 24cm 0cm, clip]{img/2022-12-07-snapshot-sizes-1-4-rb.pdf}
+    \end{column}
+    \begin{column}{0.25\textwidth}
+      \includegraphics<3->[width=\columnwidth,trim=27cm 0.8cm 12cm 0cm, clip]{img/2022-12-07-snapshot-sizes-1-4-rb.pdf}
+    \end{column}
+    \begin{column}{0.25\textwidth}
+      \includegraphics<4->[width=\columnwidth,trim=39cm 0.8cm 0cm 0cm, clip]{img/2022-12-07-snapshot-sizes-1-4-rb.pdf}
     \end{column}
   \end{columns}
+  \vspace{-1em}
+  \begin{center}
+    \includegraphics[width=\columnwidth,trim=2cm 0cm 2cm 12cm, clip]{img/2022-12-07-snapshot-sizes-1-4-rb.pdf}
+  \end{center}
+  % \begin{figure}
+  %   \hspace*{-1.2cm}\includegraphics[width=1.2 \columnwidth, trim=0cm 0cm 12cm 0cm, clip]{img/2022-12-07-snapshot-sizes-1-4-rb.pdf}
+  % \end{figure}
+  \begin{itemize}
+    \item<5> Aucun impact si GC
+    \item<5> Surcoût de chaque opération \ren s'additionne sinon
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Surcoût en calculs - Opérations \ins et \rmv}
