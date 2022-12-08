@@ -61,9 +61,6 @@
   \begin{center}
     \includegraphics[width=\columnwidth,trim=2cm 0cm 2cm 12cm, clip]{img/2022-12-07-snapshot-sizes-1-4-rb.pdf}
   \end{center}
-  % \begin{figure}
-  %   \hspace*{-1.2cm}\includegraphics[width=1.2 \columnwidth, trim=0cm 0cm 12cm 0cm, clip]{img/2022-12-07-snapshot-sizes-1-4-rb.pdf}
-  % \end{figure}
   \begin{itemize}
     \item<5> Aucun impact si GC
     \item<5> Surcoût de chaque opération \ren s'additionne sinon
@@ -74,19 +71,21 @@
     \begin{block}{Intuition}
         Mesurer temps d'intégration \alert{local} et \alert{distant} d'opérations \ins à différents stades de la collaboration
     \end{block}
-    TODO: Animer l'apparition au fur et à mesure des différentes stats?
+    \pause
+    \vspace{-0.5cm}
     \begin{figure}[!ht]
         \centering
         \subfloat[Modifications locales]{
-            \includegraphics[width=0.5\textwidth]{img/integration-time-boxplot-local-operations-without-outliers.pdf}
+            \hspace*{-1.2cm}\includegraphics[width=0.6\textwidth, trim=0cm 0cm 0cm 1.1cm, clip]{img/integration-time-boxplot-local-operations-without-outliers.pdf}
         }
         \subfloat[Modifications distantes]{
-            \includegraphics[width=0.5\textwidth]{img/integration-time-boxplot-remote-operations-without-outliers.pdf}
+          \hspace*{-0.2cm}\includegraphics[width=0.6\textwidth, trim=1.25cm 0cm 0cm 1.1cm, clip]{img/2022-12-08-integration-time-boxplot-remote-operations-without-outliers.pdf}
         }
     \end{figure}
+    \vspace{-0.3cm}
     \begin{itemize}
-        \item Opérations \ren réduisent temps d'intégration des opérations suivantes
-        \item Réduction de l'état contrebalance surcoût de transformation pour opérations concurrentes à une opération \ren
+        \item<3-> Opérations \ren réduisent temps intégration
+        \item<4> Réduction état contrebalance surcoût transformation
     \end{itemize}
 \end{frame}
 
