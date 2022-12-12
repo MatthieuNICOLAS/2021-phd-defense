@@ -1,95 +1,246 @@
 \section{État de l'art des CRDTs pour le type Séquence}
 
-\begin{frame}{Type de données \emph{Séquence}}
-    TODO: Représenter une séquence, puis une exécution provoquant un conflit
-    \begin{itemize}
-        \item Représente une collection ordonnée et de taille dynamique d'éléments
-        \item Deux opérations de modifications, \ins et \rmv
-        \item Modifications ne commutent généralement pas
-    \end{itemize}
-    Un mécanisme de résolution de conflits est nécessaire pour résoudre les divergences
-\end{frame}
-
 \begin{frame}{Conflict-free Replicated Data Types (CRDTs) \footcite{shapiro_2011_crdt}}
     \begin{itemize}
-        \item Nouvelles spécifications des types de données
-        \item Types de données répliquées
-        \begin{itemize}
-            \item Permettent modifications sans coordination
-            \item Garantissent la convergence forte
-        \end{itemize}
+        \item Nouvelles spécifications des types de données, \eg \emph{Ensemble} ou \emph{Séquence}
+        \item Conçues pour données répliquées
     \end{itemize}
-    \begin{alertblock}{Convergence forte}
+    \pause
+    \begin{block}{Propriétés des CRDTs}
+        \begin{itemize}
+            \item Permettent modifications \alert{sans coordination}
+            \item Garantissent la \alert{convergence forte}
+        \end{itemize}
+    \end{block}
+    \pause
+    \begin{block}{Convergence forte}
         Ensemble des noeuds ayant intégrés le même ensemble de modifications obtient des états équivalents, sans nécessiter d'actions ou messages supplémentaires
-    \end{alertblock}
-\end{frame}
-
-\begin{frame}{CRDTs et théorie des treillis \footcite{2002-intro-lattices-order-davey}}
-    \begin{itemize}
-        \item Reposent sur la théorie des treillis
-    \end{itemize}
-    TODO: Représenter un sup-demi-treillis
-    \begin{itemize}
-        \item États ordonnés par relation $\leq$, avec état minimal $\bot$
-        \item Modification d'un état génère état supérieur ou égal d'après $\leq$
-        \item Existe fonction qui fusionne deux états et retourne leur borne supérieure
-    \end{itemize}
-\end{frame}
-
-\begin{frame}[standout]
-    La fonction de fusion d'états est un mécanisme de résolution de conflits automatique
-\end{frame}
-
-\begin{frame}{Caractéristiques d'un CRDT}
-    \begin{block}{Ce qui définit un CRDT}
-        \begin{itemize}
-            \item Sémantique de son mécanisme de résolution de conflits
-            \item Modèle de synchronisation utilisé
-        \end{itemize}
-    \end{block}
-    \begin{block}{Se focalise sur}
-        \begin{itemize}
-            \item Spécification forte des séquences répliquées avec entrelacements \footcite{2021-specification-complexity-collaborative-text-editing-attiya}
-            \item Synchronisation par opérations
-        \end{itemize}
     \end{block}
 \end{frame}
 
-\begin{frame}{LogootSplit \footcite{2013-logootsplit}}
-    \begin{itemize}
-        \item CRDT pour le type Séquence
-        \item Appartient à l'approche à identifiants densément ordonnés
-    \end{itemize}
-\end{frame}
+% \begin{frame}{CRDTs et théorie des treillis \footcite{2002-intro-lattices-order-davey}}
+%     \begin{itemize}
+%         \item Reposent sur la théorie des treillis
+%     \end{itemize}
+%     TODO: Représenter un sup-demi-treillis
+%     \begin{itemize}
+%         \item États ordonnés par relation $\leq$, avec état minimal $\bot$
+%         \item Modification d'un état génère état supérieur ou égal d'après $\leq$
+%         \item Existe fonction qui fusionne deux états et retourne leur borne supérieure
+%     \end{itemize}
+% \end{frame}
 
-\begin{frame}{Approche à identifiants densément ordonnés}
+% \begin{frame}[standout]
+%     La fonction de fusion d'états est un mécanisme de résolution de conflits automatique
+% \end{frame}
+
+% \begin{frame}{Caractéristiques d'un CRDT}
+%     \begin{block}{Ce qui définit un CRDT}
+%         \begin{itemize}
+%             \item Sémantique de son mécanisme de résolution de conflits
+%             \item Modèle de synchronisation utilisé
+%         \end{itemize}
+%     \end{block}
+%     \begin{block}{Se focalise sur}
+%         \begin{itemize}
+%             \item Spécification forte des séquences répliquées avec entrelacements \footcite{2021-specification-complexity-collaborative-text-editing-attiya}
+%             \item Synchronisation par opérations
+%         \end{itemize}
+%     \end{block}
+% \end{frame}
+
+\begin{frame}{LogootSplit \footcite{2013-logootsplit}, un CRDT pour le type Séquence}
     \begin{itemize}
-        \item Assigne un identifiant de position à chaque élément de la séquence
-        \item Utilise les identifiants des éléments pour les ordonner les uns par rapport aux autres
+        \item Assigne \alert{identifiant de position} à chaque élément de la séquence
     \end{itemize}
+    \pause
     \begin{block}{Propriétés des identifiants de position \footcite{2009-treedoc-preguica}}
-        \begin{itemize}
+        \begin{enumerate}
             \item Unique
             \item Immuable
             \item Ordonnable par une relation d'ordre strict total $\lid$
             \item Appartenant à un espace dense
+        \end{enumerate}
+    \end{block}
+    \pause
+    \begin{itemize}
+        \item \alert{Ordonne les éléments} entre eux \alert{en utilisant} leurs \alert{identifiants}
+    \end{itemize}
+\end{frame}
+
+\newcommand{\highlight}[2]{\colorbox{#1!17}{#2}}
+
+\begin{frame}{Identifiant LogootSplit}
+    \metroset{block=transparent}
+    \begin{block}{Identifiant}
+        \begin{itemize}
+            \item Composé d'un ou plusieurs tuples suivants
         \end{itemize}
+        \vspace{3em}
+        \begin{equation*}
+            \tikzmarknode{pos}{pos}^{
+                \tikzmarknode{nodeId}{nodeId}~\tikzmarknode{nodeSeq}{nodeSeq}
+            }_{\tikzmarknode{offset}{offset}}
+        \end{equation*}
+        \begin{tikzpicture}[overlay,remember picture,>=stealth,nodes={align=left,inner ysep=1pt},<-]
+            % For "pos"
+            \path<2-> (pos.north) ++ (0,2em) node[anchor=south east,color=ucl1mdred] (legend-pos){\textbf{position (a-z)}};
+            \draw<2-> [color=ucl1mdred](pos.north) |- ([xshift=-0.3ex,color=ucl1mdred] legend-pos.south west);
+            % For "nodeId"
+            \path<3-> (nodeId.north) ++ (0,2em) node[anchor=south west,color=ucl1mdblue] (legend-nodeid){\textbf{identifiant (A-Z) de l'auteur}};
+            \draw<3-> [color=ucl1mdblue](nodeId.north) |- ([xshift=0.3ex,color=ucl1mdblue] legend-nodeid.south east);
+            % For "nodeSeq"
+            \path<4-> (nodeSeq.south) ++ (0,-2em) node[anchor=north west,color=ucl1mdgreen] (legend-nodeseq){\textbf{numéro de séquence (1-99)}};
+            \draw<4-> [color=ucl1mdgreen](nodeSeq.south) |- ([xshift=0.3ex,color=ucl1mdgreen] legend-nodeseq.south east);
+        \end{tikzpicture}
+    \end{block}
+    \onslide<5->{
+    \begin{block}{Exemples}
+            \begin{equation*}
+                \id{d}{F5}{0} \onslide<6->{\lid \id{m}{C1}{0}} \onslide<7->{\lid \id{m}{C1}{0}\id{f}{E1}{0}}
+            \end{equation*}
+        \onslide<8->{
+            \begin{equation*}
+                \id{i}{B1}{0} \lid \only<8>{\quad?\quad} \only<9>{\id{i}{B1}{0}\id{f}{A1}{0}} \lid \id{i}{B1}{1}
+            \end{equation*}
+        }
+    }
     \end{block}
 \end{frame}
 
-\begin{frame}{Identifiant LogootSplit}
+\begin{frame}[fragile]{Bloc LogootSplit}
     \begin{itemize}
-        \item Composé d'un ou plusieurs tuples $\id{pos}{nodeId~nodeSeq}{offset}$
-        \item TODO: Ajouter animations pour expliciter le rôle de chaque composant
+        \item Coûteux de stocker les identifiants de chaque élément
     \end{itemize}
-    Exemple :
-    \begin{equation*}
-        \id{i}{A1}{0}\id{r}{B1}{3}\cdots\id{m}{A2}{0}
-    \end{equation*}
+    \begin{figure}[!ht]
+        \begin{tikzpicture}
+            \path
+                node[letter, label=below:{$\id{m}{C1}{0}$}] {B}
+                ++(0:\widthletter) node[letter, label=below:{$\id{m}{C1}{1}$}] {A}
+                ++(0:\widthletter) node[letter, label=below:{$\id{m}{C1}{2}$}] {N}
+                ++(0:\widthletter) node[letter, label=below:{$\id{m}{C1}{3}$}] {J}
+                ++(0:\widthletter) node[letter, label=below:{$\id{m}{C1}{4}$}] {O};
+        \end{tikzpicture}
+    \end{figure}
+    \pause
+    \begin{itemize}
+        \item Aggrège en un \alert{bloc} éléments ayant \alert{identifiants contigus}
+    \end{itemize}
+    \begin{block}{Identifiants contigus}
+        Deux identifiants sont contigus si et seulement si les deux identifiants sont identiques à l'exception de leur dernier offset et que leur derniers offsets sont consécutifs.
+    \end{block}
+    \pause
+    \begin{itemize}
+        \item Note l'intervalle d'identifiants d'un bloc : $\id{pos}{nodeId~nodeSeq}{begin..end}$
+    \end{itemize}
+    \begin{figure}[!ht]
+        \begin{tikzpicture}
+            \path
+                node[block, label=below:{$\id{m}{C1}{0..4}$}] {BANJO};
+        \end{tikzpicture}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{???}
-    TODO: Reprendre exemple de divergence, mais avec LogootSplit pour montrer convergence
+\begin{frame}[fragile]{Exemple insertions concurrentes}
+    \begin{figure}[!ht]
+        \centering
+        \resizebox{\columnwidth}{!}{
+          \begin{tikzpicture}
+            \newcommand\nodehl[1]{
+                node[block, label=#1:{$\id{i}{B1}{0..1}$}] {HL}
+            }
+            \newcommand\nodehlo[1]{
+                node[block, label=#1:{$\id{i}{B1}{0..2}$}] {HLO}
+            }
+            \newcommand\nodeh[1]{
+                node[letter, label=#1:{$\id{i}{B1}{0}$}] {H}
+            }
+            \newcommand\nodee[1]{
+                node[letter, fill=\colorblockone, label=#1:{$\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$}] {E}
+            }
+            \newcommand\nodel[1]{
+                node[letter, label=#1:{$\id{i}{B1}{1}$}] {L}
+            }
+            \newcommand\nodelo[1]{
+                node[block, label=#1:{$\id{i}{B1}{1..2}$}] {LO}
+            }
+
+            \newcommand\initialstate[3]{
+              \path
+                #1
+                ++#2
+                ++(0:0.5)
+                ++(#3:0.5) \nodehl{#3};
+            }
+
+            \newcommand\inso[3]{
+              \path
+                #1
+                ++#2
+                ++(0:0.5)
+                ++(#3:0.5) \nodehlo{#3};
+            }
+
+            \newcommand\inse[3]{
+              \path
+                #1
+                ++#2
+                ++(0:0.5)
+                ++(#3:0.5) \nodeh{#3}
+                ++(0:\widthletter) \nodee{#3}
+                ++(0:\widthletter) \nodel{#3};
+            }
+
+            \newcommand\finalstate[3]{
+              \path
+                #1
+                ++#2
+                ++(0:0.5)
+                ++(#3:0.5) \nodeh{#3}
+                ++(0:\widthletter) \nodee{#3}
+                ++(0:\widthletter) \nodelo{#3};
+            }
+
+            \newcommand\offseta{ (90:0.7) }
+            \newcommand\offsetb{ (270:0.7) }
+
+            \path
+                node {\textbf{A}}
+                ++(0:0.5) node (a) {}
+                +(0:16) node (a-end) {}
+                +(0:1) node[point] (a-initial) {}
+                +(0:5) node[point, label=-170:{$\trm{ins}(1, E)$}] (a-ins-e) {}
+                +(0:10) node[point] (a-recv-ins-o) {}
+                +(0:15) node (a-final) {};
+
+            \initialstate{(a-initial)}{\offseta}{90};
+            \inse{(a-ins-e)}{\offseta}{90};
+            \finalstate{(a-recv-ins-o)}{\offseta}{90};
+
+            \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
+            \draw[->, thick] (a-initial) --  (a-ins-e) --  (a-recv-ins-o) -- (a-final);
+
+            \path
+                ++(270:3) node {\textbf{B}}
+                ++(0:0.5) node (b) {}
+                +(0:16) node (b-end) {}
+                +(0:1) node[point] (b-initial) {}
+                +(0:5) node[point, label=170:{$\trm{ins}(2, O)$}] (b-ins-o) {}
+                +(0:10) node[point] (b-recv-ins-e) {}
+                +(0:15) node (b-final) {};
+
+            \initialstate{(b-initial)}{\offsetb}{-90};
+            \inso{(b-ins-o)}{\offsetb}{-90};
+            \finalstate{(b-recv-ins-e)}{\offsetb}{-90};
+
+            \draw[dotted] (b) -- (b-initial) (b-final) -- (b-end);
+            \draw[->, thick] (b-initial) --  (b-ins-o) -- (b-recv-ins-e) -- (b-final);
+
+            \draw[->, dashed, shorten >= 1] (a-ins-e) -- (b-recv-ins-e);
+            \draw[->, dashed, shorten >= 1] (b-ins-o) -- (a-recv-ins-o);
+          \end{tikzpicture}
+        }
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Limites de LogootSplit}
@@ -99,18 +250,11 @@
     \end{itemize}
     \metroset{block=transparent}
     \begin{block}{Taille du contenu comparé à la taille de la séquence LogootSplit}
-        \begin{columns}
-            \begin{column}{0.6\textwidth}
-                \begin{figure}
-                    \resizebox{\columnwidth}{!}{
-                        \includegraphics{img/ls-vs-content-snapshot-sizes-7k5.pdf}
-                    }
-                \end{figure}
-            \end{column}
-            \begin{column}{0.4\textwidth}
-                1\% contenu, 99\% métadonnées
-            \end{column}
-        \end{columns}
+        \begin{figure}
+            \resizebox{0.6\columnwidth}{!}{
+                \includegraphics{img/ls-vs-content-snapshot-sizes-7k5.pdf}
+            }
+        \end{figure}
     \end{block}
 \end{frame}
 
@@ -119,52 +263,15 @@
     \begin{block}{L'approche core-nebula \footcite{zawirski:hal-01248197}}
         \begin{itemize}
             \item Ré-assigne des identifiants courts aux éléments, \ie les \emph{renomme}
-            \item Nécessite de transformer les opérations \ins et \rmv concurrentes\dots
-            \item \dots et consensus pour effectuer le renommage
+            \item Transforme les opérations \ins et \rmv concurrentes\dots
+            \item \dots mais ne supportent pas opérations \ren concurrentes
         \end{itemize}
     \end{block}
-    \alert{Inadaptée aux systèmes P2P sujets au churn}
+    \begin{center}
+        \alert{Inadaptée aux applications pair-à-pair}
+    \end{center}
 \end{frame}
 
 \begin{frame}[standout]
-    Pouvons-nous proposer un mécanisme de réduction du surcoût des CRDTs pour le type Séquence adapté aux applications LFS, \ie  sans coordination synchrone ?
+    Proposition : Mécanisme de renommage supportant les renommages concurrents
 \end{frame}
-
-% \begin{frame}{Mitigation du surcoût des CRDTs pour le type Séquence}
-%     \metroset{block=transparent}
-%     \begin{block}{L'approche LSEQ \footcite{lseq2017}}
-%         \begin{itemize}
-%             \item Structure de données \emph{sur mesure} pour représenter les identifiants
-%             \item Ensemble de fonctions d'allocation des identifiants, chacune adaptée à un comportement d'édition différent
-%             \item Permet de ralentir la croissance des identifiants
-%             \item
-%         \end{itemize}
-%     \end{block}
-% \end{frame}
-
-% \begin{frame}{Research issue}
-
-%   \begin{itemize}
-%     \item \textbf{Evergrowing overhead:} impacts memory, bandwidth and CPU
-%   \end{itemize}
-
-%   \begin{columns}
-%     \begin{column}{0.45\textwidth}
-%       \begin{figure}
-%         \centering
-%         \includegraphics[width=\textwidth]{img/overhead-size.pdf}
-%         \caption{Memory footprint of the data structure}
-%       \end{figure}
-%     \end{column}
-%     \begin{column}{0.55\textwidth}
-%       \begin{itemize}
-%         \item \textbf{Operation count:} 100k
-%         \item \textbf{Size of content:} 100KB
-%         \item \textbf{Size of data structure:} 20MB
-%       \end{itemize}
-%     \end{column}
-%   \end{columns}
-
-%   \centering
-%   \alert{How to reduce the overhead introduced by the data structure?}
-% \end{frame}

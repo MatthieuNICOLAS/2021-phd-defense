@@ -1,78 +1,52 @@
 \section{Problématiques des applications collaboratives}
 
-\begin{frame}{Applications collaboratives}
-    TODO: Voir comment représenter une appli collaboratice à ce stade
+\begin{frame}{MUTE \singlefootnote{Disponible à : \url{https://mutehost.loria.fr}}}
+    \begin{figure}
+        \resizebox{0.9 \textwidth}{!}{
+            \includegraphics{img/screenshot-mute-editor.png}
+        }
+    \end{figure}
+    \vspace{-0.5cm}
     \begin{itemize}
-        \item Un \alert{système collaboratif} est un système supportant ses utilisateur-rices dans leurs processus de collaboration pour la réalisation de tâches.
+        \item Application pair-à-pair
+        \item Permet à groupes de rédiger collaborativement documents texte
+        \item Garantit confidentialité \& souveraineté de ses données
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Démocratisation des applications collaboratives}
-    TODO: Voir comment illustrer ce point.
-    Screenshots et nombre d'utilisateurs en-dessous ?
-\end{frame}
-
-\begin{frame}{Avantages d'une architecture basée sur le cloud...}
-    TODO: Représenter collaboration via appli basée sur le cloud
-    \begin{itemize}
-        \item \alert{Disponibilité} : Répond aux utilisateur-rices
-        \item \alert{Tolérance aux pannes} : Fonctionne malgré pannes
-        \item \alert{Capacité de passage à l'échelle} : Supporte activité massive
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{... et ses limites}
-    TODO: Illustrer chacune des propriétés
-    \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item Confidentialité
-                \item Souveraineté
-            \end{itemize}
-        \end{column}
-        \begin{column}{0.5\textwidth}
-            \begin{itemize}
-                \item Pérennité
-                \item Résistance à la censure
-            \end{itemize}
-        \end{column}
-    \end{columns}
-\end{frame}
-
-\begin{frame}[standout]
-    Pouvons-nous concevoir des applications collaboratives satisfaisant l'ensemble de ces propriétés ?
-\end{frame}
-
-\begin{frame}{Applications collaboratives pair-à-pair \footcite{localfirstsoftware2019}}
+\begin{frame}{Applications collaboratives pair-à-pair}
     TODO: Illustrer une appli P2P
     \begin{block}{Problématiques}
         En l'absence d'autorités centrales, comment
         \begin{itemize}
-            \item résoudre les conflits de modifications ?
             \item authentifier les utilisateur-rices ?
-            \item sécuriser les communications ?
+            \item vérifier leurs droits d'accès ?
+            \item \alert{résoudre les conflits de modifications ?}
         \end{itemize}
     \end{block}
 \end{frame}
 
-
-\begin{frame}{MUTE \singlefootnote{Disponible à : \url{https://mutehost.loria.fr}}}
-    \begin{figure}
-        \resizebox{0.8 \textwidth}{!}{
-            \includegraphics{img/screenshot-mute-editor.png}
-        }
-    \end{figure}
-    \begin{itemize}
-        \item Éditeur de texte collaboratif P2P temps réel chiffré de bout en bout
-        \item Permet à l'équipe d'étudier et contribuer sur les problématiques des applications Local First Software (LFS)
-    \end{itemize}
+\begin{frame}{Évaluation de MUTE}
+    \metroset{block=transparent}
+    \begin{block}{Taille du texte comparée à taille de la séquence répliquée}
+        \begin{columns}
+            \begin{column}{0.6\textwidth}
+                \begin{figure}
+                    \resizebox{\columnwidth}{!}{
+                        \includegraphics{img/ls-vs-content-snapshot-sizes-7k5.pdf}
+                    }
+                \end{figure}
+            \end{column}
+            \begin{column}{0.4\textwidth}
+                \begin{itemize}
+                    \item 1\% contenu\dots
+                    \item \dots 99\% métadonnées
+                \end{itemize}
+            \end{column}
+        \end{columns}
+    \end{block}
 \end{frame}
 
-\begin{frame}{Mes contributions}
-    TODO: À retravailler pour faire apparaître les problématiques ?
-    TODO: Ajouter comparaison des modèles de sync et approches pour CRDTs pour le type Séquence ?
-    \begin{itemize}
-        \item Conception d'un nouveau CRDT pour le type Séquence
-        \item Implémentation et intégration de CRDTs dans MUTE
-    \end{itemize}
+\begin{frame}[standout]
+    Comment peut-on réduire le surcoût mémoire des mécanismes de résolution de conflits dans les applications pair-à-pair ?
 \end{frame}
