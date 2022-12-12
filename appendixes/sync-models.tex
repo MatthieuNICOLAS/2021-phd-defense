@@ -1,0 +1,24 @@
+\section{Modèles de synchronisation}
+
+\begin{frame}{Doit-on encore concevoir CRDTs synchronisés par états ou opérations ?}
+    \begin{table}[!ht]
+      \resizebox{\columnwidth}{!}{
+        \begin{tabular}{lccc}
+          \toprule
+                                                    & Sync. par états & Sync. par opérations    & Sync. par diff. d'états \\
+          \midrule
+          Forme un sup-demi-treillis                  & \checkmark  & \checkmark  & \checkmark  \\
+          Intègre modifications par fusion d'états  & \checkmark  & \ballotx    & \checkmark  \\
+          Intègre modifications par élts irréductibles & \ballotx    & \checkmark  & \checkmark  \\
+          Résiste nativ. aux défaillances réseau           & \checkmark  & \ballotx    & \checkmark  \\
+          Adapté pour systèmes temps réel           & \ballotx    & \checkmark  & \checkmark  \\
+          Offre nativ. modèle de cohérence causale             & \checkmark  & \ballotx    & \ballotx  \\
+          \bottomrule
+        \end{tabular}
+      }
+    \end{table}
+    \begin{itemize}
+      \item Synchronisation par différences offre meilleur des mondes\dots
+      \item \dots y a-t-il encore un intérêt aux autres modèles, \eg pour composition ou sécurité ?
+    \end{itemize}
+  \end{frame}
