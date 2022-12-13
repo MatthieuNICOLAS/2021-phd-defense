@@ -299,34 +299,6 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Annuler l'effet d'une opération \ren}
-  \metroset{block=transparent}
-  \begin{block}{Ajout d'un nouveau mécanisme de transformation}
-    \begin{itemize}
-      \pause
-      \item Prend la forme de l'algorithme \emph{revertRenameId}
-      \pause
-      \item \alert{Exclure l'effet de l'opération \ren}
-    \end{itemize}
-  \end{block}
-  \metroset{block=fill}
-  \pause
-  \begin{block}{Intuition}
-    \begin{enumerate}
-      \pause
-      \item $\trm{id}$ fait partie des identifiants renommés : doit retourner son ancienne valeur
-      \pause
-      \item $\trm{id}$ a (potentiellement) été inséré en concurrence : doit restaurer sa (potentielle) ancienne valeur
-      \pause
-      \item $\trm{id}$ a été inséré après le renommage : doit retourner une valeur qui préserve l'ordre
-    \end{enumerate}
-  \end{block}
-  \pause
-  \begin{center}
-    Distingue cas par \alert{filtrage par motif}
-  \end{center}
-\end{frame}
-
 \begin{frame}[fragile]{Exemple - Calculs des transformations à effectuer}
   \metroset{block=transparent}
   \begin{figure}
@@ -393,6 +365,40 @@
             ++(0:\widthletter) \renlo{-#3}
             ++(0:\widthblock) node (eA2-right) {};
         }
+        \newcommand\totoa[3]{
+          \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{A2}$}
+            ++(0:1.18 * \widthepoch) \renhe{-#3}
+            ++(0:\widthblock) \renl{#3}
+            ++(0:\widthletter) \renlo{-#3}
+            ++(0:\widthblock) node (eA2-right) {}
+            +(0:2) node (e0-left) {}
+            +(0:3) node {?};
+
+            \draw[->, loosely dash dot, shorten >= 1] (eA2-right) --  node[above, align=center]{\emph{revert}\\ \emph{to} $\epoch{0}$} (e0-left);
+        }
+        \newcommand\totob[3]{
+          \path
+            #1
+            ++#2
+            ++(0:0.5)
+            ++(#3:0.5) node[epoch] {$\epoch{A2}$}
+            ++(0:1.18 * \widthepoch) \renhe{-#3}
+            ++(0:\widthblock) \renl{#3}
+            ++(0:\widthletter) \renlo{-#3}
+            ++(0:\widthblock) node (eA2-right) {}
+            +(0:2) node (e0-left) {}
+            +(0:3) node {?}
+            +(0:4) node (e0-right) {}
+            ++(0:6) node[epoch] (eB3-left) {$\epoch{B3}$}
+            ++(0:1.18 * \widthepoch) \renhello{#3};
+
+            \draw[->, loosely dash dot, shorten >= 1] (eA2-right) --  node[above, align=center]{\emph{revert}\\ \emph{to} $\epoch{0}$} (e0-left);
+            \draw[->, loosely dash dot, shorten >= 1] (e0-right) --  node[above, align=center]{$\trm{rename}$\\ \emph{to} $\epoch{B3}$} (eB3-left);
+        }
         \newcommand\finalstateb[3]{
           \path
             #1
@@ -435,9 +441,17 @@
         \onslide<2->{
           \path
             (a-recv-ren-B3) node[point] {};
-          \finalstatea{(a-recv-ren-B3)}{\offseta}{90};
           \draw[->, thick] (a-recv-ins-l) -- (a-recv-ren-B3) -- (a-final);
           \draw[->, dashed, shorten >= 1] (b-ren-B3) -- (a-recv-ren-B3);
+        }
+        \onslide<2-4>{
+          \finalstatea{(a-recv-ren-B3)}{\offseta}{90};
+        }
+        \only<5>{
+          \totoa{(a-recv-ren-B3)}{\offseta}{90};
+        }
+        \only<6>{
+          \totob{(a-recv-ren-B3)}{\offseta}{90};
         }
     \end{tikzpicture}
     }
@@ -448,6 +462,9 @@
         \begin{figure}
           \resizebox{0.8 \columnwidth}{!}{
             \begin{tikzpicture}[scale=0.8,every node/.style={scale=0.3}]
+              % \path
+              %   +(0:1) node {}
+              %   +(180:-1) node {};
               \path
                 node[op] (e0) {$\epoch{0}$}
                 +(225:0.7) node[op, currentepoch] (eA2) {$\epoch{A2}$}
@@ -465,6 +482,12 @@
                   (eB3) node[op,targetepoch] (eB3-node-2) {$\epoch{B3}$};
                 \draw[->] (e0) edge (eB3-node-2);
               }
+              \onslide<5-> {
+                \draw[->, densely dash dot, thin, gray] (eA2) edge[bend left] node[xshift=-2em]{$\trm{revert}$} (e0.west);
+              }
+              \only<6> {
+                \draw[->, densely dash dot, thin, gray] (e0) edge[bend left] node[xshift=2em]{$\trm{apply}$} (eB3-node-2.north);
+              }
             \end{tikzpicture}
           }
         \end{figure}
@@ -479,10 +502,58 @@
         \end{itemize}
       \end{block}
       \begin{center}
-        \only<5>{\alert{Doit annuler $\epoch{A2}$ et appliquer $\epoch{B3}$}}
+        \alert{
+          \onslide<5->{Doit annuler $\epoch{A2}$}
+          \only<6>{puis appliquer $\epoch{B3}$}
+        }
       \end{center}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}{Algorithme d'intégration d'une opération \ren}
+  \begin{block}{Intuition}
+    \begin{enumerate}
+      \item {\color{gray}Ajouter l'époque créée par l'opération \ren à l'ensemble des époques connues}
+      \item {\color{gray}Choisir entre époque courante et nouvelle époque l'époque cible}
+      \item {\color{gray}Si changement d'époque cible}
+      \begin{enumerate}
+        \item {\color{gray}Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)}
+        \item
+          \only<1>{Annuler l'effet des opérations \ren de l'époque courante au PPAC}
+          \only<2>{\alert{Annuler l'effet des opérations \ren de l'époque courante au PPAC}}
+        \item Appliquer l'effet des opérations \ren du PPAC à l'époque cible
+      \end{enumerate}
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Annuler l'effet d'une opération \ren}
+  \metroset{block=transparent}
+  \begin{block}{Ajout d'un nouveau mécanisme de transformation}
+    \begin{itemize}
+      \pause
+      \item Prend la forme de l'algorithme \emph{revertRenameId}
+      \pause
+      \item \alert{Exclure l'effet de l'opération \ren}
+    \end{itemize}
+  \end{block}
+  \metroset{block=fill}
+  \pause
+  \begin{block}{Intuition}
+    \begin{enumerate}
+      \pause
+      \item $\trm{id}$ fait partie des identifiants renommés : doit retourner son ancienne valeur
+      \pause
+      \item $\trm{id}$ a (potentiellement) été inséré en concurrence : doit restaurer sa (potentielle) ancienne valeur
+      \pause
+      \item $\trm{id}$ a été inséré après le renommage : doit retourner une valeur qui préserve l'ordre
+    \end{enumerate}
+  \end{block}
+  \pause
+  \begin{center}
+    Distingue cas par \alert{filtrage par motif}
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Opérations \ren concurrentes - Choix de l'époque cible}
