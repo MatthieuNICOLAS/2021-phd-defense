@@ -58,6 +58,15 @@
                 ++#2
                 ++(0:0.5)
                 ++(#3:0.5) \renhelo{-#3}
+                ++(0:\widthblock) \nodel{#3};
+        }
+
+        \newcommand\finalstatecrossed[3]{
+            \path
+                #1
+                ++#2
+                ++(0:0.5)
+                ++(#3:0.5) \renhelo{-#3}
                 ++(0:\widthblock) \crossl{#3};
         }
 
@@ -69,7 +78,7 @@
             ++(0:0.5) node (a) {}
             +(0:16) node (a-end) {}
             +(0:1) node[point] (a-initial) {}
-            +(0:6) node[point, label=-170:{$\trm{ren}()$}, label={[xshift=0pt]-10:{$\trm{ren}(A,2)$}}] (a-ren-a1) {}
+            +(0:6) node[point, label=-170:{$\trm{ren}()$}, label={[xshift=0pt]-10:{$\trm{ren}(A,2,\trm{renIds})$}}] (a-ren-a1) {}
             +(0:12) node (a-recv-ins-l) {}
             +(0:15) node (a-final) {};
         \path<3->
@@ -77,11 +86,12 @@
 
         \initialstate{(a-initial)}{\offseta}{90};
         \statehelo{(a-ren-a1)}{\offseta}{90};
-        \onslide<4->{\finalstate{(a-recv-ins-l)}{\offseta}{90};}
+        \only<4>{\finalstate{(a-recv-ins-l)}{\offseta}{90};}
+        \onslide<5->{\finalstatecrossed{(a-recv-ins-l)}{\offseta}{90};}
 
         \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
-        \draw<-3>[->, thick] (a-initial) --  (a-ren-a1) -- (a-final);
-        \draw<4->[->, thick] (a-initial) --  (a-ren-a1) -- (a-recv-ins-l) -- (a-final);
+        \draw<-2>[->, thick] (a-initial) --  (a-ren-a1) -- (a-final);
+        \draw<3->[->, thick] (a-initial) --  (a-ren-a1) -- (a-recv-ins-l) -- (a-final);
 
         \path
             ++(270:2) node {\textbf{B}}
