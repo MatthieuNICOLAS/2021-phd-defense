@@ -92,15 +92,19 @@
             ++(0:0.5) node (a) {}
             +(0:11) node (a-end) {}
             +(0:1) node[point] (a-initial) {}
-            +(0:6) node[point, label=-170:{$\trm{ren}()$}, label={[xshift=0pt]-10:{$\trm{ren}(A,2,\trm{renIds})$}}] (a-ren-a1) {}
+            +(0:6) node[point] (a-ren-a1) {}
             +(0:10) node (a-final) {};
 
         \initialstate{(a-initial)}{\offseta}{90};
+
+        \onslide<1-8>{\path (a-ren-a1) node[label=-170:{$\trm{ren}()$}, label={[xshift=0pt]-10:{$\trm{ren}(A,2)$}}] {};}
+
         \only<4>{\stateh{(a-ren-a1)}{\offseta}{90}};
         \only<5>{\statehe{(a-ren-a1)}{\offseta}{90};}
         \only<6>{\statehel{(a-ren-a1)}{\offseta}{90};}
         \only<7>{\statehelo{(a-ren-a1)}{\offseta}{90};}
         \onslide<8->{\finalstate{(a-ren-a1)}{\offseta}{90};}
+        \only<9>{\path (a-ren-a1) node[label=-170:{$\trm{ren}()$}, label={[xshift=0pt]-10:{$\trm{ren}(A,2,\trm{renIds})$}}] {};}
 
         \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
         \draw[->, thick] (a-initial) --  (a-ren-a1) -- (a-final);
