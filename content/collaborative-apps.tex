@@ -14,16 +14,96 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Applications collaboratives pair-à-pair}
-    TODO: Illustrer une appli P2P
-    \begin{block}{Problématiques}
-        En l'absence d'autorités centrales, comment
-        \begin{itemize}
-            \item authentifier les utilisateur-rices ?
-            \item vérifier leurs droits d'accès ?
-            \item \alert{résoudre les conflits de modifications ?}
-        \end{itemize}
-    \end{block}
+\begin{frame}[fragile]{Réplication dans applications collaboratives pair-à-pair}
+    \begin{figure}
+        \resizebox{0.7 \textwidth}{!}{
+            \begin{tikzpicture}
+                \newcommand{\doc}{
+                    \tikz{
+                        \fill[scale=.15,fill=white,draw=gray,thick,solid] (0,0) -- (7,0) -- (7,8) -- (5,10) -- (0,10) -- cycle;
+                    }
+                }
+                \newcommand{\updsquare}{
+                    \tikz{
+                        \fill[\colorblockone, scale=.12] (0,0) rectangle (3,3);
+                    }
+                }
+                \newcommand{\updcircle}{
+                    \tikz{
+                        \fill[\colorblocktwo, scale=.07] (3,3) circle (3);
+                    }
+                }
+                \newcommand{\updtriangle}{
+                    \tikz{
+                        \fill[\colorblockfive, scale=.07] (0,0) -- (6,0) -- (3,6) -- cycle;
+                    }
+                }
+                \path
+                    node[label=90:{A}] (a) {
+                        \includegraphics[scale=0.4, page=5, trim=0cm 24cm 32cm 0cm, clip]{img/mute-figures.pdf}
+                    }
+                    +(-70:3) node[label=-90:{B}] (b) {
+                        \includegraphics[scale=0.4, page=5, trim=0cm 24cm 32cm 0cm, clip]{img/mute-figures.pdf}
+                    }
+                    +(200:4) node[label=-90:{C}] (c) {
+                        \includegraphics[scale=0.4, page=5, trim=0cm 24cm 32cm 0cm, clip]{img/mute-figures.pdf}
+                    };
+
+                \path
+                    (a) node[label={[xshift=2em]0:{\doc}}] {}
+                    (b) node[label={[xshift=2em]0:{\doc}}] {}
+                    (c) node[label={[xshift=-2em]180:{\doc}}] {};
+
+                \draw[dotted] (a) -- (b);
+
+                \onslide<2->{
+                    \path
+                        (a) node[label={[xshift=3.8em]90:{\updsquare}}] {}
+                        (b) node[label={[xshift=3.7em]0:{\updtriangle}}] {}
+                        (c) node[label={[xshift=-4.8em]-90:{\updcircle}}] {};
+                }
+
+                \only<3>{
+                    \path
+                        (a) -- node[midway]{\includegraphics[scale=0.4]{img/sync.pdf}} (b);
+                }
+
+                \onslide<4->{
+                    \path
+                        (a) node[label={[xshift=3.7em]0:{\updtriangle}}] {}
+                        (b) node[label={[xshift=3.8em]90:{\updsquare}}] {};
+                }
+
+                \onslide<5->{
+                    \draw[dotted] (a) -- (c);
+                    \draw[dotted] (b) -- (c);
+                }
+
+                \only<5> {
+                    \path
+                        (a) -- node[midway]{\includegraphics[scale=0.4]{img/sync.pdf}} (c)
+                        (b) -- node[midway]{\includegraphics[scale=0.4]{img/sync.pdf}} (c);
+                }
+
+                \onslide<6->{
+                    \path
+                        (a) node[label={[xshift=3.8em]-90:{\updcircle}}] {}
+                        (b) node[label={[xshift=3.8em]-90:{\updcircle}}] {}
+                        (c) node[label={[xshift=-4.8em]90:{\updsquare}}] {}
+                        (c) node[label={[xshift=-4.7em]0:{\updtriangle}}] {};
+                }
+            \end{tikzpicture}
+        }
+    \end{figure}
+    \begin{itemize}
+        \item<7-> Doit garantir \alert{convergence à terme}\footcite{10.1145/224057.224070}
+    \end{itemize}
+    \onslide<8>{
+        \vspace{-1em}
+        \begin{center}
+            \alert{Nécessite mécanismes de résolution de conflits}
+        \end{center}
+    }
 \end{frame}
 
 \begin{frame}{Évaluation de MUTE}
