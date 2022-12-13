@@ -422,9 +422,9 @@
 \end{frame}
 
 \begin{frame}[fragile]{Exemple de \texttt{renameId}}
-    \vspace{-1.5em}
+    \vspace{-0.8 em}
     \begin{figure}
-      \resizebox{\textwidth}{!}{
+      \resizebox{0.9 \textwidth}{!}{
         \begin{tikzpicture}
           \newcommand\nodeh[1]{
               node[letter, label=#1:{$\id{i}{B1}{0}$}] {H}
@@ -532,9 +532,15 @@
         \end{tikzpicture}
       }
     \end{figure}
+    \vspace{-1em}
+    \textbf{Rappel : }
+    \begin{equation*}
+        \trm{renIds}_{A2} = [\id{i}{B1}{0},\id{i}{B1}{0}\id{f}{A1}{0},\id{i}{B1}{1},\id{i}{B1}{2}]
+    \end{equation*}
+    \vspace{-1em}
     \begin{block}{Exemple avec {$\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}$}}
       \begin{itemize}
-        \item<2-> Trouver son prédecesseur à l'époque d'origine $\epoch{0}$ : $\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$
+        \item<2-> Trouver son prédecesseur dans $\trm{renIds}_{A2}$ : $\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$
         \item<3-> Trouver son équivalent à l'époque cible $\epoch{A2}$ : $\coloridtwo\id{i}{A2}{1}$
         \item<4-> Préfixer {$\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}$} par ce dernier pour obtenir son équivalent à $\epoch{A2}$ : $\coloridfour\id{i}{A2}{1}\id{i}{B1}{0}\id{m}{B2}{0}$
       \end{itemize}
