@@ -532,28 +532,27 @@
   \metroset{block=transparent}
   \begin{block}{Ajout d'un nouveau mécanisme de transformation}
     \begin{itemize}
-      \pause
-      \item Prend la forme de l'algorithme \emph{revertRenameId}
-      \pause
-      \item \alert{Exclure l'effet de l'opération \ren}
+      \item<2-> Prend la forme de l'algorithme \emph{revertRenameId}
+      \item<3-> \alert{Exclure l'effet de l'opération \ren}
     \end{itemize}
   \end{block}
   \metroset{block=fill}
-  \pause
-  \begin{block}{Intuition}
-    \begin{enumerate}
-      \pause
-      \item $\trm{id}$ fait partie des identifiants renommés : doit retourner son ancienne valeur
-      \pause
-      \item $\trm{id}$ a (potentiellement) été inséré en concurrence : doit restaurer sa (potentielle) ancienne valeur
-      \pause
-      \item $\trm{id}$ a été inséré après le renommage : doit retourner une valeur qui préserve l'ordre
-    \end{enumerate}
-  \end{block}
-  \pause
-  \begin{center}
-    Distingue cas par \alert{filtrage par motif}
-  \end{center}
+  \onslide<4->{
+    \begin{block}{Intuition}
+      \begin{enumerate}
+        \item<5-> $\trm{id}$ fait partie des identifiants renommés : doit retourner son ancienne valeur
+        \item<6->
+          \only<6,7,8>{$\trm{id}$ a (potentiellement) été inséré en concurrence : doit restaurer sa (potentielle) ancienne valeur}
+          \only<9>{\alert{$\trm{id}$ a (potentiellement) été inséré en concurrence : doit restaurer sa (potentielle) ancienne valeur}}
+        \item<7-> $\trm{id}$ a été inséré après le renommage : doit retourner une valeur qui préserve l'ordre
+      \end{enumerate}
+    \end{block}
+  }
+  \onslide<8->{
+    \begin{center}
+      Distingue cas par \alert{filtrage par motif}
+    \end{center}
+  }
 \end{frame}
 
 \begin{frame}[fragile]{Opérations \ren concurrentes - Choix de l'époque cible}
