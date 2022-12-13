@@ -146,12 +146,14 @@
   \begin{block}{Intuition}
     \begin{enumerate}
       \item<2-> \only<8,9>{\color{gray}}Ajouter l'époque créée par l'opération \ren à l'ensemble des époques connues
-      \item<3-> Choisir entre époque courante et nouvelle époque \alert{l'époque cible}
+      \item<3->
+        \only<3,4,5,6,7,8>{Choisir entre époque courante et nouvelle époque \alert{l'époque cible}}
+        \only<9>{\alert{Choisir entre époque courante et nouvelle époque l'époque cible}}
       \item<4-> Si changement d'époque cible
       \begin{enumerate}
-        \item<5-> \only<8,9>{\color{gray}}Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)
+        \item<5-> Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)
         \item<6-> Annuler l'effet des opérations \ren de l'époque courante au PPAC
-        \item<7-> \only<9>{\color{gray}}Appliquer l'effet des opérations \ren du PPAC à l'époque cible
+        \item<7-> Appliquer l'effet des opérations \ren du PPAC à l'époque cible
       \end{enumerate}
     \end{enumerate}
   \end{block}
@@ -199,13 +201,13 @@
         \draw<1,2,3>[->, thick] (c-initial) -- (c-final);
         \onslide<2->{
           \path
-            (a-ren-A2) node[point, label=above:{$\trm{ren}(\epoch{0}, A,2)$}] {};
+            (a-ren-A2) node[point, label=above:{$\trm{ren}(\epoch{0}, A,2,\renids{A2})$}] {};
           \draw<2->[->, thick] (a-initial) --  (a-ren-A2) -- (a-final);
         }
         \draw<3-5>[->, thick] (b-initial) -- (b-ren-B3) -- (b-final);
         \onslide<3-> {
           \path
-            (b-ren-B3) node[point, label=below:{$\trm{ren}(\epoch{0},B,3)$}] {};
+            (b-ren-B3) node[point, label=below:{$\trm{ren}(\epoch{0},B,3,\renids{B3})$}] {};
         }
         \draw<4>[->, thick] (c-initial) -- (c-recv-ren-A2) -- (c-final);
         \onslide<4-> {
@@ -215,12 +217,12 @@
         }
         \onslide<5-> {
           \path
-            (c-ren-c6) node[point, label=below:{$\trm{ren}(\epoch{A2},C,6)$}] {};
+            (c-ren-c6) node[point, label=below:{$\trm{ren}(\epoch{A2},C,6,\renids{C6})$}] {};
           \draw[->, thick] (c-initial) -- (c-recv-ren-A2) -- (c-ren-c6) -- (c-final);
         }
         \onslide<6-> {
           \path
-            (b-ren-b7) node[point, label=below:{$\trm{ren}(\epoch{B3},B,7)$}] {};
+            (b-ren-b7) node[point, label=below:{$\trm{ren}(\epoch{B3},B,7,\renids{B7})$}] {};
           \draw[->, thick] (b-initial) -- (b-ren-B3) -- (b-ren-b7) -- (b-final);
         }
 
@@ -229,8 +231,8 @@
   \end{figure}
   \begin{columns}
     \begin{column}{0.3 \textwidth}
+      \vspace{-1.3em}
       \begin{block}{Arbre des époques}
-        \vspace{-1em}
         \begin{figure}
           \resizebox{\columnwidth}{!}{
             \begin{tikzpicture}[scale=0.8,every node/.style={scale=0.3}]
@@ -260,13 +262,13 @@
                 \draw[->] (eA2-node) edge (eC6-node);
               }
 
-              \onslide<6-8>{
+              \onslide<6-11>{
                 \path
                   (eB7) node[op] (eB7-node-1) {$\epoch{B7}$};
                 \draw[->] (eB3-node) edge (eB7-node-1);
               }
 
-              \onslide<9>{
+              \onslide<12>{
                 \path
                   (eB7) node[op, targetepoch] (eB7-node-2) {$\epoch{B7}$};
                 \draw[->] (eB3-node) edge (eB7-node-2);
@@ -278,12 +280,20 @@
       \end{block}
     \end{column}
     \begin{column}{0.7 \textwidth}
-      \vspace{-3.7em}
+      \vspace{-2.5em}
       \begin{block}<7->{Comment choisir ?}
         \begin{itemize}
           \item<8-> Définit relation \emph{priority}, notée $\lepoch$, ordre strict total sur les époques
-          \item<9> Utilise ordre lexicographique sur chemins des époques dans l'arbre
+          \item<9-> Utilise \alert{ordre lexicographique sur chemins} des époques dans l'arbre
         \end{itemize}
+      \end{block}
+      \vspace{-1em}
+      \begin{block}<10->{Exemple}
+        \begin{equation*}
+          \only<10,11,12>{\epoch{0} < \epoch{0}\epoch{A2}}
+          \only<11,12>{< \epoch{0}\epoch{A2}\epoch{C6}}
+          \only<12>{< \epoch{0}\epoch{B3}\epoch{B7}}
+        \end{equation*}
       \end{block}
     \end{column}
   \end{columns}

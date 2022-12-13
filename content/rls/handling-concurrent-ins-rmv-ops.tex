@@ -247,7 +247,7 @@
                 +(0:13) node[point] (a-recv-ins-l) {}
                 +(0:14) node (a-final) {};
             \path<5>
-                (a-ren-a1) node[label={[xshift=0pt]-10:{$\trm{ren}(\epoch{0}, A,2,\trm{renIds}_{A2})$}}] {};
+                (a-ren-a1) node[label={[xshift=0pt]-10:{$\trm{ren}(\epoch{0}, A,2,\renids{A2})$}}] {};
 
             \onslide<1-2>{\initialstate{(a-initial)}{\offseta}{90};}
             \onslide<1-3>{\statehelo{(a-ren-a1)}{\offseta}{90};}
@@ -422,7 +422,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Exemple de \texttt{renameId}}
-    \vspace{-0.8 em}
+    \vspace{-0.5 em}
     \begin{figure}
       \resizebox{0.9 \textwidth}{!}{
         \begin{tikzpicture}
@@ -535,14 +535,14 @@
     \vspace{-1em}
     \textbf{Rappel : }
     \begin{equation*}
-        \trm{renIds}_{A2} = [\id{i}{B1}{0},\id{i}{B1}{0}\id{f}{A1}{0},\id{i}{B1}{1},\id{i}{B1}{2}]
+        \renids{A2} = [\id{i}{B1}{0},\id{i}{B1}{0}\id{f}{A1}{0},\id{i}{B1}{1},\id{i}{B1}{2}]
     \end{equation*}
     \vspace{-1em}
     \begin{block}{Exemple avec {$\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}$}}
       \begin{itemize}
-        \item<2-> Trouver son prédecesseur dans $\trm{renIds}_{A2}$ : $\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$
+        \item<2-> Trouver son prédecesseur dans $\renids{A2}$ : $\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$
         \item<3-> Trouver son équivalent à l'époque cible $\epoch{A2}$ : $\coloridtwo\id{i}{A2}{1}$
-        \item<4-> Préfixer {$\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}$} par ce dernier pour obtenir son équivalent à $\epoch{A2}$ : $\coloridfour\id{i}{A2}{1}\id{i}{B1}{0}\id{m}{B2}{0}$
+        \item<4-> Préfixer {$\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}$} par ce dernier : $\coloridfour\id{i}{A2}{1}\id{i}{B1}{0}\id{m}{B2}{0}$
       \end{itemize}
     \end{block}
   \end{frame}
