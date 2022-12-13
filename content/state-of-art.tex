@@ -18,37 +18,6 @@
     \end{block}
 \end{frame}
 
-% \begin{frame}{CRDTs et théorie des treillis \footcite{2002-intro-lattices-order-davey}}
-%     \begin{itemize}
-%         \item Reposent sur la théorie des treillis
-%     \end{itemize}
-%     TODO: Représenter un sup-demi-treillis
-%     \begin{itemize}
-%         \item États ordonnés par relation $\leq$, avec état minimal $\bot$
-%         \item Modification d'un état génère état supérieur ou égal d'après $\leq$
-%         \item Existe fonction qui fusionne deux états et retourne leur borne supérieure
-%     \end{itemize}
-% \end{frame}
-
-% \begin{frame}[standout]
-%     La fonction de fusion d'états est un mécanisme de résolution de conflits automatique
-% \end{frame}
-
-% \begin{frame}{Caractéristiques d'un CRDT}
-%     \begin{block}{Ce qui définit un CRDT}
-%         \begin{itemize}
-%             \item Sémantique de son mécanisme de résolution de conflits
-%             \item Modèle de synchronisation utilisé
-%         \end{itemize}
-%     \end{block}
-%     \begin{block}{Se focalise sur}
-%         \begin{itemize}
-%             \item Spécification forte des séquences répliquées avec entrelacements \footcite{2021-specification-complexity-collaborative-text-editing-attiya}
-%             \item Synchronisation par opérations
-%         \end{itemize}
-%     \end{block}
-% \end{frame}
-
 \begin{frame}{LogootSplit \footcite{2013-logootsplit}, un CRDT pour le type Séquence}
     \begin{itemize}
         \item Assigne \alert{identifiant de position} à chaque élément de la séquence
@@ -209,49 +178,78 @@
                 ++(0:0.5) node (a) {}
                 +(0:16) node (a-end) {}
                 +(0:1) node[point] (a-initial) {}
-                +(0:5) node[point, label=-170:{$\trm{ins}(1, E)$}] (a-ins-e) {}
-                +(0:10) node[point] (a-recv-ins-o) {}
+                +(0:5) node (a-ins-e) {}
+                +(0:10) node (a-recv-ins-o) {}
                 +(0:15) node (a-final) {};
 
             \initialstate{(a-initial)}{\offseta}{90};
-            \inse{(a-ins-e)}{\offseta}{90};
-            \finalstate{(a-recv-ins-o)}{\offseta}{90};
-
             \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
-            \draw[->, thick] (a-initial) --  (a-ins-e) --  (a-recv-ins-o) -- (a-final);
 
             \path
                 ++(270:3) node {\textbf{B}}
                 ++(0:0.5) node (b) {}
                 +(0:16) node (b-end) {}
                 +(0:1) node[point] (b-initial) {}
-                +(0:5) node[point, label=170:{$\trm{ins}(2, O)$}] (b-ins-o) {}
-                +(0:10) node[point] (b-recv-ins-e) {}
+                +(0:5) node (b-ins-o) {}
+                +(0:10) node (b-recv-ins-e) {}
                 +(0:15) node (b-final) {};
 
             \initialstate{(b-initial)}{\offsetb}{-90};
-            \inso{(b-ins-o)}{\offsetb}{-90};
-            \finalstate{(b-recv-ins-e)}{\offsetb}{-90};
-
             \draw[dotted] (b) -- (b-initial) (b-final) -- (b-end);
-            \draw[->, thick] (b-initial) --  (b-ins-o) -- (b-recv-ins-e) -- (b-final);
 
-            \draw[->, dashed, shorten >= 1] (a-ins-e) -- (b-recv-ins-e);
-            \draw[->, dashed, shorten >= 1] (b-ins-o) -- (a-recv-ins-o);
+            \only<1> {
+                \draw[->, thick] (a-initial) -- (a-final);
+            }
+            \only<1,2> {
+                \draw[->, thick] (b-initial) -- (b-final);
+            }
+            \only<2,3,4,5> {
+                \draw[->, thick] (a-initial) --  (a-ins-e) -- (a-final);
+            }
+            \onslide<2-> {
+                \path (a-ins-e) node[point, label=-170:{$\trm{ins}(1, E)$}] {};
+                \inse{(a-ins-e)}{\offseta}{90};
+            }
+            \only<3,4> {
+                \draw[->, thick] (b-initial) --  (b-ins-o) -- (b-final);
+            }
+            \onslide<3-> {
+                \path (b-ins-o) node[point, label=170:{$\trm{ins}(2, O)$}] {};
+                \inso{(b-ins-o)}{\offsetb}{-90};
+            }
+            \onslide<4-> {
+                \path (a-ins-e) node[label={[xshift=25pt]-10:{$\trm{ins}({\coloridthree\id{i}{B1}{0}\id{f}{A1}{0}},E)$}}] {};
+                \draw[->, dashed, shorten >= 1] (a-ins-e) -- (b-recv-ins-e);
+            }
+            \onslide<5-> {
+                \path (b-recv-ins-e) node[point] {};
+                \finalstate{(b-recv-ins-e)}{\offsetb}{-90};
+                \draw[->, thick] (b-initial) --  (b-ins-o) -- (b-recv-ins-e) -- (b-final);
+            }
+            \onslide<6-> {
+                \path (b-ins-o) node[label={[xshift=25pt]10:{$\trm{ins}(\id{i}{B1}{2},O)$}}] {};
+                \path (a-recv-ins-o) node[point] {};
+                \draw[->, dashed, shorten >= 1] (b-ins-o) -- (a-recv-ins-o);
+                \finalstate{(a-recv-ins-o)}{\offseta}{90};
+                \draw[->, thick] (a-initial) --  (a-ins-e) -- (a-recv-ins-o) -- (a-final);
+            }
           \end{tikzpicture}
         }
     \end{figure}
 \end{frame}
 
 \begin{frame}{Limites de LogootSplit}
-    \begin{itemize}
-        \item Croissance non-bornée de la taille des identifiants
-        \item Fragmentation en blocs courts
-    \end{itemize}
     \metroset{block=transparent}
+    \begin{block}{Sources croissance métadonnées}
+        \begin{itemize}
+            \item Croissance non-bornée de la taille des identifiants
+            \item Fragmentation en blocs courts
+        \end{itemize}
+    \end{block}
+    \pause
     \begin{block}{Taille du contenu comparé à la taille de la séquence LogootSplit}
         \begin{figure}
-            \resizebox{0.6\columnwidth}{!}{
+            \resizebox{0.5\columnwidth}{!}{
                 \includegraphics{img/ls-vs-content-snapshot-sizes-7k5.pdf}
             }
         \end{figure}
@@ -264,14 +262,18 @@
         \begin{itemize}
             \item Ré-assigne des identifiants courts aux éléments, \ie les \emph{renomme}
             \item Transforme les opérations \ins et \rmv concurrentes\dots
+            \pause
             \item \dots mais ne supportent pas opérations \ren concurrentes
         \end{itemize}
     \end{block}
+    \pause
     \begin{center}
         \alert{Inadaptée aux applications pair-à-pair}
     \end{center}
 \end{frame}
 
 \begin{frame}[standout]
-    Proposition : Mécanisme de renommage supportant les renommages concurrents
+    \alert{Proposition}
+
+    Mécanisme de renommage supportant les renommages concurrents
 \end{frame}
