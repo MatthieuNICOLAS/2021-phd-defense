@@ -63,7 +63,7 @@
   \end{itemize}
   \pause
   \begin{itemize}
-    \item Noeuds terminent quand ensemble des noeuds a effectué nombre donné de modifications (10k)\dots
+    \item Noeuds terminent quand ensemble des noeuds a effectué nombre donné de modifications (15k)\dots
     \item \dots et intégré celles des autres (150k au total)
   \end{itemize}
 \end{frame}
@@ -71,14 +71,14 @@
 \begin{frame}{Simulations - Mécanisme de renommage}
   \begin{itemize}
     \item Noeuds désignés comme \emph{noeuds de renommage} (1 à 4)
-    \item Noeuds de renommage effectue un renommage à toutes les 7.5k/30k opérations qu'ils intègrent (5/20 opérations \ren par noeud de renommage)
+    \item Noeuds de renommage effectue un renommage à toutes les 30k opérations qu'ils intègrent (5 opérations \ren par noeud de renommage)
     \item Opérations \ren générées à un point donné sont \alert{concurrentes}
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Simulations - Sorties}
   \begin{itemize}
-    \item Instantané de l'état de chaque noeud à différents points de la simulation (2.5k/10k opérations et état final)
+    \item Instantané de l'état de chaque noeud à différents points de la simulation (10k opérations et état final)
     \item Journal des opérations de chaque noeud
   \end{itemize}
   \pause
