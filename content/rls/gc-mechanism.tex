@@ -7,5 +7,95 @@
 \end{frame}
 
 \begin{frame}{Suppression des $\trm{renIds}$}
-    TODO: Faire exemple d'exécution avec arbre des époques associé
+    \vspace{-1.5em}
+    \begin{columns}
+        \begin{column}{0.7\textwidth}
+            \begin{figure}
+                \resizebox{\columnwidth}{!}{
+                    \begin{tikzpicture}
+                    \path
+                        node {\textbf{A}}
+                        ++(0:0.5) node (a) {}
+                        +(0:8) node (a-end) {}
+                        +(0:1) node (a-initial) {}
+                        +(0:2) node[point, label=above:{$\trm{ren}(\epoch{0}, A,2,\renids{A2})$}] (a-ren-A2) {}
+                        +(0:6) node[point] (a-recv-ren-B3) {}
+                        +(0:7) node (a-final) {};
+
+                    \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
+
+                    \path
+                        ++(270:2) node {\textbf{B}}
+                        ++(0:0.5) node (b) {}
+                        +(0:8) node (b-end) {}
+                        +(0:1) node (b-initial) {}
+                        +(0:2) node[point, label=below:{$\trm{ren}(\epoch{0},B,3,\renids{B3})$}] (b-ren-B3) {}
+                        +(0:6) node (b-ren-b7) {}
+                        +(0:7) node (b-final) {};
+
+                    \draw[dotted] (b) -- (b-initial) (b-final) -- (b-end);
+
+                    \draw[->, thick] (a-initial) -- (a-ren-A2) -- (a-recv-ren-B3) -- (a-final);
+                    \draw[->, dashed, shorten >= 1] (b-ren-B3) -- (a-recv-ren-B3);
+                    \draw<1>[->, thick] (b-initial) -- (b-ren-B3) -- (b-final);
+                    \onslide<2-> {
+                        \path
+                        (b-ren-b7) node[point, label=below:{$\trm{ren}(\epoch{B3},B,7,\renids{B7})$}] {};
+                        \draw[->, thick] (b-initial) -- (b-ren-B3) -- (b-ren-b7) -- (b-final);
+                    }
+                    \end{tikzpicture}
+                }
+            \end{figure}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \begin{figure}
+                \resizebox{\columnwidth}{!}{
+                  \begin{tikzpicture}[scale=0.8,every node/.style={scale=0.3}]
+                    \path
+                      node[op] (e0) {$\epoch{0}$}
+                      ++(225:0.7) node[op] (eA2) {$\epoch{A2}$};
+                    \path
+                      ++(315:0.7) node[op] (eB3) {$\epoch{B3}$}
+                      ++(270:0.7) node (eB7) {};
+
+                    \draw[->]
+                        (e0) edge (eA2)
+                        (e0) edge (eB3)
+                    ;
+
+                    \only<1>{
+                        \path (eB3) node[label={[xshift=1em]right:{A,B}}] {};
+                    }
+                    \onslide<2->{
+                      \path
+                        (eB7) node[op] (eB7-node) {$\epoch{B7}$}
+                        (eB7) node[label={[xshift=1em]right:{B}}] {}
+                        (eB3) node[label={[xshift=1em]right:{A}}] {};
+
+                      \draw[->] (eB3) edge (eB7-node);
+                    }
+                    \onslide<4->{
+                        \draw[]
+                            ([xshift=-0em,yshift=-0.3em]eA2.south west) -- ([xshift=0em, yshift=0.3em]eA2.north east)
+                            ([xshift=-0em,yshift=-0.3em]e0.south west) -- ([xshift=0em, yshift=0.3em]e0.north east);
+                    }
+                  \end{tikzpicture}
+                }
+              \end{figure}
+        \end{column}
+    \end{columns}
+    \begin{itemize}
+        \item Besoin de garder $\trm{renIds}$ pour transformer opérations
+        \item<3-> Si plus d'opérations nécessitant transformations vers époque donnée\dots
+        \item<4-> \dots alors époque et $\trm{renIds}$ correspondant obsolètes
+    \end{itemize}
+    \vspace{-0.5em}
+    \onslide<5>{
+        \begin{block}{Besoins}
+            \begin{itemize}
+                \item \alert{Détecter stabilité causale}\footcite{10.1007/978-3-662-43352-2_11} des opérations \ren
+                \item \alert{Connaître noeuds} appartenant au groupe
+            \end{itemize}
+        \end{block}
+    }
 \end{frame}
