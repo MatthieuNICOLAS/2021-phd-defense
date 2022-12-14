@@ -375,8 +375,11 @@
             ++(0:\widthblock) \renl{#3}
             ++(0:\widthletter) \renlo{-#3}
             ++(0:\widthblock) node (eA2-right) {}
-            +(0:2) node (e0-left) {}
-            +(0:3) node {?};
+            ++(0:1.5) node[epoch] (e0-left) {$\epoch{0}$}
+            ++(0:1.25 * \widthoriginepoch) \nodeh{-#3}
+            ++(0:\widthletter) \nodee{#3}
+            ++(0:\widthletter) \nodel{-#3}
+            ++(0:\widthletter) \nodelo{#3};
 
             \draw[->, loosely dash dot, shorten >= 1] (eA2-right) --  node[above, align=center]{\emph{revert}\\ \emph{to} $\epoch{0}$} (e0-left);
         }
@@ -390,10 +393,13 @@
             ++(0:\widthblock) \renl{#3}
             ++(0:\widthletter) \renlo{-#3}
             ++(0:\widthblock) node (eA2-right) {}
-            +(0:2) node (e0-left) {}
-            +(0:3) node {?}
-            +(0:4) node (e0-right) {}
-            ++(0:6) node[epoch] (eB3-left) {$\epoch{B3}$}
+            ++(0:1.5) node[epoch] (e0-left) {$\epoch{0}$}
+            ++(0:1.25 * \widthoriginepoch) \nodeh{-#3}
+            ++(0:\widthletter) \nodee{#3}
+            ++(0:\widthletter) \nodel{-#3}
+            ++(0:\widthletter) \nodelo{#3}
+            ++(0:\widthblock) node (e0-right) {}
+            ++(0:1.5) node[epoch] (eB3-left) {$\epoch{B3}$}
             ++(0:1.18 * \widthepoch) \renhello{#3};
 
             \draw[->, loosely dash dot, shorten >= 1] (eA2-right) --  node[above, align=center]{\emph{revert}\\ \emph{to} $\epoch{0}$} (e0-left);
@@ -620,7 +626,7 @@
   \end{equation*}
   \begin{block}{Exemple avec {$\coloridfour\id{i}{A2}{1}\id{i}{B1}{0}\id{m}{B2}{0}$}}
     \begin{itemize}
-      \item<2-> Est de la forme ${\coloridfour\id{i}{A2}{1}} \oplus \id{i}{B1}{0}\id{m}{B2}{0}$ : cas 2 ou 3
+      \item<2-> Est de la forme ${\coloridfour\id{i}{A2}{1}}$ concaténé à $\id{i}{B1}{0}\id{m}{B2}{0}$ : cas 2 ou 3
       \item<3-> Trouver l'équivalent de $\id{i}{A2}{1}$ dans $\renids{A2}$ : {$\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$}
       \item<4-> Trouver l'équivalent de $\id{i}{A2}{2}$ dans $\renids{A2}$ : $\id{i}{B1}{1}$
       \item<5-> Comparer $\id{i}{B1}{0}\id{m}{B2}{0}$ avec ces derniers : ${\coloridone\id{i}{B1}{0}\id{f}{A1}{0}} \lid \id{i}{B1}{0}\id{m}{B2}{0} \lid \id{i}{B1}{1}$
