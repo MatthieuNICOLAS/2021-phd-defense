@@ -172,7 +172,7 @@
     \end{columns}
     \begin{itemize}
         \item<6-> Changements des indices est \alert{source de conflits}
-        \item<7-> Assigne des \alert{identifiants de position}\footcite{2009-treedoc-preguica} à chaque élément
+        \item<7-> Assignent des \alert{identifiants de position}\footcite{2009-treedoc-preguica} à chaque élément
         \item<7->
             Permettent d'\alert{ordonner les élements}
             \onslide<8->{
@@ -195,25 +195,6 @@
             \alert{Utilise LogootSplit\footcite{2013-logootsplit} comme base}
         \end{center}
     }
-\end{frame}
-
-\begin{frame}{LogootSplit \footcite{2013-logootsplit}, un CRDT pour le type Séquence}
-    \begin{itemize}
-        \item Assigne \alert{identifiant de position} à chaque élément de la séquence
-    \end{itemize}
-    \pause
-    \begin{block}{Propriétés des identifiants de position \footcite{2009-treedoc-preguica}}
-        \begin{enumerate}
-            \item Unique
-            \item Immuable
-            \item Ordonnable par une relation d'ordre strict total $\lid$
-            \item Appartenant à un espace dense
-        \end{enumerate}
-    \end{block}
-    \pause
-    \begin{itemize}
-        \item \alert{Ordonne les éléments} entre eux \alert{en utilisant} leurs \alert{identifiants}
-    \end{itemize}
 \end{frame}
 
 \begin{frame}{Identifiant LogootSplit}
@@ -417,18 +398,29 @@
 
 \begin{frame}{Limites de LogootSplit}
     \metroset{block=transparent}
-    \begin{block}{Sources croissance métadonnées}
+    \begin{block}{Sources de la croissance des métadonnées}
         \begin{itemize}
-            \item Croissance non-bornée de la taille des identifiants
-            \item Fragmentation en blocs courts
+            \item Augmentation non-bornée de la taille des identifiants
+            \item Fragmentation de la séquence en un nombre croissant de blocs
         \end{itemize}
     \end{block}
-    \begin{figure}
-        \resizebox{0.5\columnwidth}{!}{
-            \includegraphics{img/ls-vs-content-snapshot-sizes-7k5.pdf}
-        }
-        \caption{Taille du contenu comparée à la taille de la séquence LogootSplit}
-    \end{figure}
+    \vspace{-1.5em}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}
+            \begin{figure}
+                \resizebox{0.9 \columnwidth}{!}{
+                    \includegraphics[trim=0cm 0.5cm 0cm 0cm, clip]{img/ls-vs-content-snapshot-sizes-7k5.pdf}
+                }
+                \caption{Taille du contenu comparée à la taille de la séquence LogootSplit}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \vspace{-2em}
+            \begin{center}
+                Diminution des performances du point de vue \alert{mémoire, calculs et bande-passante}
+            \end{center}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Mitigation du surcoût des CRDTs pour le type Séquence}
