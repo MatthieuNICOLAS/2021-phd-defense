@@ -18,6 +18,185 @@
     \end{block}
 \end{frame}
 
+\begin{frame}[fragile]{CRDTs pour le type Séquence}
+    \metroset{block=transparent}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Type Séquence séquentiel}
+                \begin{figure}[!ht]
+                    \centering
+                    \resizebox{\columnwidth}{!}{
+                        \begin{tikzpicture}
+                            \newcommand\initialstate[2]{
+                                \path
+                                    #1
+                                    ++#2
+                                    node[letter, label=below:{$0$}] {B}
+                                    ++(0:\widthletter) node[letter, label=below:{$1$}] {N}
+                                    ++(0:\widthletter) node[letter, label=below:{$2$}] {J}
+                                    ++(0:\widthletter) node[letter, label=below:{$3$}] {O};
+                            }
+                            \newcommand\totoa[2]{
+                                \path
+                                    #1
+                                    ++#2
+                                    node[letter, label=below:{$0$}] {}
+                                    ++(0:\widthletter) node[letter, label=below:{$1$}] {}
+                                    ++(0:\widthletter) node[letter, label=below:{$2$}] {}
+                                    ++(0:\widthletter) node[letter, label=below:{$3$}] {}
+                                    ++(0:\widthletter) node[letter, label=below:{$4$}] {};
+                            }
+                            \newcommand\totob[2]{
+                                \path
+                                    #1
+                                    ++#2
+                                    node[letter, label=below:{$0$}] {B}
+                                    ++(0:\widthletter) node[letter, label=below:{$1$}] {}
+                                    ++(0:\widthletter) node[letter, label=below:{$2$}] {N}
+                                    ++(0:\widthletter) node[letter, label=below:{$3$}] {J}
+                                    ++(0:\widthletter) node[letter, label=below:{$4$}] {O};
+                            }
+                            \newcommand\totoc[2]{
+                                \path
+                                    #1
+                                    ++#2
+                                    node[letter, label=below:{$0$}] {B}
+                                    ++(0:\widthletter) node[letter, label=below:{$1$}] {A}
+                                    ++(0:\widthletter) node[letter, label=below:{$2$}] {N}
+                                    ++(0:\widthletter) node[letter, label=below:{$3$}] {J}
+                                    ++(0:\widthletter) node[letter, label=below:{$4$}] {O};
+                            }
+
+                            \newcommand\offseta{ (90:1) }
+
+                            \path
+                                node {\textbf{A}}
+                                ++(0:0.5) node (a) {}
+                                +(0:10) node (a-end) {}
+                                +(0:1) node[point] (a-initial) {}
+                                +(0:6) node (a-ins-a) {}
+                                +(0:9) node (a-final) {};
+
+                            \initialstate{(a-initial)}{\offseta};
+                            \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
+                            \only<1>{
+                                \draw[->, thick] (a-initial) -- (a-final);
+                            }
+                            \onslide<2->{
+                                \path (a-ins-a) node[point, label=-170:{$\trm{ins}(1, A)$}] {};
+                                \draw[->, thick] (a-initial) -- (a-ins-a) -- (a-final);
+                            }
+                            \only<3>{\totoa{(a-ins-a)}{\offseta}}
+                            \only<4>{\totob{(a-ins-a)}{\offseta}}
+                            \onslide<5->{\totoc{(a-ins-a)}{\offseta}}
+                        \end{tikzpicture}
+                    }
+                \end{figure}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \onslide<7->{
+                \begin{block}{CRDTs pour Séquence}
+                    \begin{figure}[!ht]
+                        \centering
+                        \resizebox{\columnwidth}{!}{
+                            \begin{tikzpicture}
+                                \newcommand\initialstate[2]{
+                                    \path
+                                        #1
+                                        ++#2
+                                        node[letter, label=below:{$\trm{id}_0$}] {B}
+                                        ++(0:\widthletter) node[letter, label=below:{$\trm{id}_1$}] {N}
+                                        ++(0:\widthletter) node[letter, label=below:{$\trm{id}_2$}] {J}
+                                        ++(0:\widthletter) node[letter, label=below:{$\trm{id}_3$}] {O};
+                                }
+                                \newcommand\totoa[2]{
+                                    \path
+                                        #1
+                                        ++#2
+                                        node[letter, label=below:{}] {}
+                                        ++(0:\widthletter) node[letter, label=below:{}] {}
+                                        ++(0:\widthletter) node[letter, label=below:{}] {}
+                                        ++(0:\widthletter) node[letter, label=below:{}] {}
+                                        ++(0:\widthletter) node[letter, label=below:{}] {};
+                                }
+                                \newcommand\totob[2]{
+                                    \path
+                                        #1
+                                        ++#2
+                                        node[letter, label=below:{$\trm{id}_0$}] {B}
+                                        ++(0:\widthletter) node[letter, label=below:{$?$}] {}
+                                        ++(0:\widthletter) node[letter, label=below:{$\trm{id}_1$}] {N}
+                                        ++(0:\widthletter) node[letter, label=below:{$\trm{id}_2$}] {J}
+                                        ++(0:\widthletter) node[letter, label=below:{$\trm{id}_3$}] {O};
+                                }
+                                \newcommand\totoc[2]{
+                                    \path
+                                        #1
+                                        ++#2
+                                        node[letter, label=below:{$\trm{id}_0$}] {B}
+                                        ++(0:\widthletter) node[letter, label=below:{$\trm{id}_{0.5}$}] {A}
+                                        ++(0:\widthletter) node[letter, label=below:{$\trm{id}_1$}] {N}
+                                        ++(0:\widthletter) node[letter, label=below:{$\trm{id}_2$}] {J}
+                                        ++(0:\widthletter) node[letter, label=below:{$\trm{id}_3$}] {O};
+                                }
+
+                                \newcommand\offseta{ (90:1) }
+
+                                \path
+                                    node {\textbf{A}}
+                                    ++(0:0.5) node (a) {}
+                                    +(0:10) node (a-end) {}
+                                    +(0:1) node[point] (a-initial) {}
+                                    +(0:6) node (a-ins-a) {}
+                                    +(0:9) node (a-final) {};
+
+                                \initialstate{(a-initial)}{\offseta};
+                                \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
+                                \only<7,8>{
+                                    \draw[->, thick] (a-initial) -- (a-final);
+                                }
+                                \onslide<9->{
+                                    \path (a-ins-a) node[point, label=-170:{$\trm{ins}(B \prec A \prec N)$}] {};
+                                    \draw[->, thick] (a-initial) -- (a-ins-a) -- (a-final);
+                                }
+                                \only<9>{\totoa{(a-ins-a)}{\offseta}}
+                                \only<10>{\totob{(a-ins-a)}{\offseta}}
+                                \onslide<11->{\totoc{(a-ins-a)}{\offseta}}
+                            \end{tikzpicture}
+                        }
+                    \end{figure}
+                \end{block}
+            }
+        \end{column}
+    \end{columns}
+    \begin{itemize}
+        \item<6-> Changements des indices est \alert{source de conflits}
+        \item<7-> Assigne des \alert{identifiants de position}\footcite{2009-treedoc-preguica} à chaque élément
+        \item<7->
+            Permettent d'\alert{ordonner les élements}
+            \onslide<8->{
+                \begin{equation*}
+                    \trm{id}_0 \lid \trm{id}_1 \lid \trm{id}_2 \lid \trm{id}_3
+                \end{equation*}
+            }
+        \vspace{-1.5em}
+        \item<10->
+            Nécessaire que les identifiants appartiennent à un \alert{espace dense}
+            \onslide<11->{
+                \begin{equation*}
+                    \trm{id}_0 \lid \trm{id}_{0.5} \lid \trm{id}_1
+                \end{equation*}
+            }
+    \end{itemize}
+    \vspace{-2em}
+    \onslide<12->{
+        \begin{center}
+            \alert{Utilise LogootSplit\footcite{2013-logootsplit} comme base}
+        \end{center}
+    }
+\end{frame}
+
 \begin{frame}{LogootSplit \footcite{2013-logootsplit}, un CRDT pour le type Séquence}
     \begin{itemize}
         \item Assigne \alert{identifiant de position} à chaque élément de la séquence
@@ -37,13 +216,11 @@
     \end{itemize}
 \end{frame}
 
-\newcommand{\highlight}[2]{\colorbox{#1!17}{#2}}
-
 \begin{frame}{Identifiant LogootSplit}
     \metroset{block=transparent}
     \begin{block}{Identifiant}
         \begin{itemize}
-            \item Composé d'un ou plusieurs tuples suivants
+            \item Composé d'un ou plusieurs tuples de la forme
         \end{itemize}
         \vspace{3em}
         \begin{equation*}
@@ -246,19 +423,17 @@
             \item Fragmentation en blocs courts
         \end{itemize}
     \end{block}
-    \pause
-    \begin{block}{Taille du contenu comparé à la taille de la séquence LogootSplit}
-        \begin{figure}
-            \resizebox{0.5\columnwidth}{!}{
-                \includegraphics{img/ls-vs-content-snapshot-sizes-7k5.pdf}
-            }
-        \end{figure}
-    \end{block}
+    \begin{figure}
+        \resizebox{0.5\columnwidth}{!}{
+            \includegraphics{img/ls-vs-content-snapshot-sizes-7k5.pdf}
+        }
+        \caption{Taille du contenu comparée à la taille de la séquence LogootSplit}
+    \end{figure}
 \end{frame}
 
 \begin{frame}{Mitigation du surcoût des CRDTs pour le type Séquence}
     \metroset{block=transparent}
-    \begin{block}{L'approche core-nebula \footcite{zawirski:hal-01248197}}
+    \begin{block}{L'approche core-nebula \footcite{zawirski:hal-01248197}, pour Treedoc}
         \begin{itemize}
             \item Ré-assigne des identifiants courts aux éléments, \ie les \emph{renomme}
             \item Transforme les opérations \ins et \rmv concurrentes\dots

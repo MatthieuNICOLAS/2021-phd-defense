@@ -1,6 +1,6 @@
 \section{Problématiques des applications collaboratives}
 
-\begin{frame}{MUTE \singlefootnote{Disponible à : \url{https://mutehost.loria.fr}}}
+\begin{frame}{MUTE \singlefootnote{Disponible à : \url{https://mutehost.loria.fr}}, un exemple de Local-First Software (LFS)\footcite{localfirstsoftware2019}}
     \vspace{-0.5cm}
     \begin{figure}
         \resizebox{\textwidth}{!}{
@@ -10,8 +10,8 @@
     \vspace{-0.5cm}
     \begin{itemize}
         \item Application pair-à-pair
-        \item Permet à groupes de rédiger collaborativement documents texte
-        \item Garantit confidentialité \& souveraineté de ses données
+        \item Permet de rédiger collaborativement des documents texte
+        \item Garantit la confidentialité \& souveraineté des données
     \end{itemize}
 \end{frame}
 
@@ -104,7 +104,7 @@
     \onslide<8>{
         \vspace{-1em}
         \begin{center}
-            \alert{Nécessite mécanismes de résolution de conflits}
+            \alert{Nécessite des mécanismes de résolution de conflits}
         \end{center}
     }
 \end{frame}
@@ -121,15 +121,28 @@
                 \end{figure}
             \end{column}
             \begin{column}{0.4\textwidth}
-                \begin{itemize}
-                    \item 1\% contenu\dots
-                    \item \dots 99\% métadonnées
-                \end{itemize}
+                \begin{block}{Constat}
+                    \begin{itemize}
+                        \item 1\% contenu\dots
+                        \item \dots 99\% métadonnées
+                    \end{itemize}
+                \end{block}
+                \pause
+                \begin{center}
+                    \alert{Et ça augmente !}
+                \end{center}
+                \pause
+                \begin{block}{Impact}
+                    \begin{itemize}
+                        \item Surcoût \alert{mémoire}\dots
+                        \item \dots mais aussi surcoût en \alert{calculs} et en \alert{bande-passante}
+                    \end{itemize}
+                \end{block}
             \end{column}
         \end{columns}
     \end{block}
 \end{frame}
 
 \begin{frame}[standout]
-    Comment peut-on réduire le surcoût mémoire des mécanismes de résolution de conflits dans les applications pair-à-pair ?
+    Comment peut-on réduire le surcoût des mécanismes de résolution de conflits dans les applications pair-à-pair ?
 \end{frame}
