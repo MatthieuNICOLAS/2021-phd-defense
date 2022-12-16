@@ -5,6 +5,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Opérations \ren concurrentes}
+  \vspace{-2em}
   \begin{figure}
     \resizebox{\textwidth}{!}{
       \begin{tikzpicture}
@@ -118,10 +119,14 @@
       \end{tikzpicture}
     }
   \end{figure}
+  \begin{itemize}
+    \item<4-> Noeuds possèdent des \alert{contenus identiques}\dots
+    \item<5-> \dots mais des \alert{états différents} (identifiants, époques)
+  \end{itemize}
   \begin{center}
-    \onslide<4->{Comment faire converger les noeuds ?}
+    \onslide<6->{Ne parlent plus la même langue, comment les faire converger?}
 
-    \onslide<5>{\alert{Besoin d'un mécanisme additionnel de résolution de conflits}}
+    \onslide<7>{\alert{Besoin d'un mécanisme additionnel de résolution de conflits}}
   \end{center}
 \end{frame}
 
@@ -129,15 +134,15 @@
   \metroset{block=transparent}
   \begin{block}{Observation}
     \begin{itemize}
-      \item Opérations \ren sont des opérations systèmes\dots
-      \item \dots pas des opérations utilisateur-rices
+      \item Opérations \ren sont des \alert{opérations systèmes}\dots
+      \item \dots pas des \alert{opérations utilisateur-rices}
     \end{itemize}
   \end{block}
   \pause
   \begin{block}{Proposition}
     \begin{itemize}
-      \item Considérer une opération \ren comme prioritaire\dots
-      \item \dots et ignorer les opérations \ren en conflit avec elle
+      \item Considérer une \alert{opération \ren} comme \alert{prioritaire}\dots
+      \item \dots et \alert{ignorer les opérations \ren en conflit} avec elle
     \end{itemize}
   \end{block}
 \end{frame}
@@ -492,7 +497,7 @@
                 \draw[->, densely dash dot, thin, gray] (eA2) edge[bend left] node[xshift=-2em]{$\trm{revert}$} (e0.west);
               }
               \only<6> {
-                \draw[->, densely dash dot, thin, gray] (e0) edge[bend left] node[xshift=2em]{$\trm{apply}$} (eB3-node-2.north);
+                \draw[->, densely dash dot, thin, gray] (e0) edge[bend left] node[xshift=2em]{$\trm{rename}$} (eB3-node-2.north);
               }
             \end{tikzpicture}
           }
@@ -525,9 +530,7 @@
       \item {\color{gray}Si changement d'époque cible}
       \begin{enumerate}
         \item {\color{gray}Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)}
-        \item
-          \only<1>{Annuler l'effet des opérations \ren de l'époque courante au PPAC}
-          \only<2>{\alert{Annuler l'effet des opérations \ren de l'époque courante au PPAC}}
+        \item \alert{Annuler l'effet des opérations \ren de l'époque courante au PPAC}
         \item Appliquer l'effet des opérations \ren du PPAC à l'époque cible
       \end{enumerate}
     \end{enumerate}
@@ -540,22 +543,18 @@
     \begin{itemize}
       \item<2-> Prend la forme de l'algorithme \emph{revertRenameId}
       \item<3-> \alert{Exclure l'effet de l'opération \ren}
+      \item<4-> Distingue plusieurs cas par \alert{filtrage par motif}
     \end{itemize}
   \end{block}
-  \onslide<8->{
-    \begin{center}
-      Distingue cas par \alert{filtrage par motif}
-    \end{center}
-  }
   \metroset{block=fill}
-  \onslide<4->{
+  \onslide<5->{
     \begin{block}{Intuition}
       \begin{enumerate}
-        \item<5-> $\trm{id}$ fait partie des identifiants renommés : doit retourner son ancienne valeur
-        \item<6-> $\trm{id}$ a été inséré après le renommage : doit retourner une valeur qui préserve l'ordre
-        \item<7->
-          \only<7,8>{$\trm{id}$ a été inséré après ou en concurrence : doit restaurer son ancienne valeur ou générer nouvelle valeur}
-          \only<9>{$\trm{id}$ a été inséré après ou en concurrence : doit restaurer son ancienne valeur ou générer nouvelle valeur}
+        \item<6-> $\trm{id}$ fait partie des identifiants renommés : doit retourner son ancienne valeur
+        \item<7-> $\trm{id}$ a été inséré après le renommage : doit retourner une valeur qui préserve l'ordre
+        \item<8->
+          \only<8>{$\trm{id}$ a été inséré après ou en concurrence : doit restaurer son ancienne valeur ou générer nouvelle valeur}
+          \only<9>{\alert{$\trm{id}$ a été inséré après ou en concurrence : doit restaurer son ancienne valeur ou générer nouvelle valeur}}
       \end{enumerate}
     \end{block}
   }

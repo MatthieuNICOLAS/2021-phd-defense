@@ -1,6 +1,4 @@
-\metroset{subsectionpage=progressbar}
 \subsection{Résultats}
-\metroset{subsectionpage=none}
 
 \begin{frame}{Convergence}
   \begin{block}{Intuition}
@@ -22,19 +20,35 @@
     \begin{columns}
       \hspace{-2em}
       \begin{column}{0.6 \textwidth}
+        \vspace{-2em}
         \begin{figure}
           \centering
-          \includegraphics<2>[width=0.98 \columnwidth]{img/2022-12-07-snapshot-sizes-ls.pdf}
-          \includegraphics<3,4>[width=\columnwidth]{img/2022-12-07-snapshot-sizes-rls-with-gc.pdf}
-          \includegraphics<5->[width=\columnwidth]{img/2022-12-07-snapshot-sizes-rls-without-gc.pdf}
+          \includegraphics<2>[width=0.95 \columnwidth,trim=0cm 1.6cm 0cm 0cm, clip]{img/2022-12-07-snapshot-sizes-ls.pdf}
+          \includegraphics<3,4>[width=\columnwidth,trim=0cm 2.5cm 0cm 0cm, clip]{img/2022-12-07-snapshot-sizes-rls-with-gc.pdf}
+          \includegraphics<5->[width=\columnwidth,trim=0cm 2.5cm 0cm 0cm, clip]{img/2022-12-07-snapshot-sizes-rls-without-gc.pdf}
+          \hspace*{2em}\includegraphics<2->[width=0.5\columnwidth,trim=4cm 0cm 0cm 10.5cm, clip]{img/2022-12-07-snapshot-sizes-rls-without-gc.pdf}
         \end{figure}
       \end{column}
       \hspace{-3em}
       \begin{column}{0.6 \textwidth}
-        \begin{itemize}
-          \item<4-> Opération \ren réinitialise surcoût du CRDT, si GC de l'entièreté des métadonnées du mécanisme de renommage
-          \item<6> Opération \ren réduit de 66\% surcoût du CRDT sans GC
-        \end{itemize}
+        \metroset{block=transparent}
+        \onslide<4->{
+          \begin{block}{Observations}
+            \begin{itemize}
+              \item<4-> Opération \ren \alert{réinitialise surcoût du CRDT}, si GC possible
+              \item<6-> Opération \ren \alert{réduit de 66\% surcoût du CRDT}, si GC impossible
+            \end{itemize}
+          \end{block}
+        }
+        \onslide<7->{
+          \vspace{-0.9em}
+          \begin{block}{Explications}
+            \begin{itemize}
+              \item Un seul bloc après une opération \ren
+              \item Réduction du nombre de blocs réduit les métadonnées utilisée par l'implémentation de la Séquence (arbre AVL)
+            \end{itemize}
+          \end{block}
+        }
       \end{column}
     \end{columns}
   \end{frame}
@@ -62,8 +76,8 @@
     \includegraphics[width=\columnwidth,trim=2cm 0cm 2cm 12cm, clip]{img/2022-12-07-snapshot-sizes-1-4-rb.pdf}
   \end{center}
   \begin{itemize}
-    \item<5> Aucun impact si GC
-    \item<5> Surcoût de chaque opération \ren s'additionne sinon
+    \item<5> Aucun impact si GC possible
+    \item<5> Métadonnées (époque et $\trm{renIds}$) de chaque opération \ren s'additionne si GC impossible
   \end{itemize}
 \end{frame}
 
@@ -84,60 +98,60 @@
     \end{figure}
     \vspace{-0.3cm}
     \begin{itemize}
-        \item<3-> Opérations \ren réduisent temps intégration
-        \item<4> Réduction du nombre de blocs contrebalance le surcoût de transformations
+        \item<3-> Opération \ren réduit les temps d'intégration
+        \item<4> Réduction du nombre de blocs contrebalance le surcoût des transformations
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Surcoûts en calculs - Opérations \ren}
-    \begin{block}{Intuition}
-        Mesurer temps d'intégration \alert{local} et \alert{distant} d'opérations \ren à différents stades de la collaboration
-    \end{block}
-    \pause
-    \begin{table}[!ht]
-        \centering
-        \resizebox{\columnwidth}{!}{
-            \begin{tabular}{lrrrr}
-                \toprule
-                \multicolumn{2}{c}{Paramètres} & \multicolumn{3}{c}{Temps d'intégration (ms)} \\
-                \cmidrule(lr){1-2} \cmidrule(lr){3-5}
-                Type & Nb Ops (k) &  Médiane & 1\textsuperscript{er} Percent. & 99\textsuperscript{ème} Percent. \\
-                \midrule
-                Locale & 30  & 38.7 &       37.3 &        71.7 \\
-                    & 90  & 119 &        116 &         124 \\
-                    & 150 & 158 &        153 &         164 \\
-                \cmidrule{1-5}
-                Opération \ren distante même époque & 30  & 477 &        454 &         537 \\
-                    & 90  &   \alert{1482} &       1396 &        1658 \\
-                    & 150 &   \alert{1676} &       1591 &        1853 \\
-                \cmidrule{1-5}
-                Opération \ren distante plus prioritaire & 30  &    644 &        620 &         683 \\
-                    & 90  &   \alert{1994} &       1906 &        2112 \\
-                    & 150 &   \alert{2234} &       2139 &        2351 \\
-                \bottomrule
-            \end{tabular}
-        }
-    \end{table}
-    \pause
-    \begin{itemize}
-      \item Ressentie par utilisateur-rices
-      \item Nécessaire d'améliorer temps d'intégration distant
-    \end{itemize}
-\end{frame}
+% \begin{frame}{Surcoûts en calculs - Opérations \ren}
+%     \begin{block}{Intuition}
+%         Mesurer temps d'intégration \alert{local} et \alert{distant} d'opérations \ren à différents stades de la collaboration
+%     \end{block}
+%     \pause
+%     \begin{table}[!ht]
+%         \centering
+%         \resizebox{\columnwidth}{!}{
+%             \begin{tabular}{lrrrr}
+%                 \toprule
+%                 \multicolumn{2}{c}{Paramètres} & \multicolumn{3}{c}{Temps d'intégration (ms)} \\
+%                 \cmidrule(lr){1-2} \cmidrule(lr){3-5}
+%                 Type & Nb Ops (k) &  Médiane & 1\textsuperscript{er} Percent. & 99\textsuperscript{ème} Percent. \\
+%                 \midrule
+%                 Locale & 30  & 38.7 &       37.3 &        71.7 \\
+%                     & 90  & 119 &        116 &         124 \\
+%                     & 150 & 158 &        153 &         164 \\
+%                 \cmidrule{1-5}
+%                 Opération \ren distante même époque & 30  & 477 &        454 &         537 \\
+%                     & 90  &   \alert{1482} &       1396 &        1658 \\
+%                     & 150 &   \alert{1676} &       1591 &        1853 \\
+%                 \cmidrule{1-5}
+%                 Opération \ren distante plus prioritaire & 30  &    644 &        620 &         683 \\
+%                     & 90  &   \alert{1994} &       1906 &        2112 \\
+%                     & 150 &   \alert{2234} &       2139 &        2351 \\
+%                 \bottomrule
+%             \end{tabular}
+%         }
+%     \end{table}
+%     \pause
+%     \begin{itemize}
+%       \item Ressentie par utilisateur-rices
+%       \item Nécessaire d'améliorer temps d'intégration distant
+%     \end{itemize}
+% \end{frame}
 
-\begin{frame}{Surcoût en calculs - Vue globale}
-    \begin{block}{Intuition}
-        Mesurer temps pour intégrer l'entièreté du journal d'opérations d'une collaboration en fonction du \alert{nombre de noeuds de renommage}
-    \end{block}
-    \pause
-    \vspace{-0.5cm}
-    \begin{figure}[!ht]
-        \includegraphics[width=0.7 \columnwidth]{img/replay-log-30k-2022-12-09}
-      \end{figure}
-    \vspace{-1cm}
-    \pause
-    \begin{itemize}
-        \item Initialement, gains sur opérations \ins et \rmv contrebalancent coût des opérations \ren \dots
-        \item \dots mais coût des opérations \ren augmente surcoût total \emph{in fine}
-    \end{itemize}
-\end{frame}
+% \begin{frame}{Surcoût en calculs - Vue globale}
+%     \begin{block}{Intuition}
+%         Mesurer temps pour intégrer l'entièreté du journal d'opérations d'une collaboration en fonction du \alert{nombre de noeuds de renommage}
+%     \end{block}
+%     \pause
+%     \vspace{-0.5cm}
+%     \begin{figure}[!ht]
+%         \includegraphics[width=0.7 \columnwidth]{img/replay-log-30k-2022-12-09}
+%       \end{figure}
+%     \vspace{-1cm}
+%     \pause
+%     \begin{itemize}
+%         \item Initialement, gains sur opérations \ins et \rmv contrebalancent coût des opérations \ren \dots
+%         \item \dots mais coût des opérations \ren augmente surcoût total \emph{in fine}
+%     \end{itemize}
+% \end{frame}
