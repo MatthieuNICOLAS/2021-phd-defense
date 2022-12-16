@@ -55,38 +55,40 @@
                     (b) node[label={[xshift=2em]0:{\doc}}] {}
                     (c) node[label={[xshift=-2em]180:{\doc}}] {};
 
-                \draw[dotted] (a) -- (b);
-
-                \onslide<2->{
+                \onslide<4->{
                     \path
                         (a) node[label={[xshift=3.8em]90:{\updsquare}}] {}
                         (b) node[label={[xshift=3.7em]0:{\updtriangle}}] {}
                         (c) node[label={[xshift=-4.8em]-90:{\updcircle}}] {};
                 }
 
-                \only<3>{
+                \onslide<5->{
+                    \draw[dotted] (a) -- (b);
+                }
+
+                \only<6>{
                     \path
                         (a) -- node[midway]{\includegraphics[scale=0.4]{img/sync.pdf}} (b);
                 }
 
-                \onslide<4->{
+                \onslide<7->{
                     \path
                         (a) node[label={[xshift=3.7em]0:{\updtriangle}}] {}
                         (b) node[label={[xshift=3.8em]90:{\updsquare}}] {};
                 }
 
-                \onslide<5->{
+                \onslide<8->{
                     \draw[dotted] (a) -- (c);
                     \draw[dotted] (b) -- (c);
                 }
 
-                \only<5> {
+                \only<8> {
                     \path
                         (a) -- node[midway]{\includegraphics[scale=0.4]{img/sync.pdf}} (c)
                         (b) -- node[midway]{\includegraphics[scale=0.4]{img/sync.pdf}} (c);
                 }
 
-                \onslide<6->{
+                \onslide<9->{
                     \path
                         (a) node[label={[xshift=3.8em]-90:{\updcircle}}] {}
                         (b) node[label={[xshift=3.8em]-90:{\updcircle}}] {}
@@ -97,16 +99,28 @@
         }
     \end{figure}
     \vspace{-1em}
-    \begin{itemize}
-        \item<7-> Doit garantir \alert{convergence à terme}\footcite{10.1145/224057.224070}\dots
-        \item<7-> \dots malgré ordres différents d'intégration des modifications
-    \end{itemize}
-    \onslide<8>{
-        \vspace{-1em}
+    \begin{columns}
+        \hspace{0em}
+        \begin{column}{0.6\textwidth}
+            \begin{itemize}
+                \item<2-> Noeuds peuvent être \alert{déconnectés}
+                \item<3-> Doivent pouvoir \alert{travailler sans coordination synchrone} préalable (par ex. consensus)
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.6\textwidth}
+            \begin{itemize}
+                \item<9-> Doit garantir \alert{convergence à terme}\footnotemark[1]\dots
+                \item<9-> \dots malgré ordres différents d'intégration des modifications
+            \end{itemize}
+        \end{column}
+    \end{columns}
+    \onslide<10>{
+        \vspace{-0.5em}
         \begin{center}
-            \alert{Nécessite des mécanismes de résolution de conflits}
+            \alert{Nécessite des \emph{mécanismes de résolution de conflits}}
         \end{center}
     }
+    \onslide<9->{\footnotetext[1]{\cite{10.1145/224057.224070}}}
 \end{frame}
 
 \begin{frame}{Évaluation de MUTE}
@@ -121,6 +135,7 @@
                 \end{figure}
             \end{column}
             \begin{column}{0.4\textwidth}
+                \pause
                 \begin{block}{Constat}
                     \begin{itemize}
                         \item 1\% contenu\dots
@@ -144,5 +159,5 @@
 \end{frame}
 
 \begin{frame}[standout]
-    Comment peut-on réduire le surcoût des mécanismes de résolution de conflits dans les applications pair-à-pair ?
+    Comment peut-on \alert{réduire le surcoût} des mécanismes de résolution de conflits dans les applications pair-à-pair ?
 \end{frame}
