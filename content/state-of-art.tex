@@ -21,8 +21,8 @@
 \begin{frame}[fragile]{CRDTs pour le type Séquence}
     \metroset{block=transparent}
     \begin{columns}
-        \begin{column}{0.5\textwidth}
-            \begin{block}{Type Séquence usuel}
+        \begin{column}{0.6\textwidth}
+            \begin{block}{\quad Type Séquence usuel}
                 \begin{figure}[!ht]
                     \centering
                     \resizebox{\columnwidth}{!}{
@@ -94,7 +94,7 @@
                 \end{figure}
             \end{block}
         \end{column}
-        \begin{column}{0.5\textwidth}
+        \begin{column}{0.6\textwidth}
             \onslide<7->{
                 \begin{block}{CRDTs pour Séquence}
                     \begin{figure}[!ht]
@@ -182,14 +182,14 @@
             }
         \vspace{-1.5em}
         \item<10->
-            Nécessaire que les identifiants appartiennent à un \alert{espace dense}
+            Appartiennent à un \alert{espace dense}
             \onslide<11->{
                 \begin{equation*}
                     \trm{id}_0 \lid \trm{id}_{0.5} \lid \trm{id}_1
                 \end{equation*}
             }
     \end{itemize}
-    \vspace{-2em}
+    \vspace{-2.5em}
     \onslide<12->{
         \begin{center}
             \alert{Utilise LogootSplit\footcite{2013-logootsplit} comme base}
