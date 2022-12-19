@@ -1,6 +1,6 @@
 \section{État de l'art des CRDTs pour le type Séquence}
 
-\begin{frame}{Conflict-free Replicated Data Types (CRDTs) \footcite{shapiro_2011_crdt}}
+\begin{frame}{Conflict-free Replicated Data Types (CRDTs)  \cite{shapiro_2011_crdt}}
     \begin{itemize}
         \item Nouvelles spécifications des types de données, \eg \emph{Ensemble} ou \emph{Séquence}
         \item Incorpore nativement mécanisme de résolution de conflits
@@ -14,7 +14,7 @@
     \end{block}
     \pause
     \begin{block}{Convergence forte}
-        Ensemble des noeuds ayant intégrés le même ensemble de modifications obtient des états équivalents, sans nécessiter d'actions ou messages supplémentaires
+        Ensemble des noeuds ayant intégrés le même ensemble de modifications obtient des états équivalents, \alert{sans nécessiter d'actions ou messages supplémentaires}
     \end{block}
 \end{frame}
 
@@ -171,10 +171,10 @@
         \end{column}
     \end{columns}
     \begin{itemize}
-        \item<6-> Changements des indices est \alert{source de conflits}
-        \item<7-> Assignent des \alert{identifiants de position}\footcite{2009-treedoc-preguica} à chaque élément
+        \item<6-> Changements d'indices sont \alert{source de conflits}
+        \item<7-> CRDTs assignent des \alert{identifiants de position} \cite{2009-treedoc-preguica} à chaque élément
         \item<7->
-            Permettent d'\alert{ordonner les élements}
+            Identifiants permettent d'\alert{ordonner les élements}
             \onslide<8->{
                 \begin{equation*}
                     \trm{id}_0 \lid \trm{id}_1 \lid \trm{id}_2 \lid \trm{id}_3
@@ -182,17 +182,17 @@
             }
         \vspace{-1.5em}
         \item<10->
-            Appartiennent à un \alert{espace dense}
+            Identifiants appartiennent à un \alert{espace dense}
             \onslide<11->{
                 \begin{equation*}
                     \trm{id}_0 \lid \trm{id}_{0.5} \lid \trm{id}_1
                 \end{equation*}
             }
     \end{itemize}
-    \vspace{-2.5em}
+    \vspace{-1em}
     \onslide<12->{
         \begin{center}
-            \alert{Utilise LogootSplit\footcite{2013-logootsplit} comme base}
+            \alert{Utilise LogootSplit \cite{2013-logootsplit} comme base}
         \end{center}
     }
 \end{frame}
@@ -201,7 +201,7 @@
     \metroset{block=transparent}
     \begin{block}{Identifiant}
         \begin{itemize}
-            \item Composé d'un ou plusieurs tuples de la forme
+            \item Composé d'\alert{un ou plusieurs tuples} de la forme
         \end{itemize}
         \vspace{3em}
         \begin{equation*}
@@ -222,17 +222,45 @@
         \end{tikzpicture}
     \end{block}
     \onslide<5->{
-    \begin{block}{Exemples}
-            \begin{equation*}
-                \id{d}{F5}{0} \onslide<6->{\lid \id{m}{C1}{0}} \onslide<7->{\lid \id{m}{C1}{0}\id{f}{E1}{0}}
-            \end{equation*}
-        \onslide<8->{
-            \begin{equation*}
-                \id{i}{B1}{0} \lid \only<8>{\quad?\quad} \only<9>{\id{i}{B1}{0}\id{f}{A1}{0}} \lid \id{i}{B1}{1}
-            \end{equation*}
-        }
+        \begin{block}{Relation d'ordre $\lid$}
+            \begin{itemize}
+                \item Se base sur l'\alert{ordre lexicographique sur les éléments des tuples}
+            \end{itemize}
+        \end{block}
     }
-    \end{block}
+    \onslide<6->{
+        \begin{block}{Exemples}
+            \begin{equation*}
+                \id{
+                    \only<8>{\mathbf{d}}
+                    \only<6,7,9,10,11>{d}
+                }{F5}{0}
+                \onslide<7->{
+                    \lid \id{
+                        \only<7,9,10,11,12>{m}
+                        \only<8>{\mathbf{m}}
+                    }{C1}{0}
+                }
+                \onslide<9->{
+                    \lid \id{m}{C1}{0}\id{
+                        \only<9,11,12>{f}
+                        \only<10>{\mathbf{f}}
+                    }{
+                        \only<9,11,12>{E1}
+                        \only<10>{\mathbf{E1}}
+                    }{
+                        \only<9,11,12>{0}
+                        \only<10>{\mathbf{0}}
+                    }
+                }
+            \end{equation*}
+            \onslide<11->{
+                \begin{equation*}
+                    \id{i}{B1}{0} \lid \only<11>{\quad?\quad} \only<12>{\id{i}{B1}{0}\alert{\id{f}{A1}{0}}} \lid \id{i}{B1}{1}
+                \end{equation*}
+            }
+        \end{block}
+    }
 \end{frame}
 
 \begin{frame}[fragile]{Bloc LogootSplit}
@@ -250,11 +278,16 @@
         \end{tikzpicture}
     \end{figure}
     \pause
+    \vspace{-1em}
     \begin{itemize}
         \item Aggrège en un \alert{bloc} éléments ayant \alert{identifiants contigus}
     \end{itemize}
     \begin{block}{Identifiants contigus}
-        Deux identifiants sont contigus si et seulement si les deux identifiants sont identiques à l'exception de leur dernier offset et que leur derniers offsets sont consécutifs.
+        Deux identifiants sont contigus si et seulement si :
+        \begin{enumerate}
+            \item les deux identifiants sont identiques à l'exception de leur dernier offset
+            \item ces deux derniers offsets sont consécutifs
+        \end{enumerate}
     \end{block}
     \pause
     \begin{itemize}
@@ -269,131 +302,136 @@
 \end{frame}
 
 \begin{frame}[fragile]{Exemple insertions concurrentes}
-    \begin{figure}[!ht]
-        \centering
-        \resizebox{\columnwidth}{!}{
-          \begin{tikzpicture}
-            \newcommand\nodehl[1]{
-                node[block, label=#1:{$\id{i}{B1}{0..1}$}] {HL}
-            }
-            \newcommand\nodehlo[1]{
-                node[block, label=#1:{$\id{i}{B1}{0..2}$}] {HLO}
-            }
-            \newcommand\nodeh[1]{
-                node[letter, label=#1:{$\id{i}{B1}{0}$}] {H}
-            }
-            \newcommand\nodee[1]{
-                node[letter, fill=\colorblockone, label=#1:{$\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$}] {E}
-            }
-            \newcommand\nodel[1]{
-                node[letter, label=#1:{$\id{i}{B1}{1}$}] {L}
-            }
-            \newcommand\nodelo[1]{
-                node[block, label=#1:{$\id{i}{B1}{1..2}$}] {LO}
-            }
+    \begin{columns}
+        \hspace{0em}
+        \begin{column}{1.1\textwidth}
+            \begin{figure}[!ht]
+                \centering
+                \resizebox{\columnwidth}{!}{
+                  \begin{tikzpicture}
+                    \newcommand\nodehl[1]{
+                        node[block, label=#1:{$\id{i}{B1}{0..1}$}] {HL}
+                    }
+                    \newcommand\nodehlo[1]{
+                        node[block, label=#1:{$\id{i}{B1}{0..2}$}] {HLO}
+                    }
+                    \newcommand\nodeh[1]{
+                        node[letter, label=#1:{$\id{i}{B1}{0}$}] {H}
+                    }
+                    \newcommand\nodee[1]{
+                        node[letter, fill=\colorblockone, label=#1:{$\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$}] {E}
+                    }
+                    \newcommand\nodel[1]{
+                        node[letter, label=#1:{$\id{i}{B1}{1}$}] {L}
+                    }
+                    \newcommand\nodelo[1]{
+                        node[block, label=#1:{$\id{i}{B1}{1..2}$}] {LO}
+                    }
 
-            \newcommand\initialstate[3]{
-              \path
-                #1
-                ++#2
-                ++(0:0.5)
-                ++(#3:0.5) \nodehl{#3};
-            }
+                    \newcommand\initialstate[3]{
+                      \path
+                        #1
+                        ++#2
+                        ++(0:0.5)
+                        ++(#3:0.5) \nodehl{#3};
+                    }
 
-            \newcommand\inso[3]{
-              \path
-                #1
-                ++#2
-                ++(0:0.5)
-                ++(#3:0.5) \nodehlo{#3};
-            }
+                    \newcommand\inso[3]{
+                      \path
+                        #1
+                        ++#2
+                        ++(0:0.5)
+                        ++(#3:0.5) \nodehlo{#3};
+                    }
 
-            \newcommand\inse[3]{
-              \path
-                #1
-                ++#2
-                ++(0:0.5)
-                ++(#3:0.5) \nodeh{#3}
-                ++(0:\widthletter) \nodee{#3}
-                ++(0:\widthletter) \nodel{#3};
-            }
+                    \newcommand\inse[3]{
+                      \path
+                        #1
+                        ++#2
+                        ++(0:0.5)
+                        ++(#3:0.5) \nodeh{#3}
+                        ++(0:\widthletter) \nodee{#3}
+                        ++(0:\widthletter) \nodel{#3};
+                    }
 
-            \newcommand\finalstate[3]{
-              \path
-                #1
-                ++#2
-                ++(0:0.5)
-                ++(#3:0.5) \nodeh{#3}
-                ++(0:\widthletter) \nodee{#3}
-                ++(0:\widthletter) \nodelo{#3};
-            }
+                    \newcommand\finalstate[3]{
+                      \path
+                        #1
+                        ++#2
+                        ++(0:0.5)
+                        ++(#3:0.5) \nodeh{#3}
+                        ++(0:\widthletter) \nodee{#3}
+                        ++(0:\widthletter) \nodelo{#3};
+                    }
 
-            \newcommand\offseta{ (90:0.7) }
-            \newcommand\offsetb{ (270:0.7) }
+                    \newcommand\offseta{ (90:0.7) }
+                    \newcommand\offsetb{ (270:0.7) }
 
-            \path
-                node {\textbf{A}}
-                ++(0:0.5) node (a) {}
-                +(0:16) node (a-end) {}
-                +(0:1) node[point] (a-initial) {}
-                +(0:5) node (a-ins-e) {}
-                +(0:10) node (a-recv-ins-o) {}
-                +(0:15) node (a-final) {};
+                    \path
+                        node {\textbf{A}}
+                        ++(0:0.5) node (a) {}
+                        +(0:16) node (a-end) {}
+                        +(0:1) node[point] (a-initial) {}
+                        +(0:5) node (a-ins-e) {}
+                        +(0:10) node (a-recv-ins-o) {}
+                        +(0:15) node (a-final) {};
 
-            \initialstate{(a-initial)}{\offseta}{90};
-            \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
+                    \initialstate{(a-initial)}{\offseta}{90};
+                    \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
 
-            \path
-                ++(270:3) node {\textbf{B}}
-                ++(0:0.5) node (b) {}
-                +(0:16) node (b-end) {}
-                +(0:1) node[point] (b-initial) {}
-                +(0:5) node (b-ins-o) {}
-                +(0:10) node (b-recv-ins-e) {}
-                +(0:15) node (b-final) {};
+                    \path
+                        ++(270:3) node {\textbf{B}}
+                        ++(0:0.5) node (b) {}
+                        +(0:16) node (b-end) {}
+                        +(0:1) node[point] (b-initial) {}
+                        +(0:5) node (b-ins-o) {}
+                        +(0:10) node (b-recv-ins-e) {}
+                        +(0:15) node (b-final) {};
 
-            \initialstate{(b-initial)}{\offsetb}{-90};
-            \draw[dotted] (b) -- (b-initial) (b-final) -- (b-end);
+                    \initialstate{(b-initial)}{\offsetb}{-90};
+                    \draw[dotted] (b) -- (b-initial) (b-final) -- (b-end);
 
-            \only<1> {
-                \draw[->, thick] (a-initial) -- (a-final);
-            }
-            \only<1,2> {
-                \draw[->, thick] (b-initial) -- (b-final);
-            }
-            \only<2,3,4,5> {
-                \draw[->, thick] (a-initial) --  (a-ins-e) -- (a-final);
-            }
-            \onslide<2-> {
-                \path (a-ins-e) node[point, label=-170:{$\trm{ins}(H \prec E \prec L)$}] {};
-                \inse{(a-ins-e)}{\offseta}{90};
-            }
-            \only<3,4> {
-                \draw[->, thick] (b-initial) --  (b-ins-o) -- (b-final);
-            }
-            \onslide<3-> {
-                \path (b-ins-o) node[point, label=170:{$\trm{ins}(L \prec O)$}] {};
-                \inso{(b-ins-o)}{\offsetb}{-90};
-            }
-            \onslide<4-> {
-                \path (a-ins-e) node[label={[xshift=25pt]-10:{$\trm{ins}({\coloridthree\id{i}{B1}{0}\id{f}{A1}{0}},E)$}}] {};
-                \draw[->, dashed, shorten >= 1] (a-ins-e) -- (b-recv-ins-e);
-            }
-            \onslide<5-> {
-                \path (b-recv-ins-e) node[point] {};
-                \finalstate{(b-recv-ins-e)}{\offsetb}{-90};
-                \draw[->, thick] (b-initial) --  (b-ins-o) -- (b-recv-ins-e) -- (b-final);
-            }
-            \onslide<6-> {
-                \path (b-ins-o) node[label={[xshift=25pt]10:{$\trm{ins}(\id{i}{B1}{2},O)$}}] {};
-                \path (a-recv-ins-o) node[point] {};
-                \draw[->, dashed, shorten >= 1] (b-ins-o) -- (a-recv-ins-o);
-                \finalstate{(a-recv-ins-o)}{\offseta}{90};
-                \draw[->, thick] (a-initial) --  (a-ins-e) -- (a-recv-ins-o) -- (a-final);
-            }
-          \end{tikzpicture}
-        }
-    \end{figure}
+                    \only<1> {
+                        \draw[->, thick] (a-initial) -- (a-final);
+                    }
+                    \only<1,2> {
+                        \draw[->, thick] (b-initial) -- (b-final);
+                    }
+                    \only<2,3,4,5> {
+                        \draw[->, thick] (a-initial) --  (a-ins-e) -- (a-final);
+                    }
+                    \onslide<2-> {
+                        \path (a-ins-e) node[point, label=-170:{$\trm{ins}(H \prec E \prec L)$}] {};
+                        \inse{(a-ins-e)}{\offseta}{90};
+                    }
+                    \only<3,4> {
+                        \draw[->, thick] (b-initial) --  (b-ins-o) -- (b-final);
+                    }
+                    \onslide<3-> {
+                        \path (b-ins-o) node[point, label=170:{$\trm{ins}(L \prec O)$}] {};
+                        \inso{(b-ins-o)}{\offsetb}{-90};
+                    }
+                    \onslide<4-> {
+                        \path (a-ins-e) node[label={[xshift=25pt]-10:{$\trm{ins}({\coloridthree\id{i}{B1}{0}\id{f}{A1}{0}},E)$}}] {};
+                        \draw[->, dashed, shorten >= 1] (a-ins-e) -- (b-recv-ins-e);
+                    }
+                    \onslide<5-> {
+                        \path (b-recv-ins-e) node[point] {};
+                        \finalstate{(b-recv-ins-e)}{\offsetb}{-90};
+                        \draw[->, thick] (b-initial) --  (b-ins-o) -- (b-recv-ins-e) -- (b-final);
+                    }
+                    \onslide<6-> {
+                        \path (b-ins-o) node[label={[xshift=25pt]10:{$\trm{ins}(\id{i}{B1}{2},O)$}}] {};
+                        \path (a-recv-ins-o) node[point] {};
+                        \draw[->, dashed, shorten >= 1] (b-ins-o) -- (a-recv-ins-o);
+                        \finalstate{(a-recv-ins-o)}{\offseta}{90};
+                        \draw[->, thick] (a-initial) --  (a-ins-e) -- (a-recv-ins-o) -- (a-final);
+                    }
+                  \end{tikzpicture}
+                }
+            \end{figure}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Limites de LogootSplit}
@@ -423,93 +461,96 @@
     \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Solution naïve}
-    \begin{figure}
-        \resizebox{\textwidth}{!}{
-          \begin{tikzpicture}
-            \newcommand\nodeo[1]{
-                node[letter, label=#1:{$\trm{id}_1$}] {O}
-            }
-            \newcommand\noden[1]{
-                node[letter, label=#1:{$\trm{id}_2$}] {N}
-            }
-            \newcommand\nodee[1]{
-                node[letter, label=#1:{$\trm{id}_3$}] {E}
-            }
-            \newcommand\nodeebis[1]{
-                node[letter, label=#1:{$\trm{id}_{97}$}] {E}
-            }
-            \newcommand\nodenbis[1]{
-                node[letter, label=#1:{$\trm{id}_{98}$}] {N}
-            }
-            \newcommand\noded[1]{
-                node[letter, label=#1:{$\trm{id}_{99}$}] {D}
-            }
+\begin{frame}[fragile]{Comment réduire le surcoût ?}
+    \metroset{block=transparent}
+    \begin{block}{Solution naïve}
+        \begin{figure}
+            \resizebox{\textwidth}{!}{
+              \begin{tikzpicture}
+                \newcommand\nodeo[1]{
+                    node[letter, label=#1:{$\trm{id}_1$}] {O}
+                }
+                \newcommand\noden[1]{
+                    node[letter, label=#1:{$\trm{id}_2$}] {N}
+                }
+                \newcommand\nodee[1]{
+                    node[letter, label=#1:{$\trm{id}_3$}] {E}
+                }
+                \newcommand\nodeebis[1]{
+                    node[letter, label=#1:{$\trm{id}_{97}$}] {E}
+                }
+                \newcommand\nodenbis[1]{
+                    node[letter, label=#1:{$\trm{id}_{98}$}] {N}
+                }
+                \newcommand\noded[1]{
+                    node[letter, label=#1:{$\trm{id}_{99}$}] {D}
+                }
 
 
-            \newcommand\renoneend[1]{
-                node[block, label=#1:{$\trm{id}'_{begin..end}$}] {ONE$\cdots$END}
-            }
+                \newcommand\renoneend[1]{
+                    node[block, label=#1:{$\trm{id}'_{begin..end}$}] {ONE$\cdots$END}
+                }
 
-            \newcommand\initialstate[3]{
+                \newcommand\initialstate[3]{
+                    \path
+                    #1
+                    ++#2
+                    ++(0:0.5)
+                    ++(#3:0.5) \nodeo{-#3}
+                    ++(0:\widthletter) \noden{-#3}
+                    ++(0:\widthletter) \nodee{-#3}
+                    +(0:1.5 * \widthletter) node {$\cdots$}
+                    ++(0:2 * \widthletter) \nodeebis{-#3}
+                    ++(0:\widthletter) \nodenbis{-#3}
+                    ++(0:\widthletter) \noded{-#3};
+                }
+
+                \newcommand\finalstate[3]{
+                  \path
+                  #1
+                  ++#2
+                  ++(0:0.5)
+                  ++(#3:0.5) \renoneend{-#3};
+                }
+
+                \newcommand\offseta{ (90:0.7) }
+
                 \path
-                #1
-                ++#2
-                ++(0:0.5)
-                ++(#3:0.5) \nodeo{-#3}
-                ++(0:\widthletter) \noden{-#3}
-                ++(0:\widthletter) \nodee{-#3}
-                +(0:1.5 * \widthletter) node {$\cdots$}
-                ++(0:2 * \widthletter) \nodeebis{-#3}
-                ++(0:\widthletter) \nodenbis{-#3}
-                ++(0:\widthletter) \noded{-#3};
+                    node {\textbf{A}}
+                    ++(0:0.5) node (a) {}
+                    +(0:11) node (a-end) {}
+                    +(0:1) node[point] (a-initial) {}
+                    +(0:8) node (a-ren) {}
+                    +(0:10) node (a-final) {};
+
+                \initialstate{(a-initial)}{\offseta}{90};
+
+                \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
+
+                \only<1,2>{
+                    \draw[->, thick] (a-initial) -- (a-final);
+                }
+                \onslide<2->{
+                    \finalstate{(a-ren)}{\offseta}{90};
+                }
+                \onslide<3->{
+                    \path (a-ren) node[point, label=-170:{$?$}] {};
+                    \draw[->, thick] (a-initial) --  (a-ren) -- (a-final);
+                }
+              \end{tikzpicture}
             }
-
-            \newcommand\finalstate[3]{
-              \path
-              #1
-              ++#2
-              ++(0:0.5)
-              ++(#3:0.5) \renoneend{-#3};
-            }
-
-            \newcommand\offseta{ (90:0.7) }
-
-            \path
-                node {\textbf{A}}
-                ++(0:0.5) node (a) {}
-                +(0:11) node (a-end) {}
-                +(0:1) node[point] (a-initial) {}
-                +(0:8) node (a-ren) {}
-                +(0:10) node (a-final) {};
-
-            \initialstate{(a-initial)}{\offseta}{90};
-
-            \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
-
-            \only<1>{
-                \draw[->, thick] (a-initial) -- (a-final);
-            }
-            \onslide<2->{
-                \path (a-ren) node[point, label=-170:{$?$}] {};
-                \draw[->, thick] (a-initial) --  (a-ren) -- (a-final);
-            }
-            \onslide<3->{
-                \finalstate{(a-ren)}{\offseta}{90};
-            }
-          \end{tikzpicture}
-        }
-      \end{figure}
-      \begin{itemize}
-        \item \alert{Convertir l'état} inefficient\dots
-        \item<2-> \dots à l'aide d'une nouvelle opération \dots
-        \item<3-> \dots \alert{en un état optimisé} (identifiants de taille minimale, moins de blocs)
-      \end{itemize}
+          \end{figure}
+          \begin{itemize}
+            \item \alert{Convertir l'état} actuel\dots
+            \item<2-> \dots \alert{en un état optimisé} (identifiants de taille minimale, moins de blocs)\dots
+            \item<3-> \dots à l'aide d'une \alert{nouvelle opération}
+          \end{itemize}
+    \end{block}
 \end{frame}
 
 \begin{frame}{Mitigation du surcoût des CRDTs pour le type Séquence}
     \metroset{block=transparent}
-    \begin{block}{L'approche core-nebula \footcite{zawirski:hal-01248197}, pour Treedoc}
+    \begin{block}{L'approche core-nebula  \cite{zawirski:hal-01248197}, pour Treedoc}
         \begin{itemize}
             \item Ré-assigne des identifiants plus courts aux éléments
             \item Transforme les opérations \ins et \rmv concurrentes\dots

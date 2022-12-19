@@ -117,8 +117,8 @@
     }
   \end{figure}
   \begin{itemize}
-    \item Peuvent générer opérations concurrentes aux opérations \ren
-    \item<5-> Produisent anomalies si intégrées naïvement
+    \item Noeuds peuvent générer opérations concurrentes aux opérations \ren
+    \item<5-> Opérations produisent anomalies si intégrées naïvement
   \end{itemize}
   \onslide<6>{
     \begin{center}
@@ -127,7 +127,7 @@
   }
 \end{frame}
 
-\begin{frame}{Mécanisme de résolution de conflits}
+\begin{frame}{Mécanisme de résolution de conflits entre une opération \ren et une opération \ins ou \rmv}
     \begin{block}{Besoins}
         \begin{enumerate}
             \item
@@ -533,14 +533,14 @@
     \vspace{-1em}
     \textbf{Rappel : }
     \begin{equation*}
-        \renids{A2} = [\id{i}{B1}{0},\id{i}{B1}{0}\id{f}{A1}{0},\id{i}{B1}{1},\id{i}{B1}{2}]
+        \renids{A2} = [\id{i}{B1}{0},\only<2>{{\coloridone\id{\mathbf{i}}{\mathbf{B1}}{\mathbf{0}}\id{\mathbf{f}}{\mathbf{A1}}{\mathbf{0}}}}\only<3,4,5>{{\coloridone\id{i}{B1}{0}\id{f}{A1}{0}}}\only<1>{\id{i}{B1}{0}\id{f}{A1}{0}},\id{i}{B1}{1},\id{i}{B1}{2}]
     \end{equation*}
     \vspace{-1em}
-    \begin{block}{Exemple avec {$\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}$}}
+    \begin{block}{Exemple avec {$\coloridone\id{i}{B1}{0}\id{m}{B2}{0}$}}
       \begin{itemize}
         \item<2-> Rechercher son prédecesseur dans $\renids{A2}$ : $\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$
-        \item<3-> Utiliser son index (1) pour calculer équivalent à époque $\epoch{A2}$ : $\coloridtwo\id{i}{A2}{1}$
-        \item<4-> Préfixer {$\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}$} par ce dernier : $\coloridfour\id{i}{A2}{1}\id{i}{B1}{0}\id{m}{B2}{0}$
+        \item<3-> Utiliser son index ($\coloridtwo 1$) pour calculer équivalent à époque $\epoch{A2}$ : $\coloridtwo\id{i}{A2}{1}$
+        \item<4-> Préfixer {$\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}$} par ce dernier : $\coloridfour\id{i}{A2}{1}$$\coloridthree\id{i}{B1}{0}\id{m}{B2}{0}$
       \end{itemize}
     \end{block}
   \end{frame}

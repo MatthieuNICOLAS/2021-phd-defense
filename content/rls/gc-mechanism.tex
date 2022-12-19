@@ -1,9 +1,9 @@
 \subsection{Mécanisme de GC des époques obsolètes}
 
 \begin{frame}[standout]
-    \alert{Mais ça sert à quoi de renommer ?}
+    Nous arrivons à intégrer des opérations \ren concurrentes\dots
 
-    Puisqu'on doit conserver les $\trm{renIds}$ pour gérer les opérations concurrentes\dots
+    \alert{Mais on doit conserver les $\trm{renIds}$ pour gérer les opérations concurrentes}
 \end{frame}
 
 \begin{frame}{Suppression des $\trm{renIds}$ obsolètes (Garbage Collection)}
@@ -93,7 +93,7 @@
     \onslide<5>{
         \begin{block}{Besoins}
             \begin{itemize}
-                \item \alert{Détecter stabilité causale}\footcite{10.1007/978-3-662-43352-2_11} des opérations \ren
+                \item \alert{Détecter stabilité causale} \cite{10.1007/978-3-662-43352-2_11} des opérations \ren
                 \item \alert{Connaître noeuds} appartenant au groupe
             \end{itemize}
         \end{block}

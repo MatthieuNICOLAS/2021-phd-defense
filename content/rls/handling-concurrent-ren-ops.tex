@@ -124,7 +124,7 @@
     \item<5-> \dots mais des \alert{états différents} (identifiants, époques)
   \end{itemize}
   \begin{center}
-    \onslide<6->{Ne parlent plus la même langue, comment les faire converger?}
+    \onslide<6->{Comment les faire converger?}
 
     \onslide<7>{\alert{Besoin d'un mécanisme additionnel de résolution de conflits}}
   \end{center}
@@ -147,22 +147,33 @@
   \end{block}
 \end{frame}
 
-\begin{frame}{Algorithme d'intégration d'une opération \ren}
-  \begin{block}{Intuition}
+\begin{frame}{Mécanisme de résolution de conflits entre opérations \ren}
+  \begin{block}{Besoins}
     \begin{enumerate}
-      \item<2-> \only<8,9>{\color{gray}}Ajouter l'époque créée par l'opération \ren à l'ensemble des époques connues
-      \item<3->
-        \only<3,4,5,6,7,8>{Choisir entre époque courante et nouvelle époque \alert{l'époque cible}}
-        \only<9>{\alert{Choisir entre époque courante et nouvelle époque l'époque cible}}
-      \item<4-> Si changement d'époque cible
-      \begin{enumerate}
-        \item<5-> Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)
-        \item<6-> Annuler l'effet des opérations \ren de l'époque courante au PPAC
-        \item<7-> Appliquer l'effet des opérations \ren du PPAC à l'époque cible
-      \end{enumerate}
+      \item
+        \only<1>{Désigner une opération \ren comme prioritaire à l'aide des époques}
+        \only<2>{\alert{Désigner une opération \ren comme prioritaire à l'aide des époques}}
+      \item Appliquer une opération \ren depuis une autre époque que son époque de génération
     \end{enumerate}
   \end{block}
 \end{frame}
+
+% \begin{frame}{Algorithme d'intégration d'une opération \ren}
+%   \begin{block}{Intuition}
+%     \begin{enumerate}
+%       \item<2-> \only<8,9>{\color{gray}}Ajouter l'époque créée par l'opération \ren à l'ensemble des époques connues
+%       \item<3->
+%         \only<3,4,5,6,7,8>{Choisir entre époque courante et nouvelle époque \alert{l'époque cible}}
+%         \only<9>{\alert{Choisir entre époque courante et nouvelle époque l'époque cible}}
+%       \item<4-> Si changement d'époque cible
+%       \begin{enumerate}
+%         \item<5-> Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)
+%         \item<6-> Annuler l'effet des opérations \ren de l'époque courante au PPAC
+%         \item<7-> Appliquer l'effet des opérations \ren du PPAC à l'époque cible
+%       \end{enumerate}
+%     \end{enumerate}
+%   \end{block}
+% \end{frame}
 
 \begin{frame}{Choisir une époque comme époque cible}
   \metroset{block=transparent}
@@ -273,11 +284,19 @@
                 \draw[->] (eB3-node) edge (eB7-node-1);
               }
 
+              \onslide<10-12>{
+                \draw[->, dashed, targetepoch] (eA2-node.0) -- (e0.270);
+              }
+
+              \onslide<11-12>{
+                \draw[dashed, targetepoch] (eC6-node.45) -- (eA2-node.315) ;
+              }
+
               \onslide<12>{
                 \path
                   (eB7) node[op, targetepoch] (eB7-node-2) {$\epoch{B7}$};
                 \draw[->] (eB3-node) edge (eB7-node-2);
-                \draw[->, dashed, targetepoch] (eB7-node-2.135) -- (eB3-node.225) (eB3-node.180) -- (eC6-node.45) -- (eA2-node.315) (eA2-node.0) -- (e0.270);
+                \draw[dashed, targetepoch] (eB7-node-2.135) -- (eB3-node.225) (eB3-node.180) -- (eC6-node.45);
               }
             \end{tikzpicture}
           }
@@ -288,8 +307,8 @@
       \vspace{-2.5em}
       \begin{block}<7->{Comment choisir ?}
         \begin{itemize}
-          \item<8-> Définit relation \emph{priority}, notée $\lepoch$, ordre strict total sur les époques
-          \item<9-> Utilise \alert{ordre lexicographique sur chemins} des époques dans l'arbre
+          \item<8-> Définir relation \emph{priority}, notée $\lepoch$, ordre strict total sur les époques
+          \item<9-> Utiliser \alert{ordre lexicographique sur chemins} des époques dans l'arbre
         \end{itemize}
       \end{block}
       \vspace{-1em}
@@ -522,20 +541,20 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Algorithme d'intégration d'une opération \ren}
-  \begin{block}{Intuition}
-    \begin{enumerate}
-      \item {\color{gray}Ajouter l'époque créée par l'opération \ren à l'ensemble des époques connues}
-      \item {\color{gray}Choisir entre époque courante et nouvelle époque l'époque cible}
-      \item {\color{gray}Si changement d'époque cible}
-      \begin{enumerate}
-        \item {\color{gray}Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)}
-        \item \alert{Annuler l'effet des opérations \ren de l'époque courante au PPAC}
-        \item Appliquer l'effet des opérations \ren du PPAC à l'époque cible
-      \end{enumerate}
-    \end{enumerate}
-  \end{block}
-\end{frame}
+% \begin{frame}{Algorithme d'intégration d'une opération \ren}
+%   \begin{block}{Intuition}
+%     \begin{enumerate}
+%       \item {\color{gray}Ajouter l'époque créée par l'opération \ren à l'ensemble des époques connues}
+%       \item {\color{gray}Choisir entre époque courante et nouvelle époque l'époque cible}
+%       \item {\color{gray}Si changement d'époque cible}
+%       \begin{enumerate}
+%         \item {\color{gray}Calculer chemin entre époque courante et époque cible, et notamment leur Plus Proche Ancêtre Commun (PPAC)}
+%         \item \alert{Annuler l'effet des opérations \ren de l'époque courante au PPAC}
+%         \item Appliquer l'effet des opérations \ren du PPAC à l'époque cible
+%       \end{enumerate}
+%     \end{enumerate}
+%   \end{block}
+% \end{frame}
 
 \begin{frame}{Annuler l'effet d'une opération \ren}
   \metroset{block=transparent}
@@ -621,13 +640,13 @@
   \end{figure}
   \textbf{Rappel : }
   \begin{equation*}
-      \renids{A2} = [\id{i}{B1}{0},\id{i}{B1}{0}\id{f}{A1}{0},\id{i}{B1}{1},\id{i}{B1}{2}]
+      \renids{A2} = [\id{i}{B1}{0},\only<1,2>{\id{i}{B1}{0}\id{f}{A1}{0}}\only<3>{{\coloridone\id{\mathbf{i}}{\mathbf{B1}}{\mathbf{0}}\id{\mathbf{f}}{\mathbf{A1}}{\mathbf{0}}}}\only<4,5,6>{{\coloridone\id{i}{B1}{0}\id{f}{A1}{0}}},\only<1,2,3,5,6>{\id{i}{B1}{1}}\only<4>{\id{\mathbf{i}}{\mathbf{B1}}{\mathbf{1}}},\id{i}{B1}{2}]
   \end{equation*}
   \begin{block}{Exemple avec {$\coloridfour\id{i}{A2}{1}\id{i}{B1}{0}\id{m}{B2}{0}$}}
     \begin{itemize}
       \item<2-> Est de la forme ${\coloridfour\id{i}{A2}{1}}$ concaténé à $\id{i}{B1}{0}\id{m}{B2}{0}$ : cas 2 ou 3
-      \item<3-> Rechercher l'équivalent de $\id{i}{A2}{1}$ dans $\renids{A2}$ : {$\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$}
-      \item<4-> Rechercher l'équivalent de $\id{i}{A2}{2}$ dans $\renids{A2}$ : $\id{i}{B1}{1}$
+      \item<3-> Rechercher l'équivalent de $\coloridtwo\id{i}{A2}{\only<3>{\mathbf{1}}\only<4,5,6>{1}}$ dans $\renids{A2}$ : {$\coloridone\id{i}{B1}{0}\id{f}{A1}{0}$}
+      \item<4-> Rechercher l'équivalent de $\coloridtwo\id{i}{A2}{\only<4>{\mathbf{2}}\only<5,6>{2}}$ dans $\renids{A2}$ : $\id{i}{B1}{1}$
       \item<5-> Comparer $\id{i}{B1}{0}\id{m}{B2}{0}$ avec ces derniers : ${\coloridone\id{i}{B1}{0}\id{f}{A1}{0}} \lid \id{i}{B1}{0}\id{m}{B2}{0} \lid \id{i}{B1}{1}$
       \item<6-> Retourner $\id{i}{B1}{0}\id{m}{B2}{0}$
     \end{itemize}
