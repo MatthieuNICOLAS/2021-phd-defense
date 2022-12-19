@@ -17,14 +17,38 @@
   \end{block}
 \end{frame}
 
-\begin{frame}{Limites \& perspectives}
+\begin{frame}[fragile]{Limites}
   \metroset{block=transparent}
   \begin{block}{Limites de RenamableLogootSplit}
     \begin{itemize}
-      \item Surcoût fonction du nombre d'opérations \ren concurrentes
+      \item Surcoût de l'opération \ren
+    \end{itemize}
+    \pause
+    \begin{columns}
+      \begin{column}{0.6\textwidth}
+        \begin{figure}[!ht]
+            \includegraphics[width=\columnwidth]{img/replay-log-30k-2022-12-09}
+        \end{figure}
+      \end{column}
+      \hspace{-2em}
+      \begin{column}{0.6\textwidth}
+        \pause
+        \begin{itemize}
+          \item Évaluations montrent que le \alert{temps d'intégration de l'opération \ren peut atteindre 2s}
+          \item A \alert{privilégié la correction}\dots
+          \item \dots doit \alert{améliorer les performances} (algorithme et implémentation)
+        \end{itemize}
+      \end{column}
+    \end{columns}
+    \pause
+    \begin{itemize}
       \item Stabilité causale requise pour supprimer les métadonnées
     \end{itemize}
   \end{block}
+\end{frame}
+
+\begin{frame}{Perspectives}
+  \metroset{block=transparent}
   \begin{block}{Perspectives autour de RenamableLogootSplit}
     \begin{itemize}
       \item Comment définir des relations \emph{priority} $\lepoch$ qui minimisent les renommages vains ?
