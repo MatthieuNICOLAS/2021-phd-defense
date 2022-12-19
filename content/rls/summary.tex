@@ -1,27 +1,50 @@
-\metroset{subsectionpage=progressbar}
-\subsection{Conclusion}
-\metroset{subsectionpage=none}
+% \metroset{subsectionpage=progressbar}
+\subsection{Synthèse}
+% \metroset{subsectionpage=none}
 
-\begin{frame}{Conclusion}
+\begin{frame}{Synthèse}
   \metroset{block=transparent}
-  \begin{block}{Contribution}
+  \begin{block}{Adaptation du mécanisme de renommage pour LogootSplit}
+    \pause
     \begin{itemize}
-      \item Définition et validation mécanisme de renommage pour CRDTs pour Séquence à identifiants densément ordonnés, compatible avec systèmes pair-à-pair
+      \item Opération \ren permettant de minimiser le surcoût de l'état
+      \item Mécanisme de détection des opérations concurrentes
+      \item Algorithme pour intégrer l'effet d'une opération \ren dans une opération \ins ou \rmv concurrente
     \end{itemize}
   \end{block}
   \pause
-  \begin{block}{Limites}
+  \begin{block}{Conception d'un mécanisme de résolution de conflits pour opérations \ren concurrentes}
+    \pause
     \begin{itemize}
-      \item Surcoût fonction du nombre d'opérations \ren concurrentes
-      \item Stabilité causale \footcite{baquero2017pure} requise pour supprimer les métadonnées
+      \item Mécanisme pour désigner une époque comme l'époque cible, sans coordination
+      \item Algorithme pour annuler l'effet d'une opération \ren
     \end{itemize}
   \end{block}
   \pause
-  \begin{block}{Perspectives}
-    \begin{itemize}
-      \item Stratégies de génération des opérations \ren
-      \item Relations \emph{priority} $\lepoch$ réduisant calculs à l'échelle du système
-      \item Preuve de correction de RLS
-    \end{itemize}
+  \begin{block}{Conception d'un mécanisme de suppression des époques obsolètes}
   \end{block}
 \end{frame}
+
+% \begin{frame}{Conclusion}
+%   \metroset{block=transparent}
+%   \begin{block}{Contribution}
+%     \begin{itemize}
+%       \item Définition et validation mécanisme de renommage pour CRDTs pour Séquence à identifiants densément ordonnés, compatible avec systèmes pair-à-pair
+%     \end{itemize}
+%   \end{block}
+%   \pause
+%   \begin{block}{Limites}
+%     \begin{itemize}
+%       \item Surcoût fonction du nombre d'opérations \ren concurrentes
+%       \item Stabilité causale \footcite{baquero2017pure} requise pour supprimer les métadonnées
+%     \end{itemize}
+%   \end{block}
+%   \pause
+%   \begin{block}{Perspectives}
+%     \begin{itemize}
+%       \item Stratégies de génération des opérations \ren
+%       \item Relations \emph{priority} $\lepoch$ réduisant calculs à l'échelle du système
+%       \item Preuve de correction de RLS
+%     \end{itemize}
+%   \end{block}
+% \end{frame}
