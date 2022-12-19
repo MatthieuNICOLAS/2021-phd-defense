@@ -423,14 +423,99 @@
     \end{columns}
 \end{frame}
 
+\begin{frame}[fragile]{Solution naïve}
+    \begin{figure}
+        \resizebox{\textwidth}{!}{
+          \begin{tikzpicture}
+            \newcommand\nodeo[1]{
+                node[letter, label=#1:{$\trm{id}_1$}] {O}
+            }
+            \newcommand\noden[1]{
+                node[letter, label=#1:{$\trm{id}_2$}] {N}
+            }
+            \newcommand\nodee[1]{
+                node[letter, label=#1:{$\trm{id}_3$}] {E}
+            }
+            \newcommand\nodeebis[1]{
+                node[letter, label=#1:{$\trm{id}_{97}$}] {E}
+            }
+            \newcommand\nodenbis[1]{
+                node[letter, label=#1:{$\trm{id}_{98}$}] {N}
+            }
+            \newcommand\noded[1]{
+                node[letter, label=#1:{$\trm{id}_{99}$}] {D}
+            }
+
+
+            \newcommand\renoneend[1]{
+                node[block, label=#1:{$\trm{id}'_{begin..end}$}] {ONE$\cdots$END}
+            }
+
+            \newcommand\initialstate[3]{
+                \path
+                #1
+                ++#2
+                ++(0:0.5)
+                ++(#3:0.5) \nodeo{-#3}
+                ++(0:\widthletter) \noden{-#3}
+                ++(0:\widthletter) \nodee{-#3}
+                +(0:1.5 * \widthletter) node {$\cdots$}
+                ++(0:2 * \widthletter) \nodeebis{-#3}
+                ++(0:\widthletter) \nodenbis{-#3}
+                ++(0:\widthletter) \noded{-#3};
+            }
+
+            \newcommand\finalstate[3]{
+              \path
+              #1
+              ++#2
+              ++(0:0.5)
+              ++(#3:0.5) \renoneend{-#3};
+            }
+
+            \newcommand\offseta{ (90:0.7) }
+
+            \path
+                node {\textbf{A}}
+                ++(0:0.5) node (a) {}
+                +(0:11) node (a-end) {}
+                +(0:1) node[point] (a-initial) {}
+                +(0:8) node (a-ren) {}
+                +(0:10) node (a-final) {};
+
+            \initialstate{(a-initial)}{\offseta}{90};
+
+            \draw[dotted] (a) -- (a-initial) (a-final) -- (a-end);
+
+            \only<1>{
+                \draw[->, thick] (a-initial) -- (a-final);
+            }
+            \onslide<2->{
+                \path (a-ren) node[point, label=-170:{$?$}] {};
+                \draw[->, thick] (a-initial) --  (a-ren) -- (a-final);
+            }
+            \onslide<3->{
+                \finalstate{(a-ren)}{\offseta}{90};
+            }
+          \end{tikzpicture}
+        }
+      \end{figure}
+      \begin{itemize}
+        \item \alert{Convertir l'état} inefficient\dots
+        \item<2-> \dots à l'aide d'une nouvelle opération \dots
+        \item<3-> \dots \alert{en un état optimisé} (identifiants de taille minimale, moins de blocs)
+      \end{itemize}
+\end{frame}
+
 \begin{frame}{Mitigation du surcoût des CRDTs pour le type Séquence}
     \metroset{block=transparent}
     \begin{block}{L'approche core-nebula \footcite{zawirski:hal-01248197}, pour Treedoc}
         \begin{itemize}
-            \item Ré-assigne des identifiants courts aux éléments, \ie les \emph{renomme}
+            \item Ré-assigne des identifiants plus courts aux éléments
             \item Transforme les opérations \ins et \rmv concurrentes\dots
             \pause
-            \item \dots mais ne supportent pas opérations \ren concurrentes
+            \item \dots mais ne supporte pas opérations \ren concurrentes
+            \item Repose sur un algorithme de consensus pour décider du renommage
         \end{itemize}
     \end{block}
     \pause
