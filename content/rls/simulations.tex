@@ -4,8 +4,8 @@
 
 \begin{frame}{Objectifs}
   \begin{itemize}
-    \item Montrer convergence des noeuds
-    \item Montrer que mécanisme de renommage améliore performances de la séquence répliquée (mémoire, calculs, bande-passante)
+    \item \alert{Montrer que RenamableLogootSplit satisfait la convergence forte}
+    \item \alert{Montrer que le mécanisme de renommage améliore les performances} de la séquence répliquée (mémoire, calculs, bande-passante)
   \end{itemize}
   \pause
   \begin{center}
@@ -45,41 +45,41 @@
     }
   \end{figure}
   \begin{itemize}
-    \item 10 noeuds éditent collaborativement un document
-    \item Utilisent soit LogootSplit (LS), soit RenamableLogootSplit (RLS)
+    \item \alert{10 noeuds} éditent collaborativement un document
+    \item Topologie \alert{réseau entièrement maillée}
+    \item Ne considère \alert{pas de pannes ou de pertes de message}
   \end{itemize}
-  \pause
-  \begin{itemize}
-    \item Topologie réseau entièrement maillée
-    \item Ne considère pas pannes ou pertes de message
-   \end{itemize}
 \end{frame}
 
 \begin{frame}{Simulations - Modifications}
-  \begin{itemize}
-    \item Phase 1 (génération du contenu) : Beaucoup d'insertions, quelques suppressions (80/20\%)
-    \item Phase 2 (édition) : Équilibre insertions/suppressions (50/50\%)
-    \item Noeuds passent à la phase 2 quand document atteint taille donnée (15 pages - 60k caractères)
-  \end{itemize}
+  \metroset{block=transparent}
+  Noeuds \alert{utilisent LogootSplit} (LS) ou \alert{RenamableLogootSplit} (RLS)
   \pause
-  \begin{itemize}
-    \item Noeuds terminent quand ensemble des noeuds a effectué nombre donné de modifications (15k)\dots
-    \item \dots et intégré celles des autres (150k au total)
-  \end{itemize}
+  \begin{block}{Se décompose en 2 phases}
+    \begin{enumerate}
+      \item \alert{Génération du contenu} (80\% d'\ins, 20\% de \rmv)
+      \item \alert{Édition} (50/50\%)
+    \end{enumerate}
+    Noeuds passent à la phase 2 quand leur copie locale atteint une taille donnée (15 pages - 60k caractères)
+  \end{block}
+  \pause
+  \textbf{Nombre d'opérations : } 15k par noeud, 150k au total
 \end{frame}
 
 \begin{frame}{Simulations - Mécanisme de renommage}
-  \begin{itemize}
-    \item Noeuds désignés comme \emph{noeuds de renommage} (1 à 4)
-    \item Noeuds de renommage effectue un renommage à toutes les 30k opérations qu'ils intègrent (5 opérations \ren par noeud de renommage)
-    \item Opérations \ren générées à un point donné sont \alert{concurrentes}
-  \end{itemize}
+  \metroset{block=transparent}
+  \begin{block}{Noeuds de renommage}
+    \begin{itemize}
+      \item 1 à 4 noeuds effectuent une \alert{opération \ren toutes les 30k opérations}
+      \item Opérations \ren générées à un point donné sont \alert{concurrentes}
+    \end{itemize}
+  \end{block}
 \end{frame}
 
 \begin{frame}{Simulations - Sorties}
   \begin{itemize}
-    \item Instantané de l'état de chaque noeud à différents points de la simulation (10k opérations et état final)
-    \item Journal des opérations de chaque noeud
+    \item \alert{Instantané de l'état} de chaque noeud à différents points de la simulation (10k opérations et état final)
+    \item \alert{Journal des opérations} de chaque noeud
   \end{itemize}
   \pause
   \begin{center}
