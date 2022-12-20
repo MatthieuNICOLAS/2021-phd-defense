@@ -1,0 +1,23 @@
+\section{Analyse de la complexité en temps des opérations}
+
+\begin{frame}{Analyse de la complexité en temps des opérations}
+    \begin{table}[!ht]
+        \centering
+        \caption{Complexité en temps des différentes opérations}
+        %\resizebox{0.5\columnwidth}{!}{
+        \begin{tabular}{lcc}
+            \toprule
+            Type d'opération & \multicolumn{2}{c}{Complexité en temps} \\
+            \cmidrule(lr){2-3}
+                & Locale &   Distante \\
+            \midrule
+            $\trm{insert}$ & \bigO{\log{}b} & \bigO{h + s \cdot (k + l \cdot \log{}n + \log{}b)} \\
+            $\trm{remove}$ & \bigO{\log{}b} & \bigO{h + s \cdot (k + l \cdot \log{}n + \log{}b)} \\
+            \emph{naive rename} & \bigO{b} & \bigO{h + n \cdot (k + l \cdot \log{}n + \log{}b)} \\
+            $\trm{rename}$ & \bigO{b} & \bigO{h + n \cdot (k + l) + b} \\
+            \bottomrule
+        \end{tabular}
+        \caption*{$b$ : nombre de blocs, $n$ : nombre d'éléments de l'état courant et des \emph{anciens états}, $h$ : hauteur de l'\emph{arbre des époques}, $k$ : nombre de renommages à inverser, $l$ : nombre de renommages à appliquer, $s$ : nombre d'éléments insérés/supprimés par l'opération}
+        %}
+        \end{table}
+\end{frame}

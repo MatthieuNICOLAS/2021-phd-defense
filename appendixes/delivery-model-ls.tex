@@ -1,0 +1,12 @@
+\section{Modèle de livraison de LogootSplit}
+
+\begin{frame}{Modèle de livraison de LogootSplit}
+    \begin{block}{Modèle de livraison}
+        Le modèle de livraison LogootSplit définit que :
+        \begin{enumerate}
+          \item Une opération doit être livrée exactement une fois à chaque noeud.
+          \item Les opérations $\trm{insert}$ peuvent être livrées dans un ordre quelconque.
+          \item L'opération $\trm{remove}(\trm{idIntervals})$ ne peut être livrée qu'après la livraison des opération d'insertions des éléments formant les $\trm{idIntervals}$.
+        \end{enumerate}
+    \end{block}
+\end{frame}

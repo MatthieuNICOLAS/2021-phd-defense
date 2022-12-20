@@ -1,0 +1,28 @@
+\section{Temps d'intégration de l'opération \ren}
+
+\begin{frame}{Temps d'intégration de l'opération \ren}
+    \begin{table}[!ht]
+        \centering
+        \resizebox{\columnwidth}{!}{
+            \begin{tabular}{lrrrr}
+                \toprule
+                \multicolumn{2}{c}{Paramètres} & \multicolumn{3}{c}{Temps d'intégration (ms)} \\
+                \cmidrule(lr){1-2} \cmidrule(lr){3-5}
+                Type & Nb Ops (k) &  Médiane & 1\textsuperscript{er} Percent. & 99\textsuperscript{ème} Percent. \\
+                \midrule
+                Locale & 30  & 38.7 &       37.3 &        71.7 \\
+                    & 90  & 119 &        116 &         124 \\
+                    & 150 & 158 &        153 &         164 \\
+                \cmidrule{1-5}
+                Opération \ren distante même époque & 30  & 477 &        454 &         537 \\
+                    & 90  &   \alert{1482} &       1396 &        1658 \\
+                    & 150 &   \alert{1676} &       1591 &        1853 \\
+                \cmidrule{1-5}
+                Opération \ren distante plus prioritaire & 30  &    644 &        620 &         683 \\
+                    & 90  &   \alert{1994} &       1906 &        2112 \\
+                    & 150 &   \alert{2234} &       2139 &        2351 \\
+                \bottomrule
+            \end{tabular}
+        }
+    \end{table}
+\end{frame}

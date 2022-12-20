@@ -1,0 +1,24 @@
+\section{Analyse de la complexité en temps de la GC des $\trm{renIds}$ obsolètes}
+
+\begin{frame}{Analyse de la complexité en temps du mécanisme de GC}
+    \begin{table}[!ht]
+        \centering
+        \caption{Complexité en temps du mécanisme de la suppression des $\trm{renIds}$ obsolètes}
+        \resizebox{.7\columnwidth}{!}{
+            \begin{tabular}{lc}
+                \toprule
+                Étape & Temps \\
+                \midrule
+                \emph{calculer le vecteur de versions des opérations causalement stables} & \bigO{p^2} \\
+                \emph{calculer les chemins de la racine aux \emph{potentielles époques courantes}} & \bigO{e \cdot h} \\
+                \emph{identifier le \ac{LCA}} & \bigO{e \cdot h} \\
+                \emph{calculer l'ensembe des \emph{époques requises}} & \bigO{e \cdot h} \\
+                \emph{supprimer les époques obsolètes} & \bigO{e} \\
+                \midrule
+                \emph{total} & \bigO{p^2 + e \cdot h} \\
+                \bottomrule
+            \end{tabular}
+        }
+        \caption*{$p$: nombre de noeuds (ou pairs) du système, $e$: nombre d'époques dans l'\emph{arbre des époques}, $h$: hauteur de l'\emph{arbre des époques}}
+      \end{table}
+\end{frame}
